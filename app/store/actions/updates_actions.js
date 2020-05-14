@@ -4,10 +4,10 @@ import {
 import qs from 'qs';
 import axios from 'axios';
 //import {FIREBASEDB} from '../../utils/misc';
-//import {JSONURL} from '../../utils/misc';
+import {GETUSERFEEDJSON} from '../../utils/misc';
 // import _ from 'lodash';
 import map from 'lodash/map';
-
+import merge from 'lodash/merge';
 export function getUpdates(){
         const params = {
           user_id: "429",
@@ -61,19 +61,23 @@ console.log("IN FETCH")
 //             //console.log(response)
             
 console.log("OUTSIDE FETCH")
-   const request = axios.post("http://dev.cometbroadcast.com/appuser/user_home_feed", qs.stringify(params))
+   const request = axios.post(GETUSERFEEDJSON, qs.stringify(params))
                   .then((response) => {
                     const news = [];
                     const details = [];
                     const uservalue = [];
 
-                    console.log ("USERS");
+                    console.log (response.data);
                     
                    const keys = Object.keys(news);
   //here we are using lodah to create an array from all the objects
 //   const newData = _.values(news);
   const mapData = map(response.data, 'data');
-                    console.log(mapData)
+  const mapUserData = map(response.data, 'user');
+  const mapMergeData = merge(mapData,mapUserData);
+
+
+                    console.log(mapMergeData)
                     //console.log (news);
                     console.log ("USERS END");
 
@@ -85,7 +89,7 @@ console.log("OUTSIDE FETCH")
                         })
                         
                     }
-                   
+
                     
                     return news;
 

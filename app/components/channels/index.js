@@ -26,31 +26,49 @@ renderUpdates = (updates) => (
       // <View key={i}>
       //   <Text>{item.post_content}</Text>
       // </View>
-     
-      <TouchableOpacity
-        onPress={()=> this.props.navigation.navigate('Article',{
-          ...item
-        })}
-        key={i}
-      >
-        <View style={styles.cardContainer}>
-          <View>
-            <Image
-              style={{height:150,justifyContent:'space-around'}}
-              //source={{uri:`${item.image}`}}
-              source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
-              resizeMode='cover'
-            />
+      <View style = {styles.listItemContainer}>
+      <View style= {styles.iconContainer}>
+       <Image source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}} style={styles.initStyle} resizeMode='contain' />
+      </View>
+      <View style = {styles.callerDetailsContainer}>
+       <View style={styles.callerDetailsContainerWrap}>
+        <View style={styles.nameContainer}>
+          <Text>{item.post_content}</Text>
+          <View style={styles.dateContainer}>
+            {/* <Icon name={person.missed ? "call-missed" : "call-received"} size={15} color={person.missed ? "#ed788b" : "#075e54"} /> */}
+            <Text style={{ fontWeight:'400', color:'#666', fontSize:12 }}>DATE</Text>
           </View>
-          <View style={styles.contentCard}>
-              <Text style={styles.titleCard}>{item.post_content}</Text>
-              <View style={styles.bottomCard}>
-                <Text style={styles.bottomCardTeam}>{item.user_id} - </Text>
-                <Text style={styles.bottomCardText}>Posted at {Moment(item.user_id).format('d MMMM')}</Text>
-              </View>
-          </View>
-        </View>
-      </TouchableOpacity>
+         </View>
+       <View style={styles.callIconContainer}>
+        {/* <Icon name="phone" color='#075e54' size={23} style={{ padding:5 }} /> */}
+       </View>
+      </View>
+     </View>
+    </View>
+      // <TouchableOpacity
+      //   onPress={()=> this.props.navigation.navigate('Article',{
+      //     ...item
+      //   })}
+      //   key={i}
+      // >
+      //   <View style={styles.cardContainer}>
+      //     <View>
+      //       <Image
+      //         style={{height:150,justifyContent:'space-around'}}
+      //         //source={{uri:`${item.image}`}}
+      //         source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
+      //         resizeMode='cover'
+      //       />
+      //     </View>
+      //     <View style={styles.contentCard}>
+      //         <Text style={styles.titleCard}>{item.post_content}</Text>
+      //         <View style={styles.bottomCard}>
+      //           <Text style={styles.bottomCardTeam}>{item.user_id} - </Text>
+      //           <Text style={styles.bottomCardText}>Posted at {Moment(item.user_id).format('d MMMM')}</Text>
+      //         </View>
+      //     </View>
+      //   </View>
+      // </TouchableOpacity>
     ))
   : null
 )
@@ -104,6 +122,52 @@ const styles = StyleSheet.create({
     fontFamily:'Roboto-Light',
     color:'#828282',
     fontSize:12
+  },
+  logoText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+    alignItems: "flex-start",
+    marginLeft: 10
+  },
+  listItemContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10
+  },
+  iconContainer: {
+    flex: 1,
+    alignItems: "flex-start"
+  },
+  callerDetailsContainer: {
+    flex: 4,
+    justifyContent: "center",
+    borderBottomColor: "rgba(92,94,94,0.5)",
+    borderBottomWidth: 0.25
+  },
+  callerDetailsContainerWrap: {
+    flex: 1,
+    alignItems: "center",
+    flexDirection: "row"
+  },
+  nameContainer: {
+    alignItems: "flex-start",
+    flex: 1
+  },
+  dateContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+  callIconContainer: {
+    flex: 1,
+    alignItems: "flex-end"
+  },
+  initStyle: {
+    borderRadius: 30,
+    width: 60,
+    height: 60
   }
 });
 
