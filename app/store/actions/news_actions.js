@@ -45,7 +45,6 @@ export function getNews(){
         url: `${FIREBASEDB}/news.json`
     }).then( response => {
         const articles = [];
-        
 
         for(let key in response.data){
             articles.push({

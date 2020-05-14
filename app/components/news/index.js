@@ -51,7 +51,7 @@ class NewsComponent extends Component {
 
 
 
-  render() {
+render() {
   
     return (
       <ScrollView style={{backgroundColor:'#F0F0F0'}}>
