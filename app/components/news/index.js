@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {
-  StyleSheet, 
+  StyleSheet,
+  RefreshControl,
   View,
   Text,
   ScrollView,
@@ -8,6 +9,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 
+//import Constants from 'expo-constants';
 import { connect } from 'react-redux';
 import { getUpdates } from '../../store/actions/updates_actions';
 import Moment from 'moment';
@@ -15,13 +17,26 @@ import map from 'lodash/map';
 import {IMAGEURL} from '../../utils/misc';
 
 class NewsComponent extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      refreshing: false,
+    };
+  }
+
   componentDidMount(){
     this.props.dispatch(getUpdates());
   }
 
-  
-renderUpdates = (updates) => (
+  _onRefresh() {
+    this.setState({refreshing: true});
+    this.props.dispatch(getUpdates()).then(() => {
+      this.setState({refreshing: false});
+    });
+  }
 
+renderUpdates = (updates) => (
   
   updates.news ? 
     updates.news.map((item,i)=>(
@@ -61,9 +76,17 @@ renderUpdates = (updates) => (
 )
 
 render() {
- 
+  
+
+
   return (
-    <ScrollView style={{backgroundColor:'#F0F0F0'}}>
+    <ScrollView style={{backgroundColor:'#F0F0F0'}} 
+    refreshControl={
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this._onRefresh.bind(this)}
+      />
+    }>
         { this.renderUpdates(this.props.Updates)}
     </ScrollView>
   );
