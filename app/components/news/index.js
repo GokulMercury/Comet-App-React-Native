@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {
-  StyleSheet, 
+  StyleSheet,
+  RefreshControl,
   View,
   Text,
   ScrollView,
@@ -8,59 +9,89 @@ import {
   TouchableOpacity
 } from 'react-native';
 
+//import Constants from 'expo-constants';
 import { connect } from 'react-redux';
-import { getNews } from '../../store/actions/news_actions';
+import { getUpdates } from '../../store/actions/updates_actions';
 import Moment from 'moment';
+import map from 'lodash/map';
+import {IMAGEURL} from '../../utils/misc';
 
 class NewsComponent extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      refreshing: false,
+    };
+  }
+
   componentDidMount(){
-    this.props.dispatch(getNews());
+    this.props.dispatch(getUpdates());
   }
 
-  renderArticle = (news) => (
-    news.articles ? 
-      news.articles.map((item,i)=>(
-        <TouchableOpacity
-          onPress={()=> this.props.navigation.navigate('Article',{
-            ...item
-          })}
-          key={i}
-        >
-          <View style={styles.cardContainer}>
-            <View>
-              <Image
-                style={{height:150,justifyContent:'space-around'}}
-                //source={{uri:`${item.image}`}}
-                source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
-                resizeMode='cover'
-              />
-            </View>
-            <View style={styles.contentCard}>
-                <Text style={styles.titleCard}>{item.title}</Text>
-                <View style={styles.bottomCard}>
-                  <Text style={styles.bottomCardTeam}>{item.team} - </Text>
-                  <Text style={styles.bottomCardText}>Posted at {Moment(item.date).format('d MMMM')}</Text>
-                </View>
-            </View>
-          </View>
-        </TouchableOpacity>
-      ))
-    :null
-  )
+  _onRefresh() {
+    this.setState({refreshing: true});
+    this.props.dispatch(getUpdates()).then(() => {
+      this.setState({refreshing: false});
+    });
+  }
 
-
-
-  render() {
+renderUpdates = (updates) => (
   
-    return (
-      <ScrollView style={{backgroundColor:'#F0F0F0'}}>
-          { this.renderArticle(this.props.News)}
-      </ScrollView>
-    );
-  }
-}
+  updates.news ? 
+    updates.news.map((item,i)=>(
+     
+      <TouchableOpacity
+        onPress={()=> this.props.navigation.navigate('Article',{
+          ...item
+        })}
+        key={i}
+      >
+        <View style={styles.cardContainer}>
+          <View>
+          {item.post_attachment_obj_id ? <Image
+              style={{height:150,justifyContent:'space-around'}}
+              source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
+              //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
+              resizeMode='cover'
+            /> : null}
+            
+          </View>
+          <View style={styles.contentCard}>
+              <Text style={styles.titleCard}>{item.post_content}</Text>
+              <View style={styles.bottomCard}>
+              <Image 
+                  style={{width: 60, height: 60, borderRadius: 60/ 2}} 
+                  source={{uri:IMAGEURL+`${item.image}`}}
+                />
+                <Text style={styles.bottomCardTeam}>{item.name} - </Text>
+                <Text style={styles.bottomCardTeam}>{item.party_name} - </Text>
+                <Text style={styles.bottomCardText}>Posted at {Moment(item.post_date_time).format('d MMMM')}</Text>
+              </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+    ))
+  : null
+)
 
+render() {
+  
+
+
+  return (
+    <ScrollView style={{backgroundColor:'#F0F0F0'}} 
+    refreshControl={
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this._onRefresh.bind(this)}
+      />
+    }>
+        { this.renderUpdates(this.props.Updates)}
+    </ScrollView>
+  );
+}
+}
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor:'#fff',
@@ -104,7 +135,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state){
   console.log(state)
   return {
-    News:state.News
+    Updates:state.Updates
   }
 }
 
