@@ -5,9 +5,7 @@ export const APIKEY ='AIzaSyCH2ZiBuIiXNwIOH0-r6aCNFgM0zBYb6yQ';
 export const SIGNUP ='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCH2ZiBuIiXNwIOH0-r6aCNFgM0zBYb6yQ';
 export const SIGNIN = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCH2ZiBuIiXNwIOH0-r6aCNFgM0zBYb6yQ';
 export const REFRESH = 'https://securetoken.googleapis.com/v1/token?key=AIzaSyCH2ZiBuIiXNwIOH0-r6aCNFgM0zBYb6yQ';
-export const GETUSERFEEDJSON ='http://dev.cometbroadcast.com/appuser/user_home_feed';
-export const IMAGEURL ='https://www.cometbroadcast.com/data/image?id=';
-export const GETCHANNELSJSON ='http://dev.cometbroadcast.com/appuser/search_parties';
+export const JSONURL ='http://dev.cometbroadcast.com';
 
 export const getTokens = (cb) => {
 
