@@ -1,150 +1,321 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
-  View,StyleSheet, ScrollView, ActivityIndicator
-} from 'react-native';
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
+  Text,
+  TextInput
+} from 'react-native'
+import firebase from 'react-native-firebase'
 
-import AuthLogo from '../auth/authLogo';
-import AuthForm from '../auth/authForm';
+class AuthComponent extends Component {
+  state = {
+    phone: '',
+    confirmResult: null,
+    verificationCode: '',
+    userId: ''
+  }
+  validatePhoneNumber = () => {
+    var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/
+    return regexp.test(this.state.phone)
+  }
 
-import {connect} from 'react-redux';
-import {autoSignIn} from '../../store/actions/user_actions';
-import {bindActionCreators} from 'redux';
+  handleSendCode = () => {
+    // Request to send OTP
+    if (this.validatePhoneNumber()) {
+      firebase
+        .auth()
+        .signInWithPhoneNumber(this.state.phone)
+        .then(confirmResult => {
+          this.setState({ confirmResult })
+        })
+        .catch(error => {
+          alert(error.message)
 
-import { getTokens, setTokens } from '../../utils/misc';
-
-class AuthComponent extends Component{
-  
-state = {
-  loading:true
-}
-
-componentDidMount(){
-  getTokens((value)=>{
-    if(value[0][1]===null){
-      console.log("NO TOKENS");
-      this.setState({loading:false})
-    } else{
-      this.props.autoSignIn(value[1][1]).then(()=>{
-        if(!this.props.User.auth.token){
-          this.setState({loading:false})
-        }else{
-          setTokens(this.props.User.auth,()=>{
-            this.goNext();
-          })
-        }
-      })
+          console.log(error)
+        })
+    } else {
+      alert('Invalid Phone Number')
     }
-  })
-}
+  }
 
-goNext = () => {
-  this.props.navigation.navigate('App')
-}
+  changePhoneNumber = () => {
+    this.setState({ confirmResult: null, verificationCode: '' })
+  }
 
+  handleVerifyCode = () => {
+    // Request for OTP verification
+    const { confirmResult, verificationCode } = this.state
+    if (verificationCode.length == 6) {
+      confirmResult
+        .confirm(verificationCode)
+        .then(user => {
+          this.setState({ userId: user.uid })
+          alert(`Verified! ${user.uid}`)
+        })
+        .catch(error => {
+          alert(error.message)
+          console.log(error)
+        })
+    } else {
+      alert('Please enter a 6 digit OTP code.')
+    }
+  }
 
-render() {
-  if(this.state.loading){
-    return(
-    <View style={styles.loading}>
-      <ActivityIndicator/>
-    </View>
+  renderConfirmationCodeView = () => {
+    return (
+      <View style={styles.verificationView}>
+        <TextInput
+          style={styles.textInput}
+          placeholder='Verification code'
+          placeholderTextColor='#eee'
+          value={this.state.verificationCode}
+          keyboardType='numeric'
+          onChangeText={verificationCode => {
+            this.setState({ verificationCode })
+          }}
+          maxLength={6}
+        />
+        <TouchableOpacity
+          style={[styles.themeButton, { marginTop: 20 }]}
+          onPress={this.handleVerifyCode}>
+          <Text style={styles.themeButtonTitle}>Verify Code</Text>
+        </TouchableOpacity>
+      </View>
     )
   }
-  else{
-    
+
+  render() {
     return (
-      
-      <ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'}>
-      <View >
-        <AuthLogo/>
-        <AuthForm
-        goNext={this.goNext}/>
-        
-      </View>
-    </ScrollView>
-      );
+      <SafeAreaView style={[styles.container, { backgroundColor: '#333' }]}>
+        <View style={styles.page}>
+          <TextInput
+            style={styles.textInput}
+            placeholder='Phone Number with country code'
+            placeholderTextColor='#eee'
+            keyboardType='phone-pad'
+            value={this.state.phone}
+            onChangeText={phone => {
+              this.setState({ phone })
+            }}
+            maxLength={15}
+            editable={this.state.confirmResult ? false : true}
+          />
+
+          <TouchableOpacity
+            style={[styles.themeButton, { marginTop: 20 }]}
+            onPress={
+              this.state.confirmResult
+                ? this.changePhoneNumber
+                : this.handleSendCode
+            }>
+            <Text style={styles.themeButtonTitle}>
+              {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
+            </Text>
+          </TouchableOpacity>
+
+          {this.state.confirmResult ? this.renderConfirmationCodeView() : null}
+        </View>
+      </SafeAreaView>
+    )
   }
-  // return (
-      // <KeyboardAvoidingView style={{flexGrow: 1}} behavior="padding" enabled>
-      //     <View style={style.container}>
-      //       <CometLogo/>
-      //         <TextInput 
-      //             keyboardType="email-address"
-      //             onChangeText={email => this.setState({email})}
-      //             style={style.input}
-      //             placeholder="Email Address"
-      //             value={this.state.email}
-      //         />
-      //         <TextInput 
-      //             secureTextEntry={true}
-      //             onChangeText={password => this.setState({password})}
-      //             style={style.input}
-      //             placeholder="Password"
-      //             value={this.state.password}
-      //         />
-      //         {this.state.spinner &&
-      //             <Text style={style.spinnerTextStyle}>Processing ...</Text>
-      //         }
-      //         {!this.state.spinner &&
-      //             <Button
-      //                 title="Sign in!"
-      //                 onPress={this._signInHandler}
-      //             />
-      //         }
-      //     </View>
-      // </KeyboardAvoidingView>
-  // );
-}
 }
 
 const styles = StyleSheet.create({
-  container:{
-      flex:1,
-      backgroundColor:'#1d428a',
-      padding:50
+  container: {
+    flex: 1,
+    backgroundColor: '#aaa'
   },
-  loading:{
-      flex:1,
-      backgroundColor:'#fff',
-      alignItems:'center',
-      justifyContent:'center'
+  page: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  textInput: {
+    marginTop: 20,
+    width: '90%',
+    height: 40,
+    borderColor: '#555',
+    borderWidth: 2,
+    borderRadius: 5,
+    paddingLeft: 10,
+    color: '#fff',
+    fontSize: 16
+  },
+  themeButton: {
+    width: '90%',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#888',
+    borderColor: '#555',
+    borderWidth: 2,
+    borderRadius: 5
+  },
+  themeButtonTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff'
+  },
+  verificationView: {
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 50
   }
 })
 
-function mapStateToProps(state){
+export default AuthComponent
+
+
+
+// import React, { Component } from 'react';
+// import {
+//   View,StyleSheet, ScrollView, ActivityIndicator
+// } from 'react-native';
+
+// import AuthLogo from '../auth/authLogo';
+// import AuthForm from '../auth/authForm';
+
+// import {connect} from 'react-redux';
+// import {autoSignIn} from '../../store/actions/user_actions';
+// import {bindActionCreators} from 'redux';
+
+// import { getTokens, setTokens } from '../../utils/misc';
+
+// class AuthComponent extends Component{
   
-  return {
-      User: state.User
-  }
-}
+// state = {
+//   loading:true
+// }
 
-function mapDispatchToProps(dispatch){
-  return bindActionCreators({autoSignIn},dispatch);
-}
+// componentDidMount(){
+//   getTokens((value)=>{
+//     if(value[0][1]===null){
+//       console.log("NO TOKENS");
+//       this.setState({loading:false})
+//     } else{
+//       this.props.autoSignIn(value[1][1]).then(()=>{
+//         if(!this.props.User.auth.token){
+//           this.setState({loading:false})
+//         }else{
+//           setTokens(this.props.User.auth,()=>{
+//             this.goNext();
+//           })
+//         }
+//       })
+//     }
+//   })
+// }
 
-export default connect(mapStateToProps,mapDispatchToProps)(AuthComponent)
-//const DEVICE_WIDTH = Dimensions.get('window').width;
+// goNext = () => {
+//   this.props.navigation.navigate('App')
+// }
 
-// const style = StyleSheet.create({
-// container: {
-//   flex: 1, 
-//   justifyContent: 'center', 
-//   alignItems: 'center'
-// }, 
-// input: {
-//   backgroundColor: '#DAE1F1',
+
+// render() {
+//   if(this.state.loading){
+//     return(
+//     <View style={styles.loading}>
+//       <ActivityIndicator/>
+//     </View>
+//     )
+//   }
+//   else{
+    
+//     return (
+      
+//       <ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'}>
+//       <View >
+//         <AuthLogo/>
+//         <AuthForm
+//         goNext={this.goNext}/>
+        
+//       </View>
+//     </ScrollView>
+//       );
+//   }
+//   // return (
+//       // <KeyboardAvoidingView style={{flexGrow: 1}} behavior="padding" enabled>
+//       //     <View style={style.container}>
+//       //       <CometLogo/>
+//       //         <TextInput 
+//       //             keyboardType="email-address"
+//       //             onChangeText={email => this.setState({email})}
+//       //             style={style.input}
+//       //             placeholder="Email Address"
+//       //             value={this.state.email}
+//       //         />
+//       //         <TextInput 
+//       //             secureTextEntry={true}
+//       //             onChangeText={password => this.setState({password})}
+//       //             style={style.input}
+//       //             placeholder="Password"
+//       //             value={this.state.password}
+//       //         />
+//       //         {this.state.spinner &&
+//       //             <Text style={style.spinnerTextStyle}>Processing ...</Text>
+//       //         }
+//       //         {!this.state.spinner &&
+//       //             <Button
+//       //                 title="Sign in!"
+//       //                 onPress={this._signInHandler}
+//       //             />
+//       //         }
+//       //     </View>
+//       // </KeyboardAvoidingView>
+//   // );
+// }
+// }
+
+// const styles = StyleSheet.create({
+//   container:{
+//       flex:1,
+//       backgroundColor:'#1d428a',
+//       padding:50
+//   },
+//   loading:{
+//       flex:1,
+//       backgroundColor:'#fff',
+//       alignItems:'center',
+//       justifyContent:'center'
+//   }
+// })
+
+// function mapStateToProps(state){
+  
+//   return {
+//       User: state.User
+//   }
+// }
+
+// function mapDispatchToProps(dispatch){
+//   return bindActionCreators({autoSignIn},dispatch);
+// }
+
+// export default connect(mapStateToProps,mapDispatchToProps)(AuthComponent)
+// //const DEVICE_WIDTH = Dimensions.get('window').width;
+
+// // const style = StyleSheet.create({
+// // container: {
+// //   flex: 1, 
+// //   justifyContent: 'center', 
+// //   alignItems: 'center'
+// // }, 
+// // input: {
+// //   backgroundColor: '#DAE1F1',
  
-//   height: 40,
-//   marginHorizontal: 20,
-//   borderRadius: 20,
-//   color: '#333333',
-//   marginBottom: 30,
-//   paddingLeft: 15
-// },
-// spinnerTextStyle: {
-//   textAlign: 'center'
-// },
-// });
+// //   height: 40,
+// //   marginHorizontal: 20,
+// //   borderRadius: 20,
+// //   color: '#333333',
+// //   marginBottom: 30,
+// //   paddingLeft: 15
+// // },
+// // spinnerTextStyle: {
+// //   textAlign: 'center'
+// // },
+// // });
       
      
 

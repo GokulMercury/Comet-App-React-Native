@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+//apply plugin: "com.google.gms.google-services"
 
 import com.android.build.OutputFile
 
@@ -191,7 +192,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
-
+    implementation "com.google.firebase:firebase-auth:19.3.1"
+    implementation "com.firebaseui:firebase-ui-database:6.0.2"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
@@ -228,3 +230,4 @@ project.ext.vectoricons = [
 ]
 
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+apply plugin: 'com.google.gms.google-services'
