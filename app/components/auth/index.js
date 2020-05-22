@@ -8,14 +8,40 @@ import {
   TextInput
 } from 'react-native'
 import firebase from 'react-native-firebase'
+import AuthLogo from '../auth/authLogo';
+//import AuthForm from '../auth/authForm';
 
+import {connect} from 'react-redux';
+import {signIn} from '../../store/actions/user_actions'
+import {autoSignIn} from '../../store/actions/user_actions';
+import {bindActionCreators} from 'redux';
+import AsyncStorage from '@react-native-community/async-storage';
+import { getTokens, setTokens } from '../../utils/misc';
 class AuthComponent extends Component {
-  state = {
+
+  constructor() {
+    super();
+    this.state = { 
     phone: '',
     confirmResult: null,
     verificationCode: '',
-    userId: ''
+    userId: '',
+    loading:true};
   }
+ 
+  componentDidMount(){
+      getTokens((value)=>{
+        if(value===null){
+          console.log("NO TOKENS");
+          //this.setState({loading:false})
+        } else{
+          console.log(value[2][2]);
+          this.props.navigation.navigate('App');
+        }
+      })
+    }
+
+
   validatePhoneNumber = () => {
     var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/
     return regexp.test(this.state.phone)
@@ -51,8 +77,12 @@ class AuthComponent extends Component {
       confirmResult
         .confirm(verificationCode)
         .then(user => {
-          this.setState({ userId: user.uid })
-          alert(`Verified! ${user.uid}`)
+          this.setState({ userId: user.uid }),
+          
+
+          //this.saveLoginData();
+         
+          this.goNext()
         })
         .catch(error => {
           alert(error.message)
@@ -62,6 +92,14 @@ class AuthComponent extends Component {
       alert('Please enter a 6 digit OTP code.')
     }
   }
+
+  
+async goNext (){
+  await this.props.signIn({phone : this.state.phone})
+  setTokens(this.props.User.auth)
+  this.props.navigation.navigate('App')
+  
+}
 
   renderConfirmationCodeView = () => {
     return (
@@ -90,6 +128,7 @@ class AuthComponent extends Component {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: '#333' }]}>
         <View style={styles.page}>
+          <AuthLogo/>
           <TextInput
             style={styles.textInput}
             placeholder='Phone Number with country code'
@@ -165,7 +204,19 @@ const styles = StyleSheet.create({
   }
 })
 
-export default AuthComponent
+function mapStateToProps(state){
+  console.log("In Map State Login")
+  console.log(state)
+  return {
+      User: state.User
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({autoSignIn,signIn},dispatch);
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(AuthComponent)
 
 
 

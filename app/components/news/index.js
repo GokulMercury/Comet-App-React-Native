@@ -26,6 +26,7 @@ class NewsComponent extends Component {
   }
 
   componentDidMount(){
+    console.log(this.props.User)
     this.props.dispatch(getUpdates());
   }
 
@@ -135,6 +136,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state){
   console.log(state)
   return {
+    User: state.User,
     Updates:state.Updates
   }
 }
