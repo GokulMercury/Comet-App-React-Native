@@ -32,7 +32,7 @@ export function signUp(data){
 }
 
 
-export function signIn(data,goNext){
+export function signIn(data){
     const params = {
         phone: data.phone
     };

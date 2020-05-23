@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   View,
   Text,
-  TextInput
+  TextInput,
+  ActivityIndicator
 } from 'react-native'
 import firebase from 'react-native-firebase'
 import AuthLogo from '../auth/authLogo';
@@ -22,25 +23,24 @@ class AuthComponent extends Component {
   constructor() {
     super();
     this.state = { 
-    phone: '',
-    confirmResult: null,
-    verificationCode: '',
-    userId: '',
-    loading:true};
+      phone: '',
+      confirmResult: null,
+      verificationCode: '',
+      userId: '',
+      loading:true
+    };
   }
  
   componentDidMount(){
-      getTokens((value)=>{
-        if(value===null){
-          console.log("NO TOKENS");
-          //this.setState({loading:false})
-        } else{
-          console.log(value[2][2]);
-          this.props.navigation.navigate('App');
-        }
-      })
+  getTokens((value)=>{
+    if(value[0][1]===null){
+      console.log("NO TOKENS");
+      this.setState({loading:false})
+    } else{
+      this.props.navigation.navigate('App');
     }
-
+  })
+}
 
   validatePhoneNumber = () => {
     var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/
@@ -94,7 +94,7 @@ class AuthComponent extends Component {
   }
 
   
-async goNext (){
+  async goNext (){
   await this.props.signIn({phone : this.state.phone})
   setTokens(this.props.User.auth)
   this.props.navigation.navigate('App')
@@ -125,39 +125,48 @@ async goNext (){
   }
 
   render() {
-    return (
-      <SafeAreaView style={[styles.container, { backgroundColor: '#333' }]}>
-        <View style={styles.page}>
-          <AuthLogo/>
-          <TextInput
-            style={styles.textInput}
-            placeholder='Phone Number with country code'
-            placeholderTextColor='#eee'
-            keyboardType='phone-pad'
-            value={this.state.phone}
-            onChangeText={phone => {
-              this.setState({ phone })
-            }}
-            maxLength={15}
-            editable={this.state.confirmResult ? false : true}
-          />
-
-          <TouchableOpacity
-            style={[styles.themeButton, { marginTop: 20 }]}
-            onPress={
-              this.state.confirmResult
-                ? this.changePhoneNumber
-                : this.handleSendCode
-            }>
-            <Text style={styles.themeButtonTitle}>
-              {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
-            </Text>
-          </TouchableOpacity>
-
-          {this.state.confirmResult ? this.renderConfirmationCodeView() : null}
-        </View>
-      </SafeAreaView>
-    )
+    if(this.state.loading){
+      return(
+            <View style={styles.loading}>
+              <ActivityIndicator/>
+            </View>
+            )
+    } else {
+      return (
+        <SafeAreaView style={[styles.container, { backgroundColor: '#333' }]}>
+          <View style={styles.page}>
+            <AuthLogo/>
+            <TextInput
+              style={styles.textInput}
+              placeholder='Phone Number with country code'
+              placeholderTextColor='#eee'
+              keyboardType='phone-pad'
+              value={this.state.phone}
+              onChangeText={phone => {
+                this.setState({ phone })
+              }}
+              maxLength={15}
+              editable={this.state.confirmResult ? false : true}
+            />
+  
+            <TouchableOpacity
+              style={[styles.themeButton, { marginTop: 20 }]}
+              onPress={
+                this.state.confirmResult
+                  ? this.changePhoneNumber
+                  : this.handleSendCode
+              }>
+              <Text style={styles.themeButtonTitle}>
+                {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
+              </Text>
+            </TouchableOpacity>
+  
+            {this.state.confirmResult ? this.renderConfirmationCodeView() : null}
+          </View>
+        </SafeAreaView>
+      )
+    }
+   
   }
 }
 
@@ -201,6 +210,12 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     marginTop: 50
+  },
+  loading:{
+    flex:1,
+    backgroundColor:'#fff',
+    alignItems:'center',
+    justifyContent:'center'
   }
 })
 

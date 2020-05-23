@@ -8,6 +8,7 @@ import {GETUSERFEEDJSON} from '../../utils/misc';
 // import _ from 'lodash';
 import map from 'lodash/map';
 import merge from 'lodash/merge';
+
 export function getUpdates(){
         const params = {
           user_id: "429",
