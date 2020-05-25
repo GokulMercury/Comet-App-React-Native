@@ -46,12 +46,28 @@ class NewsComponent extends Component {
   }
 
   _onRefresh() {
-    this.setState({refreshing: true});
-    this.props.dispatch(getUpdates()).then(() => {
-      this.setState({refreshing: false});
-    });
+    const params = {
+      user_id: "",
+      start:"0",
+      limit:"25",
+      explore:"10"
+  };
+    getTokens((value)=>{
+      if(value[0][1]===null){
+        console.log("NO TOKENS");
+      } else{
+        
+        params.user_id = value[2][1];
+        console.log(params)
+        this.props.dispatch(getUpdates(params));
+      }
+    })
+    // this.setState({refreshing: true});
+    // this.props.dispatch(getUpdates()).then(() => {
+    //   this.setState({refreshing: false});
+    
   }
-
+  
 renderUpdates = (updates) => (
   
   updates.news ? 

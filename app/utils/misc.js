@@ -10,6 +10,8 @@ export const GETUSERFEEDJSON ='http://dev.cometbroadcast.com/appuser/user_home_f
 export const IMAGEURL ='https://www.cometbroadcast.com/data/image?id=';
 export const GETCHANNELSJSON ='http://dev.cometbroadcast.com/appuser/search_parties';
 export const SIGNIN = 'http://dev.cometbroadcast.com/appuser/new_user';
+export const SUBSCRIBE = 'http://dev.cometbroadcast.com/appuser/user_add_peep';
+
 export const getTokens = (cb) => {
 
     AsyncStorage.multiGet([

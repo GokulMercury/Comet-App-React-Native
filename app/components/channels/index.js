@@ -11,24 +11,44 @@ import {
 import { connect } from 'react-redux';
 import { getChannels } from '../../store/actions/channels_actions';
 import Moment from 'moment';
-import map from 'lodash/map';
 import {IMAGEURL} from '../../utils/misc';
+import { getTokens } from '../../utils/misc';
+import { subscribeChannels } from '../../store/actions/channels_actions';
 
 class ChannelsComponent extends Component {
+  constructor() {
+    super();
+    this.state = { 
+      userId :"",
+      peeped : false
+    };
+  }
   componentDidMount(){
-    this.props.dispatch(getChannels());
+    const params = {
+      search_keyword: "",
+      user_id:this.state.userId,
+      start:"0",
+      limit:"25"
+  }
+    getTokens((value)=>{
+      if(value[0][1]===null){
+        console.log("NO TOKENS");
+      } else{ 
+        this.state.userId = value[2][1];
+        console.log(params)
+        this.props.dispatch(getChannels(params));
+      }
+    })
   }
 
-  
+
 renderUpdates = (channellist) => (
 
   channellist.channels ? 
     channellist.channels.map((item,i)=>(
      
       <TouchableOpacity
-        onPress={()=> this.props.navigation.navigate('Article',{
-          ...item
-        })}
+        onPress={()=>subscribeChannels(this.state.userId,item.party_id)}
         key={i}
       >
         <View style={styles.cardContainer}>
