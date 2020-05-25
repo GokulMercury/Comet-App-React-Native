@@ -33,7 +33,7 @@ class AuthComponent extends Component {
  
   componentDidMount(){
   getTokens((value)=>{
-    if(value[0][1]===null){
+    if(value[2][1]===null){
       console.log("NO TOKENS");
       this.setState({loading:false})
     } else{

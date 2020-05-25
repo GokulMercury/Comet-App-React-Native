@@ -15,6 +15,7 @@ import { getUpdates } from '../../store/actions/updates_actions';
 import Moment from 'moment';
 import map from 'lodash/map';
 import {IMAGEURL} from '../../utils/misc';
+import { getTokens } from '../../utils/misc';
 
 class NewsComponent extends Component {
 
@@ -26,8 +27,22 @@ class NewsComponent extends Component {
   }
 
   componentDidMount(){
-    console.log(this.props.User)
-    this.props.dispatch(getUpdates());
+    const params = {
+      user_id: "",
+      start:"0",
+      limit:"25",
+      explore:"10"
+  };
+    getTokens((value)=>{
+      if(value[0][1]===null){
+        console.log("NO TOKENS");
+      } else{
+        
+        params.user_id = value[2][1];
+        console.log(params)
+        this.props.dispatch(getUpdates(params));
+      }
+    })
   }
 
   _onRefresh() {

@@ -9,19 +9,17 @@ import {GETUSERFEEDJSON} from '../../utils/misc';
 import map from 'lodash/map';
 import merge from 'lodash/merge';
 
-export function getUpdates(){
-        const params = {
-          user_id: "429",
-          start:"0",
-          limit:"25",
-          explore:"10"
-      };
+export function getUpdates(params){
+      //   const params = {
+      //     user_id: "429",
+      //     start:"0",
+      //     limit:"25",
+      //     explore:"10"
+      // };
 
    const request = axios.post(GETUSERFEEDJSON, qs.stringify(params))
                   .then((response) => {
                     const news = [];
-                    const details = [];
-                    const uservalue = [];
 
                     console.log (response.data);
                     
