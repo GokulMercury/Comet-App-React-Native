@@ -10,19 +10,21 @@ import map from 'lodash/map';
 import merge from 'lodash/merge';
 import messaging from '@react-native-firebase/messaging';
 
-export function subscribeChannels(user,channel,channelName){
+export function subscribeChannels(user,channel,cName){
   const params = {
           user_id:user,
           party_id:channel
   };
-  
+        let channelName = cName.replace(/ /g, "_");
+        messaging()
+        .subscribeToTopic(channelName)
+        .then(() => console.log('Subscribed to topic!', channelName));
+
   const request = axios.post(SUBSCRIBE, qs.stringify(params))
       .then((response) => {
         console.log ('PARAMS', params);
         console.log ('SUBSCRIBE RESPONSE', response.data);
-        // messaging()
-        // .subscribeToTopic(qs.stringify('channelName'))
-        // .then(() => console.log('Subscribed to topic!',qs.stringify(channelName)));
+       
       })
       return request;
 }
