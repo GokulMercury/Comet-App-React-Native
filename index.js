@@ -10,6 +10,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import promiseMiddleware from 'redux-promise';
 import reducers from './app/store/reducers';
+import messaging from '@react-native-firebase/messaging';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -22,6 +23,19 @@ const appRedux = () => (
         <App/>
     </Provider>
 )
+// Register background handler
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+    console.log('Message handled in the background!', remoteMessage);
+  });
 
-AppRegistry.registerComponent(appName, () => appRedux);
+  function HeadlessCheck({ isHeadless }) {
+    if (isHeadless) {
+      // App has been launched in the background by iOS, ignore
+      return null;
+    }
+  
+    return <App />;
+  }
+
+AppRegistry.registerComponent(appName, () => appRedux, () => HeadlessCheck);
 

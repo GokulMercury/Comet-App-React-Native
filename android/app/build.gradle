@@ -135,6 +135,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -192,11 +193,12 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    implementation "com.google.firebase:firebase-auth:19.3.1"
-    implementation "com.google.firebase:firebase-messaging:20.2.0"
-    implementation "com.firebaseui:firebase-ui-database:6.0.2"
+    // implementation "com.google.firebase:firebase-auth:19.3.1"
+    // implementation "com.google.firebase:firebase-messaging:20.2.0"
+    // implementation "com.firebaseui:firebase-ui-database:6.0.2"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
-
+    compile 'com.android.support:multidex:1.0.3'
+    
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }

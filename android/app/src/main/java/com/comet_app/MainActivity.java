@@ -1,8 +1,8 @@
 package com.comet_app;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactActivity;
-import io.invertase.firebase.RNFirebasePackage;
-import io.invertase.firebase.auth.RNFirebaseAuthPackage;
+// import io.invertase.firebase.RNFirebasePackage;
+// import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 
 public class MainActivity extends ReactActivity {
 

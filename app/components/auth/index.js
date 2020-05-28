@@ -8,7 +8,8 @@ import {
   TextInput,
   ActivityIndicator
 } from 'react-native'
-import firebase from 'react-native-firebase'
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
 import AuthLogo from '../auth/authLogo';
 //import AuthForm from '../auth/authForm';
 

@@ -48,7 +48,7 @@ renderUpdates = (channellist) => (
     channellist.channels.map((item,i)=>(
      
       <TouchableOpacity
-        onPress={()=>subscribeChannels(this.state.userId,item.party_id)}
+        onPress={()=>subscribeChannels(this.state.userId,item.party_id,item.party_name)}
         key={i}
       >
         <View style={styles.cardContainer}>

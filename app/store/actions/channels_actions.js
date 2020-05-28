@@ -8,9 +8,9 @@ import {GETCHANNELSJSON, SUBSCRIBE} from '../../utils/misc';
 // import _ from 'lodash';
 import map from 'lodash/map';
 import merge from 'lodash/merge';
+import messaging from '@react-native-firebase/messaging';
 
-
-export function subscribeChannels(user,channel){
+export function subscribeChannels(user,channel,channelName){
   const params = {
           user_id:user,
           party_id:channel
@@ -20,9 +20,14 @@ export function subscribeChannels(user,channel){
       .then((response) => {
         console.log ('PARAMS', params);
         console.log ('SUBSCRIBE RESPONSE', response.data);
+        // messaging()
+        // .subscribeToTopic(qs.stringify('channelName'))
+        // .then(() => console.log('Subscribed to topic!',qs.stringify(channelName)));
       })
       return request;
 }
+
+
 export function getChannels(params){
       //   const params = {
       //     search_keyword: "",
