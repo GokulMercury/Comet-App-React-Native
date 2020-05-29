@@ -2,6 +2,7 @@ import React, {Component, useEffect} from 'react';
 import {
   StyleSheet,
   RefreshControl,
+  FlatList,
   View,
   Text,
   ScrollView,
@@ -140,7 +141,7 @@ displayNotification(title, body) {
 }
   
 
-  _onRefresh() {
+  onRefresh() {
     const params = {
       user_id: "",
       start:"0",
@@ -164,16 +165,63 @@ displayNotification(title, body) {
     
   }
   
-renderUpdates = (updates) => (
+// renderUpdates = (updates) => (
   
-  updates.news ? 
-    updates.news.map((item,i)=>(
+//   updates.news ? 
+//     updates.news.map((item,i)=>(
      
+//       <TouchableOpacity
+//         onPress={()=> this.props.navigation.navigate('Article',{
+//           ...item
+//         })}
+//         key={i}
+//       >
+//         <View style={styles.cardContainer}>
+//           <View>
+//           {item.post_attachment_obj_id ? <Image
+//               style={{height:150,justifyContent:'space-around'}}
+//               source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
+//               //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
+//               resizeMode='cover'
+//             /> : null}
+            
+//           </View>
+//           <View style={styles.contentCard}>
+//               <Text style={styles.titleCard}>{item.post_content}</Text>
+//               <View style={styles.bottomCard}>
+//               <Image 
+//                   style={{width: 60, height: 60, borderRadius: 60/ 2}} 
+//                   source={{uri:IMAGEURL+`${item.image}`}}
+//                 />
+//                 <Text style={styles.bottomCardTeam}>{item.name} - </Text>
+//                 <Text style={styles.bottomCardTeam}>{item.party_name} - </Text>
+//                 <Text style={styles.bottomCardText}>Posted at {Moment(item.post_date_time).format('d MMMM')}</Text>
+//               </View>
+//           </View>
+//         </View>
+//       </TouchableOpacity>
+//     ))
+//   : null
+// )
+
+render() {
+  
+
+
+  return (
+
+    <View style={styles.container}>
+    <FlatList
+      data={this.props.Updates.news}
+      refreshing={this.state.refreshing}
+      onRefresh={this.onRefresh.bind(this)}
+      renderItem={({item,index}) => 
+        
       <TouchableOpacity
         onPress={()=> this.props.navigation.navigate('Article',{
           ...item
         })}
-        key={i}
+        key={index}
       >
         <View style={styles.cardContainer}>
           <View>
@@ -194,32 +242,39 @@ renderUpdates = (updates) => (
                 />
                 <Text style={styles.bottomCardTeam}>{item.name} - </Text>
                 <Text style={styles.bottomCardTeam}>{item.party_name} - </Text>
-                <Text style={styles.bottomCardText}>Posted at {Moment(item.post_date_time).format('d MMMM')}</Text>
+                <Text style={styles.bottomCardText}>Posted at {Moment(item.post_date_time).from(Date.now())}</Text>
               </View>
           </View>
         </View>
       </TouchableOpacity>
-    ))
-  : null
-)
-
-render() {
-  
-
-
-  return (
-    <ScrollView style={{backgroundColor:'#F0F0F0'}} 
-    refreshControl={
-      <RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={this._onRefresh.bind(this)}
-      />
-    }>
-        { this.renderUpdates(this.props.Updates)}
-    </ScrollView>
+      }
+    />
+  </View>
+    // <ScrollView style={{backgroundColor:'#F0F0F0'}} 
+    // refreshControl={
+    //   <RefreshControl
+    //     refreshing={this.state.refreshing}
+    //     onRefresh={this._onRefresh.bind(this)}
+    //   />
+    // }>
+    //     { this.renderUpdates(this.props.Updates)}
+    // </ScrollView>
   );
 }
 }
+
+// const styles = StyleSheet.create({
+//   container: {
+//    flex: 1,
+//    paddingTop: 22
+//   },
+//   item: {
+//     padding: 10,
+//     fontSize: 18,
+//     height: 44,
+//   },
+// })
+
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor:'#fff',
