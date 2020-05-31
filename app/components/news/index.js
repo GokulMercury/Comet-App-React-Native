@@ -14,10 +14,10 @@ import {
 import { AsyncStorage } from 'react-native';
 import firebase from '@react-native-firebase/app';
 import messaging, { AuthorizationStatus } from '@react-native-firebase/messaging';
-
+import qs from 'qs';
 //import Constants from 'expo-constants';
 import { connect } from 'react-redux';
-import { getUpdates } from '../../store/actions/updates_actions';
+import { getUpdates, pushUpdates } from '../../store/actions/updates_actions';
 import Moment from 'moment';
 import map from 'lodash/map';
 import {IMAGEURL} from '../../utils/misc';
@@ -28,6 +28,8 @@ class NewsComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      copyData: [],
+      updatesData: [],
       refreshing: false,
     };
   }
@@ -78,6 +80,24 @@ async checkPermission() {
 getMessage () {
   const unsubscribe = messaging().onMessage(async remoteMessage => {
     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    
+    this.state.updatesData = this.props.Updates.news[14];
+    this.state.updatesData.name = remoteMessage.data.name;
+    this.state.updatesData.party_name = remoteMessage.data.party_name;
+    this.state.updatesData.image = remoteMessage.data.image;
+    this.state.updatesData.post_attachment_obj_id = remoteMessage.data.post_attachment_obj_id;
+    this.state.updatesData.post_content = remoteMessage.data.post_content;
+    this.state.updatesData.post_date_time = remoteMessage.data.post_date_time;
+
+    // let joinedUpdates = this.state.copyData.concat(updatesData);
+    // this.setState({ copyData: joinedUpdates })
+    
+    this.state.copyData = this.props.Updates.news;
+    this.state.copyData.unshift(this.state.updatesData);
+    console.log('UPDATES DATA', this.state.updatesData);
+    console.log('COPY DATA', this.state.copyData);
+    this.props.dispatch(pushUpdates(this.state.copyData));
+    
   });
 
   return unsubscribe;
@@ -138,6 +158,7 @@ displayNotification(title, body) {
     ],
     { cancelable: false },
   );
+  console.log(title,body)
 }
   
 
@@ -215,13 +236,14 @@ render() {
       data={this.props.Updates.news}
       refreshing={this.state.refreshing}
       onRefresh={this.onRefresh.bind(this)}
-      renderItem={({item,index}) => 
+      keyExtractor={(item, index) => item.key}
+      renderItem={({item}) => 
         
       <TouchableOpacity
         onPress={()=> this.props.navigation.navigate('Article',{
           ...item
         })}
-        key={index}
+        key={item.key}
       >
         <View style={styles.cardContainer}>
           <View>

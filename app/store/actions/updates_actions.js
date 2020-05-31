@@ -1,5 +1,6 @@
 import {
-    GET_UPDATES
+    GET_UPDATES,
+    PUSH_UPDATES
 } from '../types';
 import qs from 'qs';
 import axios from 'axios';
@@ -58,3 +59,13 @@ export function getUpdates(params){
                 }
           
       }   
+
+export function pushUpdates(params){
+  let news = params;
+  console.log('PUSH_UPDATES', news);
+  //news.push(params.data);
+    return{
+      type:PUSH_UPDATES,
+      payload: news
+    }
+}
