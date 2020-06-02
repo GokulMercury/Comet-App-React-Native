@@ -24,7 +24,7 @@ export function getUpdates(params){
 
                     console.log (response.data);
                     
-                   const keys = Object.keys(news);
+                   //const keys = Object.keys(news);
   //here we are using lodah to create an array from all the objects
 //   const newData = _.values(news);
   const mapData = map(response.data, 'data');

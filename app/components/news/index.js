@@ -77,11 +77,13 @@ async checkPermission() {
   }
 }
 
-getMessage () {
-  const unsubscribe = messaging().onMessage(async remoteMessage => {
-    Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+async getMessage () {
+  const appNotification = messaging().onMessage(async remoteMessage => {
+    //Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
     
-    this.state.updatesData = this.props.Updates.news[14];
+    //this.state.updatesData = this.props.Updates.news;
+
+    this.state.updatesData.post_id = remoteMessage.data.post_id;
     this.state.updatesData.name = remoteMessage.data.name;
     this.state.updatesData.party_name = remoteMessage.data.party_name;
     this.state.updatesData.image = remoteMessage.data.image;
@@ -94,13 +96,15 @@ getMessage () {
     
     this.state.copyData = this.props.Updates.news;
     this.state.copyData.unshift(this.state.updatesData);
+                      
     console.log('UPDATES DATA', this.state.updatesData);
     console.log('COPY DATA', this.state.copyData);
     this.props.dispatch(pushUpdates(this.state.copyData));
+    this.setState({updatesData:[]})
     
   });
 
-  return unsubscribe;
+  return appNotification;
 }
  
 
@@ -236,14 +240,14 @@ render() {
       data={this.props.Updates.news}
       refreshing={this.state.refreshing}
       onRefresh={this.onRefresh.bind(this)}
-      keyExtractor={(item, index) => item.key}
+      keyExtractor={(item, index) => String(index)}
       renderItem={({item}) => 
         
       <TouchableOpacity
         onPress={()=> this.props.navigation.navigate('Article',{
           ...item
         })}
-        key={item.key}
+        key={qs.stringify(item.post_id)}
       >
         <View style={styles.cardContainer}>
           <View>

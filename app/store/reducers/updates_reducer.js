@@ -11,6 +11,7 @@ export default function(state={},action){
         
         case PUSH_UPDATES:
             console.log('REDUCER PUSH_UPDATES', action.payload)
+            
             return {...state,news:action.payload}
             
         default:
