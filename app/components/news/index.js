@@ -1,27 +1,26 @@
 import React, {Component, useEffect} from 'react';
 import {
   StyleSheet,
-  RefreshControl,
   FlatList,
   View,
   Text,
-  ScrollView,
   Image,
   TouchableOpacity,
   Alert
 } from 'react-native';
 
 import { AsyncStorage } from 'react-native';
+import { Linking } from 'react-native';
 import firebase from '@react-native-firebase/app';
 import messaging, { AuthorizationStatus } from '@react-native-firebase/messaging';
 import qs from 'qs';
-//import Constants from 'expo-constants';
 import { connect } from 'react-redux';
 import { getUpdates, pushUpdates } from '../../store/actions/updates_actions';
 import Moment from 'moment';
-import map from 'lodash/map';
 import {IMAGEURL} from '../../utils/misc';
 import { getTokens } from '../../utils/misc';
+import ChannelsComponent from '../channels/index'
+import { ScrollView } from 'react-native-gesture-handler';
 
 class NewsComponent extends Component {
 
@@ -59,7 +58,7 @@ class NewsComponent extends Component {
     })
   }
 
-  
+
  //Remove listeners allocated in createNotificationListeners()
 //  componentWillUnmount() {
 //   this.notificationListener();
@@ -100,7 +99,6 @@ async getMessage () {
     console.log('UPDATES DATA', this.state.updatesData);
     console.log('COPY DATA', this.state.copyData);
     this.props.dispatch(pushUpdates(this.state.copyData));
-    this.setState({updatesData:[]})
     
   });
 
@@ -228,7 +226,11 @@ displayNotification(title, body) {
 //     ))
 //   : null
 // )
-
+//Share to Whatsapp
+shareToWhatsApp = (text) => {
+  Linking.openURL(`whatsapp://send?text=${text}`);
+ }
+ 
 render() {
   
 
@@ -236,6 +238,16 @@ render() {
   return (
 
     <View style={styles.container}>
+    
+    <ScrollView>
+      {/* <View>
+        <Text>Channels</Text>
+      </View> */}
+    <ChannelsComponent/>
+      <View>
+
+        {/* <Text>Channels</Text> */}
+
     <FlatList
       data={this.props.Updates.news}
       refreshing={this.state.refreshing}
@@ -263,7 +275,7 @@ render() {
               <Text style={styles.titleCard}>{item.post_content}</Text>
               <View style={styles.bottomCard}>
               <Image 
-                  style={{width: 60, height: 60, borderRadius: 60/ 2}} 
+                  style={{width: 20, height: 20, borderRadius: 60/ 2}} 
                   source={{uri:IMAGEURL+`${item.image}`}}
                 />
                 <Text style={styles.bottomCardTeam}>{item.name} - </Text>
@@ -275,6 +287,9 @@ render() {
       </TouchableOpacity>
       }
     />
+    </View>
+    </ScrollView>
+      
   </View>
     // <ScrollView style={{backgroundColor:'#F0F0F0'}} 
     // refreshControl={
@@ -302,10 +317,13 @@ render() {
 // })
 
 const styles = StyleSheet.create({
-  cardContainer: {
+  container: {
     backgroundColor:'#fff',
+  },
+  cardContainer: {
+    backgroundColor:'#f8f8f8',
     margin:10,
-    shadowColor: '#dddddd',
+    shadowColor: '#ada96a',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
@@ -314,11 +332,11 @@ const styles = StyleSheet.create({
   },
   contentCard:{
     borderWidth:1,
-    borderColor:'#dddddd'
+    borderColor:'white'
   },
   titleCard:{
     fontFamily:'Roboto-Bold',
-    color:'#232323',
+    borderColor: '#fff',
     fontSize:16,
     padding:10
   },
@@ -326,17 +344,17 @@ const styles = StyleSheet.create({
     flex:1,
     flexDirection:'row',
     borderTopWidth:1,
-    borderTopColor:'#e6e6e6',
+    borderTopColor:'#fff',
     padding:10
   },
   bottomCardTeam:{
-    //fontFamily:'Roboto-Bold',
-    color:'#828282',
+    fontFamily:'Roboto-Bold',
+    color:'#0c4e8b',
     fontSize:12
   },
   bottomCardText:{
     fontFamily:'Roboto-Light',
-    color:'#828282',
+    color:'#6b3920',
     fontSize:12
   }
 });

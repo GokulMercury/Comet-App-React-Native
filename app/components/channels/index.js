@@ -4,10 +4,11 @@ import {
   View,
   Text,
   ScrollView,
+  FlatList,
   Image,
   TouchableOpacity
 } from 'react-native';
-
+import { Card } from "react-native-elements";
 import { connect } from 'react-redux';
 import { getChannels } from '../../store/actions/channels_actions';
 import Moment from 'moment';
@@ -42,49 +43,106 @@ class ChannelsComponent extends Component {
   }
 
 
-renderUpdates = (channellist) => (
+  
+// renderUpdates = (channellist) => (
 
-  channellist.channels ? 
-    channellist.channels.map((item,i)=>(
+//   channellist.channels ? 
+//     channellist.channels.map((item,i)=>(
      
-      <TouchableOpacity
-        onPress={()=>subscribeChannels(this.state.userId,item.party_id,item.party_name)}
-        key={i}
-      >
-        <View style={styles.cardContainer}>
-          <View>
-          {item.post_attachment_obj_id ? <Image
-              style={{height:150,justifyContent:'space-around'}}
-              source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
-              //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
-              resizeMode='cover'
-            /> : null}
+      // <TouchableOpacity
+      //   onPress={()=>subscribeChannels(this.state.userId,item.party_id,item.party_name)}
+      //   key={i}
+      // >
+      //   <View style={styles.cardContainer}>
+      //     <View>
+      //     {item.post_attachment_obj_id ? <Image
+      //         style={{height:150,justifyContent:'space-around'}}
+      //         source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
+      //         //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
+      //         resizeMode='cover'
+      //       /> : null}
             
-          </View>
-          <View style={styles.contentCard}>
-              <Text style={styles.titleCard}>{item.post_content}</Text>
-              <View style={styles.bottomCard}>
-              <Image 
-                  style={{width: 60, height: 60, borderRadius: 60/ 2}} 
-                  source={{uri:IMAGEURL+`${item.party_image_obj_id}`}}
-                />
-                <Text style={styles.bottomCardTeam}>{item.name} - </Text>
-                <Text style={styles.bottomCardTeam}>{item.party_name} - </Text>
-                <Text style={styles.bottomCardText}>Posted at {Moment(item.post_date_time).format('d MMMM')}</Text>
-              </View>
-          </View>
-        </View>
-      </TouchableOpacity>
-    ))
-  : null
-)
+      //     </View>
+      //     <View style={styles.contentCard}>
+      //         <Text style={styles.titleCard}>{item.post_content}</Text>
+      //         <View style={styles.bottomCard}>
+      //         <Image 
+      //             style={{width: 60, height: 60, borderRadius: 60/ 2}} 
+      //             source={{uri:IMAGEURL+`${item.party_image_obj_id}`}}
+      //           />
+      //           <Text style={styles.bottomCardTeam}>{item.name} - </Text>
+      //           <Text style={styles.bottomCardTeam}>{item.party_name} - </Text>
+      //           <Text style={styles.bottomCardText}>Posted at {Moment(item.post_date_time).format('d MMMM')}</Text>
+      //         </View>
+      //     </View>
+      //   </View>
+      // </TouchableOpacity>
+//     ))
+//   : null
+// )
 
 render() {
  
   return (
-    <ScrollView style={{backgroundColor:'#F0F0F0'}}>
-        { this.renderUpdates(this.props.Channels)}
-    </ScrollView>
+    <View style={styles.container}>
+    <FlatList
+      data={this.props.Channels.channels}
+      //refreshing={this.state.refreshing}
+      horizontal = {true}
+      showsHorizontalScrollIndicator={false}
+      //onRefresh={this.onRefresh.bind(this)}
+      keyExtractor={(item, index) => String(index)}
+      renderItem={({item}) => 
+      <TouchableOpacity
+      onPress={()=>subscribeChannels(this.state.userId,item.party_id,item.party_name)}
+      key={item.party_id}
+    >
+
+    <Card
+      title={null}
+      image={{ uri: IMAGEURL+`${item.party_image_obj_id}` }}
+      containerStyle={{ padding: 0, width: 160 }}
+    >
+      <Text style={{ marginBottom: 10, fontSize:20 }}>
+      {item.party_name}
+      </Text>
+    </Card>
+
+</TouchableOpacity>
+ 
+        // <View style={styles.cardContainer}>
+         
+        //   <View style={styles.contentCard}>
+        //   <View>
+        //   <Image 
+        //           style={{width: 150, height: 150}} 
+        //           source={{uri:IMAGEURL+`${item.party_image_obj_id}`}}
+        //         />
+        //         <Text style={styles.bottomCardTeam}>{item.party_name} - </Text>
+        //   {/* {item.post_attachment_obj_id ? <Image
+        //       style={{height:150,justifyContent:'space-around'}}
+        //       source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
+        //       //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
+        //       resizeMode='cover'
+        //     /> : null} */}
+            
+        //   </View>
+        //       <Text style={styles.titleCard}>{item.post_content}</Text>
+        //       <View style={styles.bottomCard}>
+        //       {/* <Image 
+        //           style={{width: 60, height: 60, borderRadius: 60/ 2}} 
+        //           source={{uri:IMAGEURL+`${item.party_image_obj_id}`}}
+        //         /> */}
+        //         {/* <Text style={styles.bottomCardTeam}>{item.name} - </Text> */}
+                
+        //         {/* <Text style={styles.bottomCardText}>Posted at {Moment(item.post_date_time).format('d MMMM')}</Text> */}
+        //       </View>
+        //   </View>
+        // </View>
+      // </TouchableOpacity>
+      }
+    />
+  </View>
   );
 }
 }
@@ -114,7 +172,8 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     borderTopWidth:1,
     borderTopColor:'#e6e6e6',
-    padding:10
+    padding:10,
+    width:150
   },
   bottomCardTeam:{
     //fontFamily:'Roboto-Bold',
