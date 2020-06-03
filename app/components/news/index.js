@@ -2,6 +2,8 @@ import React, {Component, useEffect} from 'react';
 import {
   StyleSheet,
   FlatList,
+  ScrollView,
+  RefreshControl,
   View,
   Text,
   Image,
@@ -16,11 +18,12 @@ import messaging, { AuthorizationStatus } from '@react-native-firebase/messaging
 import qs from 'qs';
 import { connect } from 'react-redux';
 import { getUpdates, pushUpdates } from '../../store/actions/updates_actions';
+import { getChannels } from '../../store/actions/channels_actions';
 import Moment from 'moment';
 import {IMAGEURL} from '../../utils/misc';
 import { getTokens } from '../../utils/misc';
 import ChannelsComponent from '../channels/index'
-import { ScrollView } from 'react-native-gesture-handler';
+//import { ScrollView } from 'react-native-gesture-handler';
 
 class NewsComponent extends Component {
 
@@ -46,6 +49,12 @@ class NewsComponent extends Component {
       limit:"25",
       explore:"10"
   };
+  const paramsChannels = {
+    search_keyword: "",
+    user_id:this.state.userId,
+    start:"0",
+    limit:"25"
+}
     getTokens((value)=>{
       if(value[0][1]===null){
         console.log("NO TOKENS");
@@ -53,7 +62,9 @@ class NewsComponent extends Component {
         
         params.user_id = value[2][1];
         console.log(params)
+        this.props.dispatch(getChannels(params));
         this.props.dispatch(getUpdates(params));
+
       }
     })
   }
@@ -172,6 +183,12 @@ displayNotification(title, body) {
       explore:"10"
   };
 
+  const paramsChannels = {
+    search_keyword: "",
+    user_id:this.state.userId,
+    start:"0",
+    limit:"25"
+};
     getTokens((value)=>{
       if(value[0][1]===null){
         console.log("NO TOKENS");
@@ -180,6 +197,7 @@ displayNotification(title, body) {
         params.user_id = value[2][1];
         console.log(params)
         this.props.dispatch(getUpdates(params));
+        this.props.dispatch(getChannels(paramsChannels));
       }
     })
     // this.setState({refreshing: true});
@@ -239,12 +257,18 @@ render() {
 
     <View style={styles.container}>
     
-    <ScrollView>
+    <ScrollView 
+    refreshControl={
+        <RefreshControl
+          refreshing={this.state.refreshing}
+          onRefresh={this.onRefresh.bind(this)}
+        />
+      }>
       {/* <View>
         <Text>Channels</Text>
       </View> */}
     <ChannelsComponent/>
-      <View>
+      
 
         {/* <Text>Channels</Text> */}
 
@@ -287,7 +311,7 @@ render() {
       </TouchableOpacity>
       }
     />
-    </View>
+ 
     </ScrollView>
       
   </View>
