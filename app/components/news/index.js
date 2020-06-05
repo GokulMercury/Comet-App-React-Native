@@ -3,6 +3,7 @@ import {
   StyleSheet,
   FlatList,
   ScrollView,
+  SafeAreaView,
   RefreshControl,
   View,
   Text,
@@ -30,6 +31,7 @@ class NewsComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId:'',
       copyData: [],
       updatesData: [],
       refreshing: false,
@@ -59,10 +61,10 @@ class NewsComponent extends Component {
       if(value[0][1]===null){
         console.log("NO TOKENS");
       } else{
-        
-        params.user_id = value[2][1];
-        console.log(params)
-        this.props.dispatch(getChannels(params));
+        this.state.userId = value[2][1];
+        params.user_id = this.state.userId;
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>',params)
+        //this.props.dispatch(getChannels(paramsChannels));
         this.props.dispatch(getUpdates(params));
 
       }
@@ -194,56 +196,16 @@ displayNotification(title, body) {
         console.log("NO TOKENS");
       } else{
         
-        params.user_id = value[2][1];
+        params.user_id = this.state.userId;
         console.log(params)
         this.props.dispatch(getUpdates(params));
         this.props.dispatch(getChannels(paramsChannels));
       }
     })
-    // this.setState({refreshing: true});
-    // this.props.dispatch(getUpdates()).then(() => {
-    //   this.setState({refreshing: false});
-    
+   
   }
   
-// renderUpdates = (updates) => (
-  
-//   updates.news ? 
-//     updates.news.map((item,i)=>(
-     
-//       <TouchableOpacity
-//         onPress={()=> this.props.navigation.navigate('Article',{
-//           ...item
-//         })}
-//         key={i}
-//       >
-//         <View style={styles.cardContainer}>
-//           <View>
-//           {item.post_attachment_obj_id ? <Image
-//               style={{height:150,justifyContent:'space-around'}}
-//               source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
-//               //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
-//               resizeMode='cover'
-//             /> : null}
-            
-//           </View>
-//           <View style={styles.contentCard}>
-//               <Text style={styles.titleCard}>{item.post_content}</Text>
-//               <View style={styles.bottomCard}>
-//               <Image 
-//                   style={{width: 60, height: 60, borderRadius: 60/ 2}} 
-//                   source={{uri:IMAGEURL+`${item.image}`}}
-//                 />
-//                 <Text style={styles.bottomCardTeam}>{item.name} - </Text>
-//                 <Text style={styles.bottomCardTeam}>{item.party_name} - </Text>
-//                 <Text style={styles.bottomCardText}>Posted at {Moment(item.post_date_time).format('d MMMM')}</Text>
-//               </View>
-//           </View>
-//         </View>
-//       </TouchableOpacity>
-//     ))
-//   : null
-// )
+
 //Share to Whatsapp
 shareToWhatsApp = (text) => {
   Linking.openURL(`whatsapp://send?text=${text}`);
@@ -255,25 +217,26 @@ render() {
 
   return (
 
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
     
-    <ScrollView 
+    {/* <ScrollView 
     refreshControl={
         <RefreshControl
           refreshing={this.state.refreshing}
           onRefresh={this.onRefresh.bind(this)}
         />
-      }>
+      }> */}
       {/* <View>
         <Text>Channels</Text>
       </View> */}
-    <ChannelsComponent/>
+    {/* <ChannelsComponent/> */}
       
 
         {/* <Text>Channels</Text> */}
 
     <FlatList
       data={this.props.Updates.news}
+      ListHeaderComponent={ChannelsComponent}
       refreshing={this.state.refreshing}
       onRefresh={this.onRefresh.bind(this)}
       keyExtractor={(item, index) => String(index)}
@@ -312,9 +275,9 @@ render() {
       }
     />
  
-    </ScrollView>
+    {/* </ScrollView> */}
       
-  </View>
+  </SafeAreaView>
     // <ScrollView style={{backgroundColor:'#F0F0F0'}} 
     // refreshControl={
     //   <RefreshControl

@@ -14,20 +14,22 @@ import { getChannels } from '../../store/actions/channels_actions';
 import Moment from 'moment';
 import {IMAGEURL} from '../../utils/misc';
 import { getTokens } from '../../utils/misc';
-import { subscribeChannels } from '../../store/actions/channels_actions';
+import { subscribeChannels, unSubscribeChannels } from '../../store/actions/channels_actions';
 
 class ChannelsComponent extends Component {
   constructor() {
     super();
     this.state = { 
       userId :"",
-      peeped : false
+      peeped : false,
+      subscribeData : []
     };
   }
   componentDidMount(){
+    
     const params = {
-      search_keyword: "",
-      user_id:this.state.userId,
+      // search_keyword: "",
+      user_id: "",
       start:"0",
       limit:"25"
   }
@@ -36,50 +38,41 @@ class ChannelsComponent extends Component {
         console.log("NO TOKENS");
       } else{ 
         this.state.userId = value[2][1];
-        console.log(params)
+        params.user_id = this.state.userId;
+       
         this.props.dispatch(getChannels(params));
+      
       }
     })
   }
-
-
-  
-// renderUpdates = (channellist) => (
-
-//   channellist.channels ? 
-//     channellist.channels.map((item,i)=>(
-     
-      // <TouchableOpacity
-      //   onPress={()=>subscribeChannels(this.state.userId,item.party_id,item.party_name)}
-      //   key={i}
-      // >
-      //   <View style={styles.cardContainer}>
-      //     <View>
-      //     {item.post_attachment_obj_id ? <Image
-      //         style={{height:150,justifyContent:'space-around'}}
-      //         source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
-      //         //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
-      //         resizeMode='cover'
-      //       /> : null}
-            
-      //     </View>
-      //     <View style={styles.contentCard}>
-      //         <Text style={styles.titleCard}>{item.post_content}</Text>
-      //         <View style={styles.bottomCard}>
-      //         <Image 
-      //             style={{width: 60, height: 60, borderRadius: 60/ 2}} 
-      //             source={{uri:IMAGEURL+`${item.party_image_obj_id}`}}
-      //           />
-      //           <Text style={styles.bottomCardTeam}>{item.name} - </Text>
-      //           <Text style={styles.bottomCardTeam}>{item.party_name} - </Text>
-      //           <Text style={styles.bottomCardText}>Posted at {Moment(item.post_date_time).format('d MMMM')}</Text>
-      //         </View>
-      //     </View>
-      //   </View>
-      // </TouchableOpacity>
-//     ))
-//   : null
-// )
+ 
+  getChannelData = (peepin,userId,channelId,channelName) => {
+    if (peepin == "false"){
+      const params = {
+        // search_keyword: "",
+        user_id:userId,
+        start:"0",
+        limit:"25"
+    }
+      console.log('>>>>>>SUBSCRIBE CHANNEL>>>>', params)
+      subscribeChannels(userId,channelId,channelName);
+      this.props.dispatch(getChannels(params));
+      this.state.subscribeData = this.props.Channels.channels;
+    } else {
+      const params = {
+        // search_keyword: "",
+        user_id:userId,
+        start:"0",
+        limit:"25"
+    }
+    console.log('>>>>>>SUBSCRIBE CHANNEL>>>>', params)
+      unSubscribeChannels(userId,channelId,channelName)
+      this.props.dispatch(getChannels(params));
+      this.state.subscribeData = this.props.Channels.channels;
+    }
+   
+ 
+  }
 
 render() {
  
@@ -87,60 +80,52 @@ render() {
     <View style={styles.container}>
     <FlatList
       data={this.props.Channels.channels}
-      //refreshing={this.state.refreshing}
+      // extraData={this.state}
       horizontal = {true}
       showsHorizontalScrollIndicator={false}
-      //onRefresh={this.onRefresh.bind(this)}
       keyExtractor={(item, index) => String(index)}
-      renderItem={({item}) => 
-      <TouchableOpacity
-      onPress={()=>subscribeChannels(this.state.userId,item.party_id,item.party_name)}
-      key={item.party_id}
-    >
+      renderItem={({item}) =>{ 
+      
+      if (item.party_active == 1){
+       
 
-    <Card
-      title={null}
-      image={{ uri: IMAGEURL+`${item.party_image_obj_id}` }}
-      containerStyle={{ padding: 0, width: 160 }}
-    >
-      <Text style={{ marginBottom: 10, fontSize:20 }}>
-      {item.party_name}
-      </Text>
-    </Card>
-
-</TouchableOpacity>
- 
-        // <View style={styles.cardContainer}>
+          return(
          
-        //   <View style={styles.contentCard}>
-        //   <View>
-        //   <Image 
-        //           style={{width: 150, height: 150}} 
-        //           source={{uri:IMAGEURL+`${item.party_image_obj_id}`}}
-        //         />
-        //         <Text style={styles.bottomCardTeam}>{item.party_name} - </Text>
-        //   {/* {item.post_attachment_obj_id ? <Image
-        //       style={{height:150,justifyContent:'space-around'}}
-        //       source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
-        //       //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
-        //       resizeMode='cover'
-        //     /> : null} */}
-            
-        //   </View>
-        //       <Text style={styles.titleCard}>{item.post_content}</Text>
-        //       <View style={styles.bottomCard}>
-        //       {/* <Image 
-        //           style={{width: 60, height: 60, borderRadius: 60/ 2}} 
-        //           source={{uri:IMAGEURL+`${item.party_image_obj_id}`}}
-        //         /> */}
-        //         {/* <Text style={styles.bottomCardTeam}>{item.name} - </Text> */}
-                
-        //         {/* <Text style={styles.bottomCardText}>Posted at {Moment(item.post_date_time).format('d MMMM')}</Text> */}
-        //       </View>
-        //   </View>
-        // </View>
-      // </TouchableOpacity>
-      }
+            <TouchableOpacity
+              onPress={()=>
+               this.getChannelData(item.peepin,this.state.userId,item.party_id,item.party_name)
+              // this.getChannelData(this.state.peepin, this.state.userId,item.party_id,item.party_name)
+              }
+              key={item.party_id}
+            >
+            <Card
+              title={null}
+              image={{ uri: IMAGEURL+`${item.party_image_obj_id}` }}
+              containerStyle={{ padding: 0, width: 100 }}
+            >
+              {
+                item.peepin === 'true' ?
+                  <Text style={{ marginBottom: 10, fontSize:10, color:'green' }}>
+                  {item.party_name}
+                  </Text>
+                :
+                  <Text style={{ marginBottom: 10, fontSize:10, color:'red' }}>
+                {item.party_name}
+                </Text>
+              }
+              
+            </Card>
+    
+        </TouchableOpacity>
+       ) 
+      
+          
+        }
+        
+      } 
+    }
+    
+  
     />
   </View>
   );
