@@ -73,7 +73,7 @@ class NewsComponent extends Component {
   }
 
 
- //Remove listeners allocated in createNotificationListeners()
+//  Remove listeners allocated in createNotificationListeners()
 //  componentWillUnmount() {
 //   this.notificationListener();
 //   this.notificationOpenedListener();
@@ -431,7 +431,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft:10,
     alignSelf: 'center',
-    color:'#f65720'
+    color:'#824d9d'
   },
   party:{
     fontSize:14,

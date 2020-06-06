@@ -10,14 +10,14 @@ import {
   Alert,
   ScrollView
 } from 'react-native';
-import { Card } from "react-native-elements";
+import Icon from 'react-native-ionicons'
 import { connect } from 'react-redux';
 import { getChannels } from '../../store/actions/channels_actions';
 import Moment from 'moment';
 import {IMAGEURL} from '../../utils/misc';
 import { getTokens } from '../../utils/misc';
 import { subscribeChannels, unSubscribeChannels } from '../../store/actions/channels_actions';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+
 
 class ChannelsComponent extends Component {
   constructor() {
@@ -107,7 +107,8 @@ render() {
                 <Text style={styles.name}>{item.party_name}</Text>
                 
                 <View style={styles.followButton}>
-                <Ionicons name={item.peepin === 'true' ? "ios-alarm" : "ios-alarm"} size={23} color={item.peepin === 'true' ? "#075e54" : "#ed788b"} /> 
+                
+                <Icon type='ionicon' name={item.peepin === 'true' ? 'ios-radio' : 'ios-radio'} size={23} color={item.peepin === 'true' ? "#075e54" : "#ed788b"} /> 
                 </View>
               </View>
             </TouchableOpacity>
@@ -159,13 +160,13 @@ render() {
 const styles = StyleSheet.create({
   container:{
     flex:1,
-    marginTop:0,
-    backgroundColor:"#ecc3b4"
+    marginBottom:10,
+    backgroundColor:"#824d9d"
   },
   listTitle:{
     fontSize:26,
     fontWeight: 'bold',
-    color:'#0b0d36',
+    color:'#EBEBEB',
     marginTop:10,
     alignSelf: 'center'
   },
@@ -195,7 +196,7 @@ const styles = StyleSheet.create({
     elevation: 12,
 
     marginLeft: 20,
-    marginRight: 20,
+    marginRight: 3,
     marginTop:20,
     marginBottom:20,
     backgroundColor:"white",
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
     fontSize:16,
     flex:1,
     alignSelf:'center',
-    color:"#3399ff",
+    color:"#824d9d",
     fontWeight:'bold'
   },
   count:{
@@ -226,7 +227,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // borderRadius:30,
-    backgroundColor: "white",
+    // backgroundColor: "white",
     // borderWidth:1,
     // borderColor:"#dcdcdc",
   },

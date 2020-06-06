@@ -18,9 +18,9 @@ const headerConf={
   headerLayoutPreset:'center',
   defaultNavigationOptions:{
     headerStyle:{
-      backgroundColor:'white'
+      backgroundColor:'#824d9d'
       },
-      headerTintColor:'#11457e',
+      headerTintColor:'white',
       headerTitle:'COMET'
       //headerTitle:Logo
     }
@@ -49,7 +49,7 @@ const AppStack = createBottomTabNavigator({
   Channels: ChannelStack
 },{
   tabBarOptions:{
-    activeTintColor:'#11457e',
+    activeTintColor:'#824d9d',
     showLabel:false,
     showIcon: true,
     activeBackgroundColor:'white',
