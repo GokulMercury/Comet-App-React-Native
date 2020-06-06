@@ -49,11 +49,11 @@ const AppStack = createBottomTabNavigator({
   Channels: ChannelStack
 },{
   tabBarOptions:{
-    activeTintColor:'white',
+    activeTintColor:'#11457e',
     showLabel:false,
     showIcon: true,
-    activeBackgroundColor:'#4274a1',
-    inactiveBackgroundColor:'#11457e',
+    activeBackgroundColor:'white',
+    inactiveBackgroundColor:'white',
     style:{
       backgroundColor:'#001338'
     },

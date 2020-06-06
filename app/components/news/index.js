@@ -1,16 +1,16 @@
 import React, {Component, useEffect} from 'react';
 import {
   StyleSheet,
-  FlatList,
-  ScrollView,
-  SafeAreaView,
-  RefreshControl,
-  View,
   Text,
-  Image,
+  View,
   TouchableOpacity,
-  Alert
+  Image,
+  Alert,
+  ScrollView,
+  TextInput,
+  FlatList
 } from 'react-native';
+
 
 import { AsyncStorage } from 'react-native';
 import { Linking } from 'react-native';
@@ -24,6 +24,7 @@ import Moment from 'moment';
 import {IMAGEURL} from '../../utils/misc';
 import { getTokens } from '../../utils/misc';
 import ChannelsComponent from '../channels/index'
+import { color } from 'react-native-reanimated';
 //import { ScrollView } from 'react-native-gesture-handler';
 
 class NewsComponent extends Component {
@@ -94,7 +95,7 @@ async getMessage () {
     //Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
     
     //this.state.updatesData = this.props.Updates.news;
-
+    console.log ('BEFORE>>>>>>>>>>>>>>>>>', this.props.Updates.news)
     this.state.updatesData.post_id = remoteMessage.data.post_id;
     this.state.updatesData.name = remoteMessage.data.name;
     this.state.updatesData.party_name = remoteMessage.data.party_name;
@@ -112,6 +113,9 @@ async getMessage () {
     console.log('UPDATES DATA', this.state.updatesData);
     console.log('COPY DATA', this.state.copyData);
     this.props.dispatch(pushUpdates(this.state.copyData));
+    console.log ('BEFORE>>>>>>>>>>>>>>>>>', this.props.Updates.news)
+    this.state.copyData = [];
+    this.state.updatesData = [];
     
   });
 
@@ -217,7 +221,9 @@ render() {
 
   return (
 
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+   
+
     
     {/* <ScrollView 
     refreshControl={
@@ -236,21 +242,32 @@ render() {
 
     <FlatList
       data={this.props.Updates.news}
+    //  extraData={this.state.copyData}
       ListHeaderComponent={ChannelsComponent}
       refreshing={this.state.refreshing}
       onRefresh={this.onRefresh.bind(this)}
       keyExtractor={(item, index) => String(index)}
       renderItem={({item}) => 
-        
-      <TouchableOpacity
-        onPress={()=> this.props.navigation.navigate('Article',{
-          ...item
-        })}
-        key={qs.stringify(item.post_id)}
-      >
-        <View style={styles.cardContainer}>
-          <View>
-          {item.post_attachment_obj_id ? <Image
+      
+      <TouchableOpacity style={[styles.card, {borderColor:"#EBEBEB"}]} 
+      onPress={()=> this.props.navigation.navigate('Article',{
+        ...item
+      })}
+      key={qs.stringify(item.post_id)}
+    >
+                <View style={styles.cardContent}>
+                  <Image style={[styles.image, styles.imageContent]} source={{uri:IMAGEURL+`${item.image}`}}/>
+                  <Text style={styles.name}>{item.name}</Text>
+                  <Text style={styles.party}>- {item.party_name}</Text>
+                  <Text style={styles.time}> ~ {Moment(item.post_date_time).from(Date.now())}</Text>
+                  {/* <Text style={styles.time}> - {Moment(item.post_date_time).from(Date.now())}</Text> */}
+                </View>
+                <View style={[styles.cardContent, styles.tagsContent]}>
+                <Text style={styles.post}>{item.post_content}</Text>
+
+                </View>
+                <View>
+         {item.post_attachment_obj_id ? <Image
               style={{height:150,justifyContent:'space-around'}}
               source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
               //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
@@ -258,26 +275,45 @@ render() {
             /> : null}
             
           </View>
-          <View style={styles.contentCard}>
-              <Text style={styles.titleCard}>{item.post_content}</Text>
-              <View style={styles.bottomCard}>
-              <Image 
-                  style={{width: 20, height: 20, borderRadius: 60/ 2}} 
-                  source={{uri:IMAGEURL+`${item.image}`}}
-                />
-                <Text style={styles.bottomCardTeam}>{item.name} - </Text>
-                <Text style={styles.bottomCardTeam}>{item.party_name} - </Text>
-                <Text style={styles.bottomCardText}>Posted at {Moment(item.post_date_time).from(Date.now())}</Text>
-              </View>
-          </View>
-        </View>
-      </TouchableOpacity>
+       
+              </TouchableOpacity>
+
+      // <TouchableOpacity
+      //   onPress={()=> this.props.navigation.navigate('Article',{
+      //     ...item
+      //   })}
+      //   key={qs.stringify(item.post_id)}
+      // >
+      //   <View style={styles.cardContainer}>
+      //     <View>
+      //     {item.post_attachment_obj_id ? <Image
+      //         style={{height:150,justifyContent:'space-around'}}
+      //         source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
+      //         //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
+      //         resizeMode='cover'
+      //       /> : null}
+            
+      //     </View>
+      //     <View style={styles.contentCard}>
+      //         <Text style={styles.titleCard}>{item.post_content}</Text>
+      //         <View style={styles.bottomCard}>
+      //         <Image 
+      //             style={{width: 20, height: 20, borderRadius: 60/ 2}} 
+      //             source={{uri:IMAGEURL+`${item.image}`}}
+      //           />
+      //           <Text style={styles.bottomCardTeam}>{item.name} - </Text>
+      //           <Text style={styles.bottomCardTeam}>{item.party_name} - </Text>
+      //           <Text style={styles.bottomCardText}>Posted at {Moment(item.post_date_time).from(Date.now())}</Text>
+      //         </View>
+      //     </View>
+      //   </View>
+      // </TouchableOpacity>
       }
     />
  
     {/* </ScrollView> */}
       
-  </SafeAreaView>
+  </View>
     // <ScrollView style={{backgroundColor:'#F0F0F0'}} 
     // refreshControl={
     //   <RefreshControl
@@ -305,45 +341,122 @@ render() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor:'#fff',
+    flex: 1,
+    backgroundColor: '#EBEBEB',
   },
-  cardContainer: {
-    backgroundColor:'#f8f8f8',
-    margin:10,
-    shadowColor: '#ada96a',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 1,
-    borderRadius: 2,
+  formContent:{
+    flexDirection: 'row',
+    marginTop:30,
   },
-  contentCard:{
-    borderWidth:1,
-    borderColor:'white'
-  },
-  titleCard:{
-    fontFamily:'Roboto-Bold',
-    borderColor: '#fff',
-    fontSize:16,
-    padding:10
-  },
-  bottomCard:{
+  inputContainer: {
+    borderBottomColor: '#F5FCFF',
+    backgroundColor: '#FFFFFF',
+    borderRadius:30,
+    borderBottomWidth: 1,
+    height:45,
+    flexDirection: 'row',
+    alignItems:'center',
     flex:1,
+    margin:10,
+  },
+  imageCanvas: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+  icon:{
+    width:30,
+    height:30,
+  },
+  iconBtnSearch:{
+    alignSelf:'center'
+  },
+  inputs:{
+    height:45,
+    marginLeft:16,
+    borderBottomColor: '#FFFFFF',
+    flex:1,
+  },
+  inputIcon:{
+    marginLeft:15,
+    justifyContent: 'center'
+  },
+  notificationList:{
+    marginTop:20,
+    padding:10,
+  },
+  card: {
+    shadowColor: '#00000021',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    elevation: 1,
+    height:null,
+    paddingTop:10,
+    paddingBottom:10,
+    marginTop:5,
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'column',
+    // borderTopWidth:20,
+    marginBottom:20,
+  },
+  cardContent:{
     flexDirection:'row',
-    borderTopWidth:1,
-    borderTopColor:'#fff',
-    padding:10
+    marginLeft:10, 
   },
-  bottomCardTeam:{
-    fontFamily:'Roboto-Bold',
-    color:'#0c4e8b',
-    fontSize:12
+  cardContentBottom:{
+    flexDirection:'row',
+    marginLeft:10, 
+    marginTop:10, 
   },
-  bottomCardText:{
-    fontFamily:'Roboto-Light',
-    color:'#6b3920',
-    fontSize:12
-  }
+  imageContent:{
+    marginTop:-20,
+  },
+  tagsContent:{
+    marginTop:10,
+    flexWrap:'wrap'
+  },
+  image:{
+    width:40,
+    height:40,
+    borderRadius:30,
+  },
+  name:{
+    fontSize:14,
+    fontWeight: 'bold',
+    marginLeft:10,
+    alignSelf: 'center',
+    color:'#f65720'
+  },
+  party:{
+    fontSize:14,
+    marginLeft:3,
+    alignSelf: 'center'
+  },
+  time:{
+    fontSize:10,
+    //fontWeight: 'bold',
+    marginLeft:3,
+    alignSelf: 'center'
+  },
+  post:{
+    fontSize:17,
+    // fontWeight: 'bold',
+    marginLeft:10,
+    alignSelf: 'center'
+  },
+  btnColor: {
+    padding:10,
+    borderRadius:40,
+    marginHorizontal:3,
+    backgroundColor: "#eee",
+    marginTop:5,
+  },
 });
 
 function mapStateToProps(state){

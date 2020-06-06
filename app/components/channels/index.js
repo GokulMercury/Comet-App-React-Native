@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import {
-  StyleSheet, 
-  View,
+  StyleSheet,
   Text,
-  ScrollView,
-  FlatList,
+  View,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList,
+  Dimensions,
+  Alert,
+  ScrollView
 } from 'react-native';
 import { Card } from "react-native-elements";
 import { connect } from 'react-redux';
@@ -15,6 +17,7 @@ import Moment from 'moment';
 import {IMAGEURL} from '../../utils/misc';
 import { getTokens } from '../../utils/misc';
 import { subscribeChannels, unSubscribeChannels } from '../../store/actions/channels_actions';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 class ChannelsComponent extends Component {
   constructor() {
@@ -78,6 +81,9 @@ render() {
  
   return (
     <View style={styles.container}>
+    <View>
+      <Text style={styles.listTitle}>Tune to channels</Text>
+    </View>
     <FlatList
       data={this.props.Channels.channels}
       // extraData={this.state}
@@ -90,33 +96,52 @@ render() {
        
 
           return(
-         
-            <TouchableOpacity
-              onPress={()=>
-               this.getChannelData(item.peepin,this.state.userId,item.party_id,item.party_name)
-              // this.getChannelData(this.state.peepin, this.state.userId,item.party_id,item.party_name)
-              }
-              key={item.party_id}
-            >
-            <Card
-              title={null}
-              image={{ uri: IMAGEURL+`${item.party_image_obj_id}` }}
-              containerStyle={{ padding: 0, width: 100 }}
-            >
-              {
-                item.peepin === 'true' ?
-                  <Text style={{ marginBottom: 10, fontSize:10, color:'green' }}>
-                  {item.party_name}
-                  </Text>
-                :
-                  <Text style={{ marginBottom: 10, fontSize:10, color:'red' }}>
-                {item.party_name}
-                </Text>
-              }
-              
-            </Card>
-    
-        </TouchableOpacity>
+
+      <TouchableOpacity style={styles.card} onPress={()=>
+        this.getChannelData(item.peepin,this.state.userId,item.party_id,item.party_name)
+       // this.getChannelData(this.state.peepin, this.state.userId,item.party_id,item.party_name)
+       }
+       key={item.party_id}>
+              <Image style={styles.image} source={{uri:IMAGEURL+`${item.party_image_obj_id}`}}/>
+              <View style={styles.cardContent}>
+                <Text style={styles.name}>{item.party_name}</Text>
+                
+                <View style={styles.followButton}>
+                <Ionicons name={item.peepin === 'true' ? "ios-alarm" : "ios-alarm"} size={23} color={item.peepin === 'true' ? "#075e54" : "#ed788b"} /> 
+                </View>
+              </View>
+            </TouchableOpacity>
+
+  //           <TouchableOpacity
+              // onPress={()=>
+              //  this.getChannelData(item.peepin,this.state.userId,item.party_id,item.party_name)
+              // // this.getChannelData(this.state.peepin, this.state.userId,item.party_id,item.party_name)
+              // }
+              // key={item.party_id}
+  //           >
+  //           <View style = {styles.listItemContainer}>
+  //   <View style= {styles.iconContainer}>
+  //    <Image source={{uri:IMAGEURL+`${item.party_image_obj_id}`}} style={styles.initStyle} resizeMode='contain' />
+  //   </View>
+  //   <View style = {styles.callerDetailsContainer}>
+  //    <View style={styles.callerDetailsContainerWrap}>
+  //     <View style={styles.nameContainer}>
+  //       <Text style={{ fontFamily:'400', color:'#000', fontSize:16 }}>{item.party_name}</Text>
+  //       <View style={styles.dateContainer}>
+        
+  //         {/* <Ionicons name={item.party_name ? "ios-alarm" : "ios-alarm"} size={15} color={item.party_name ? "#ed788b" : "#075e54"} /> */}
+  //         {/* <Text style={{ fontWeight:'400', color:'#666', fontSize:12 }}>{item.party_name} {item.party_name}</Text> */}
+  //       </View>
+  //      </View>
+  //    <View style={styles.callIconContainer}>
+  //    <Ionicons name={item.peepin === 'true' ? "ios-alarm" : "ios-alarm"} size={23} color={item.peepin === 'true' ? "#075e54" : "#ed788b"} />
+  //      {/* <Ionicons name="ios-alarm" color='#075e54' size={23} style={{ padding:5 }} />  */}
+  //    </View>
+  //   </View>
+  //  </View>
+  // </View>
+  // </TouchableOpacity>    
+           
        ) 
       
           
@@ -132,44 +157,83 @@ render() {
 }
 }
 const styles = StyleSheet.create({
-  cardContainer: {
-    backgroundColor:'#fff',
-    margin:10,
-    shadowColor: '#dddddd',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 1,
-    borderRadius: 2,
-  },
-  contentCard:{
-    borderWidth:1,
-    borderColor:'#dddddd'
-  },
-  titleCard:{
-    fontFamily:'Roboto-Bold',
-    color:'#232323',
-    fontSize:16,
-    padding:10
-  },
-  bottomCard:{
+  container:{
     flex:1,
+    marginTop:0,
+    backgroundColor:"#ecc3b4"
+  },
+  listTitle:{
+    fontSize:26,
+    fontWeight: 'bold',
+    color:'#0b0d36',
+    marginTop:10,
+    alignSelf: 'center'
+  },
+  contentList:{
+    flex:1,
+  },
+  cardContent: {
+    marginLeft:20,
+    marginTop:10
+  },
+  image:{
+    width:60,
+    height:60,
+    borderRadius:45,
+    borderWidth:2,
+    borderColor:"#ebf0f7"
+  },
+
+  card:{
+    shadowColor: '#00000021',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    elevation: 12,
+
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop:20,
+    marginBottom:20,
+    backgroundColor:"white",
+    padding: 10,
     flexDirection:'row',
-    borderTopWidth:1,
-    borderTopColor:'#e6e6e6',
-    padding:10,
-    width:150
+    borderRadius:30,
   },
-  bottomCardTeam:{
-    //fontFamily:'Roboto-Bold',
-    color:'#828282',
-    fontSize:12
+
+  name:{
+    fontSize:16,
+    flex:1,
+    alignSelf:'center',
+    color:"#3399ff",
+    fontWeight:'bold'
   },
-  bottomCardText:{
-    fontFamily:'Roboto-Light',
-    color:'#828282',
-    fontSize:12
-  }
+  count:{
+    fontSize:14,
+    flex:1,
+    alignSelf:'center',
+    color:"#6666ff"
+  },
+  followButton: {
+    // marginTop:10,
+    height:35,
+    width:100,
+    // padding:10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // borderRadius:30,
+    backgroundColor: "white",
+    // borderWidth:1,
+    // borderColor:"#dcdcdc",
+  },
+  followButtonText:{
+    color: "#dcdcdc",
+    fontSize:12,
+  },
 });
 
 function mapStateToProps(state){
