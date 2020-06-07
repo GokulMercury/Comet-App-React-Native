@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
+  ActivityIndicator,
   Alert,
   ScrollView
 } from 'react-native';
@@ -17,6 +18,7 @@ import Moment from 'moment';
 import {IMAGEURL} from '../../utils/misc';
 import { getTokens } from '../../utils/misc';
 import { subscribeChannels, unSubscribeChannels } from '../../store/actions/channels_actions';
+import OfflineNotice from '../../utils/OfflineNotice';
 
 
 class ChannelsComponent extends Component {
@@ -25,7 +27,8 @@ class ChannelsComponent extends Component {
     this.state = { 
       userId :"",
       peeped : false,
-      subscribeData : []
+      subscribeData : [],
+      animating: false
     };
   }
   componentDidMount(){
@@ -47,9 +50,16 @@ class ChannelsComponent extends Component {
       
       }
     })
+    
   }
- 
+  
+  closeActivityIndicator = () => setTimeout(() => this.setState({
+    animating: false }), 7000)
+
+
   getChannelData = (peepin,userId,channelId,channelName) => {
+    this.state.animating =true
+    this.closeActivityIndicator()
     if (peepin == "false"){
       const params = {
         // search_keyword: "",
@@ -81,8 +91,10 @@ render() {
  
   return (
     <View style={styles.container}>
+      
     <View>
       <Text style={styles.listTitle}>Tune to channels</Text>
+    
     </View>
     <FlatList
       data={this.props.Channels.channels}
@@ -109,6 +121,11 @@ render() {
                 <View style={styles.followButton}>
                 
                 <Icon type='ionicon' name={item.peepin === 'true' ? 'ios-radio' : 'ios-radio'} size={23} color={item.peepin === 'true' ? "#075e54" : "#ed788b"} /> 
+                {<ActivityIndicator
+                  animating = {this.state.animating}
+                  color = '#bc2b78'
+                  size = "large"
+                  />}
                 </View>
               </View>
             </TouchableOpacity>
@@ -153,7 +170,9 @@ render() {
     
   
     />
+    
   </View>
+  
   );
 }
 }

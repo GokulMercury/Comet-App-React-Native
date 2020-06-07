@@ -174,7 +174,7 @@ class AuthComponent extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#aaa'
+    backgroundColor: '#824d9d'
   },
   page: {
     flex: 1,

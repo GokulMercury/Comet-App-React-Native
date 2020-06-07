@@ -26,6 +26,7 @@ import { getTokens } from '../../utils/misc';
 import ChannelsComponent from '../channels/index'
 import { color } from 'react-native-reanimated';
 //import { ScrollView } from 'react-native-gesture-handler';
+import OfflineNotice from '../../utils/OfflineNotice'
 
 class NewsComponent extends Component {
 
@@ -36,12 +37,14 @@ class NewsComponent extends Component {
       copyData: [],
       updatesData: [],
       refreshing: false,
+      subscribeRefreshing: false,
     };
   }
 
   
 
   componentDidMount(){
+    
     this.checkPermission() ;
     this.createNotificationListeners(); 
     this.getMessage();
@@ -59,6 +62,7 @@ class NewsComponent extends Component {
     limit:"25"
 }
     getTokens((value)=>{
+      this.state.refreshing=true
       if(value[0][1]===null){
         console.log("NO TOKENS");
       } else{
@@ -67,9 +71,10 @@ class NewsComponent extends Component {
         console.log('>>>>>>>>>>>>>>>>>>>>>>>',params)
         //this.props.dispatch(getChannels(paramsChannels));
         this.props.dispatch(getUpdates(params));
-
+        this.state.refreshing=false
       }
     })
+    
   }
 
 
@@ -222,8 +227,8 @@ render() {
   return (
 
     <View style={styles.container}>
-   
-
+    
+    
     
     {/* <ScrollView 
     refreshControl={
@@ -241,6 +246,7 @@ render() {
         {/* <Text>Channels</Text> */}
 
     <FlatList
+    
       data={this.props.Updates.news}
     //  extraData={this.state.copyData}
       ListHeaderComponent={ChannelsComponent}
@@ -312,7 +318,7 @@ render() {
     />
  
     {/* </ScrollView> */}
-      
+    <OfflineNotice />   
   </View>
     // <ScrollView style={{backgroundColor:'#F0F0F0'}} 
     // refreshControl={
