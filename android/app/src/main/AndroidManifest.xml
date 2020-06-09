@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.comet_app">
+  package="comet.dreamboosters.com.comet">
 
     <uses-permission android:name="android.permission.INTERNET" />
 

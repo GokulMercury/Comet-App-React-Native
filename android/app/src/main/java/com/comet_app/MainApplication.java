@@ -1,4 +1,4 @@
-package com.comet_app;
+package comet.dreamboosters.com.comet;
 
 import android.app.Application;
 import android.content.Context;

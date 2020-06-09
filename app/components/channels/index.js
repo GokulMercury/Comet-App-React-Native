@@ -6,20 +6,17 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  Dimensions,
   ActivityIndicator,
-  Alert,
-  ScrollView
+
 } from 'react-native';
 import Icon from 'react-native-ionicons'
 import { connect } from 'react-redux';
 import { getChannels } from '../../store/actions/channels_actions';
-import Moment from 'moment';
 import {IMAGEURL} from '../../utils/misc';
 import { getTokens } from '../../utils/misc';
 import { subscribeChannels, unSubscribeChannels } from '../../store/actions/channels_actions';
-import OfflineNotice from '../../utils/OfflineNotice';
-
+// import database from '@react-native-firebase/database';
+// import firebaseTest from './firebaseTest'
 
 class ChannelsComponent extends Component {
   constructor() {
@@ -31,8 +28,11 @@ class ChannelsComponent extends Component {
       animating: false
     };
   }
+
   componentDidMount(){
-    
+
+  // firebaseTest;
+
     const params = {
       // search_keyword: "",
       user_id: "",

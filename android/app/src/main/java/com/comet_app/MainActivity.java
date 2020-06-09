@@ -1,4 +1,4 @@
-package com.comet_app;
+package comet.dreamboosters.com.comet;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactActivity;
 // import io.invertase.firebase.RNFirebasePackage;

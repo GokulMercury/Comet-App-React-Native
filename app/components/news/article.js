@@ -179,9 +179,18 @@ import database from '@react-native-firebase/database';
 export default class ArticleComponent extends Component {
   state = {
     messages: [],
+    chatUserId:'',
+    chatCjName:'',
+    chatCjPhone:'',
   }
  
+
+
   componentDidMount() {
+    const { navigation }  = this.props;
+    this.state.chatUserId = navigation.getParam('userId');
+    this.state.chatCjName = navigation.getParam('cjName');
+    this.state.chatCjPhone = navigation.getParam('cjPhone');
     this.refOn(message => 
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, message),
@@ -190,9 +199,17 @@ export default class ArticleComponent extends Component {
     );
   }
 
-  
+ 
+
+
   refOn = callback => {
-    const reference = database().ref('/Chats')
+    const cjName = this.state.chatCjName
+    const cjNameTrim = cjName.trim();
+    const cjNameTrimSpace = cjNameTrim.replace(/ /g, "_");
+    
+    const chatRef = "/Chats/"+this.state.chatCjPhone+"/"+this.state.chatUserId;
+    console.log('<<<<<<<<<<<REFERENCE>>>>>>>>',this.state.chatUserId);
+    const reference = database().ref(chatRef)
     reference
       .limitToLast(20)
       .on('child_added', snapshot => callback(this.parse(snapshot)));
@@ -208,7 +225,13 @@ export default class ArticleComponent extends Component {
 
 
   send = messages => {
-    const ref = database().ref('/Chats')
+    const cjName = this.state.chatCjName
+    const cjNameTrim = cjName.trim();
+    const cjNameTrimSpace = cjNameTrim.replace(/ /g, "_");
+    
+    const chatRef = "/Chats/"+this.state.chatCjPhone+"/"+this.state.chatUserId;
+    console.log('<<<<<<<<<<<REFERENCE>>>>>>>>',chatRef);
+    const ref = database().ref(chatRef);
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
       const message = {text, user, createdAt: this.timestamp, };
@@ -216,12 +239,17 @@ export default class ArticleComponent extends Component {
     }
   };
 
+
+ 
+
   user() {
+    
     return {
-      name: this.props.navigation.item.user_name,
-      email: this.props.navigation.item.user_name,
-      avatar: this.props.navigation.state.params.avatar,
-      _id: '1',
+  
+      name: 'Gokul',
+      email: 'g@g.com',
+      avatar: '',
+      _id: '2',
     };
   }
   
@@ -246,10 +274,10 @@ export default class ArticleComponent extends Component {
 
   get user() {
     return {
-      name: 'good',
+      name: 'Gokul',
       channel: 'Kochi',
       //avatar: this.props.navigation.state.params.avatar,
-      _id: 1
+      _id:this.state.chatUserId
     };
   }
   // componentDidMount() {

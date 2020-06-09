@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-  ScrollView,
+  Dimensions,
   TextInput,
   FlatList
 } from 'react-native';
@@ -257,11 +257,15 @@ render() {
       
       <TouchableOpacity style={[styles.card, {borderColor:"#EBEBEB"}]} 
       onPress={()=> this.props.navigation.navigate('Article',{
-        ...item
+        userId:this.state.userId,
+        cjName:item.name,
+        cjPhone:item.cjphone
       })}
       key={qs.stringify(item.post_id)}
-    >
+    >            
+  
                 <View style={styles.cardContent}>
+                  
                   <Image style={[styles.image, styles.imageContent]} source={{uri:IMAGEURL+`${item.image}`}}/>
                   <Text style={styles.name}>{item.name}</Text>
                   <Text style={styles.party}>- {item.party_name}</Text>
@@ -272,16 +276,16 @@ render() {
                 <Text style={styles.post}>{item.post_content}</Text>
 
                 </View>
+               
                 <View>
          {item.post_attachment_obj_id ? <Image
-              style={{height:150,justifyContent:'space-around'}}
+              style={styles.postImage}
               source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
               //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
-              resizeMode='cover'
+              resizeMode='contain'
             /> : null}
             
           </View>
-       
               </TouchableOpacity>
 
       // <TouchableOpacity
@@ -345,6 +349,8 @@ render() {
 //   },
 // })
 
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -353,6 +359,10 @@ const styles = StyleSheet.create({
   formContent:{
     flexDirection: 'row',
     marginTop:30,
+  },
+  postImage: {
+    height:300,
+    justifyContent:'space-around'
   },
   inputContainer: {
     borderBottomColor: '#F5FCFF',

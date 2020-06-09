@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "374866202292",
-    "firebase_url": "https://comet-react.firebaseio.com",
-    "project_id": "comet-react",
-    "storage_bucket": "comet-react.appspot.com"
+    "project_number": "711618081393",
+    "firebase_url": "https://cometnotification.firebaseio.com",
+    "project_id": "cometnotification",
+    "storage_bucket": "cometnotification.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:374866202292:android:67f590649e346da3df11e1",
+        "mobilesdk_app_id": "1:711618081393:android:3b4220c8dd8bf57a",
         "android_client_info": {
-          "package_name": "com.comet_app"
+          "package_name": "com.dreamboosters.senate"
         }
       },
       "oauth_client": [
         {
-          "client_id": "374866202292-7bimsasjqbja05icim1cechml8q63rmc.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.comet_app",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
-          }
-        },
-        {
-          "client_id": "374866202292-7nvjigo87e2pj76kukvc7l168b03nb3r.apps.googleusercontent.com",
+          "client_id": "711618081393-lcoklvmp8abn32blmek75ededo5t8fu2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAPOWWF6etrf9FviXDuFGDaB6wlnztROTs"
+          "current_key": "AIzaSyAfygrdJV7B3BxrJA7bMZA2BTZ14kHVlc8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "374866202292-7nvjigo87e2pj76kukvc7l168b03nb3r.apps.googleusercontent.com",
+              "client_id": "711618081393-lcoklvmp8abn32blmek75ededo5t8fu2.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -45,35 +37,88 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:374866202292:android:c1751bb091b62517df11e1",
+        "mobilesdk_app_id": "1:711618081393:android:3828721355ed27b9",
         "android_client_info": {
-          "package_name": "com.dream.apptest"
+          "package_name": "comet.dreamboosters.com.comet"
         }
       },
       "oauth_client": [
         {
-          "client_id": "374866202292-ul4m5or9kvl960f9tf0rerp3iraktp2k.apps.googleusercontent.com",
+          "client_id": "711618081393-tlh6r601obuf30n3acp8hjfns2unq5hh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.dream.apptest",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+            "package_name": "comet.dreamboosters.com.comet",
+            "certificate_hash": "f01b39bef9ce3cddf30e37944a6806da9236921f"
           }
         },
         {
-          "client_id": "374866202292-7nvjigo87e2pj76kukvc7l168b03nb3r.apps.googleusercontent.com",
+          "client_id": "711618081393-gsv3g1i42b39ri45tvmc42trjs2gvimr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "comet.dreamboosters.com.comet",
+            "certificate_hash": "03527f0b2756c4f7cd1e4465bdca89a9a1aab6ec"
+          }
+        },
+        {
+          "client_id": "711618081393-88jkmmr39u7u30qibl5oepk5m2rc3uav.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "comet.dreamboosters.com.comet",
+            "certificate_hash": "62ada61ce9281bf4c1e5c8f2db25d056784d3f3b"
+          }
+        },
+        {
+          "client_id": "711618081393-lcoklvmp8abn32blmek75ededo5t8fu2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAPOWWF6etrf9FviXDuFGDaB6wlnztROTs"
+          "current_key": "AIzaSyAfygrdJV7B3BxrJA7bMZA2BTZ14kHVlc8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "374866202292-7nvjigo87e2pj76kukvc7l168b03nb3r.apps.googleusercontent.com",
+              "client_id": "711618081393-lcoklvmp8abn32blmek75ededo5t8fu2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711618081393:android:81cd0be5e2759818",
+        "android_client_info": {
+          "package_name": "comet.dreamboosters.in"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711618081393-5gjcrvfi2u15hmg1v007eb1ilsa7257h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "comet.dreamboosters.in",
+            "certificate_hash": "f01b39bef9ce3cddf30e37944a6806da9236921f"
+          }
+        },
+        {
+          "client_id": "711618081393-lcoklvmp8abn32blmek75ededo5t8fu2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfygrdJV7B3BxrJA7bMZA2BTZ14kHVlc8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711618081393-lcoklvmp8abn32blmek75ededo5t8fu2.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

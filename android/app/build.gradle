@@ -130,7 +130,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.comet_app"
+        applicationId "comet.dreamboosters.com.comet"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
