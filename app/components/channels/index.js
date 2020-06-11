@@ -15,8 +15,8 @@ import { getChannels } from '../../store/actions/channels_actions';
 import {IMAGEURL} from '../../utils/misc';
 import { getTokens } from '../../utils/misc';
 import { subscribeChannels, unSubscribeChannels } from '../../store/actions/channels_actions';
-// import database from '@react-native-firebase/database';
-// import firebaseTest from './firebaseTest'
+import database from '@react-native-firebase/database';
+import firebaseTest from './firebaseTest'
 
 class ChannelsComponent extends Component {
   constructor() {
@@ -30,8 +30,6 @@ class ChannelsComponent extends Component {
   }
 
   componentDidMount(){
-
-  // firebaseTest;
 
     const params = {
       // search_keyword: "",
@@ -257,7 +255,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state){
-  console.log(state)
+ // console.log(state)
   return {
     Channels:state.Channels
   }

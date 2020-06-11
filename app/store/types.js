@@ -5,3 +5,4 @@ export const GET_NEWS = 'get_news';
 export const GET_UPDATES = 'get_updates';
 export const PUSH_UPDATES = 'push_updates';
 export const GET_CHANNELS = 'get_channels';
+export const GET_CHATS = 'get_chats';

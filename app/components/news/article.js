@@ -174,6 +174,7 @@
 import React, {Component} from 'react';
 import { GiftedChat } from 'react-native-gifted-chat';
 import database from '@react-native-firebase/database';
+import qs from 'qs';
 
 
 export default class ArticleComponent extends Component {
@@ -190,7 +191,7 @@ export default class ArticleComponent extends Component {
     const { navigation }  = this.props;
     this.state.chatUserId = navigation.getParam('userId');
     this.state.chatCjName = navigation.getParam('cjName');
-    this.state.chatCjPhone = navigation.getParam('cjPhone');
+    this.state.chatCjPhone = navigation.getParam(qs.stringify('cjPhone'));
     this.refOn(message => 
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, message),
@@ -207,8 +208,8 @@ export default class ArticleComponent extends Component {
     const cjNameTrim = cjName.trim();
     const cjNameTrimSpace = cjNameTrim.replace(/ /g, "_");
     
-    const chatRef = "/Chats/"+this.state.chatCjPhone+"/"+this.state.chatUserId;
-    console.log('<<<<<<<<<<<REFERENCE>>>>>>>>',this.state.chatUserId);
+    const chatRef = "/Chats/+918882290484";
+    console.log('<<<<<<<<<<<REFERENCE>>>>>>>>',this.state.chatCjPhone);
     const reference = database().ref(chatRef)
     reference
       .limitToLast(20)
@@ -229,7 +230,7 @@ export default class ArticleComponent extends Component {
     const cjNameTrim = cjName.trim();
     const cjNameTrimSpace = cjNameTrim.replace(/ /g, "_");
     
-    const chatRef = "/Chats/"+this.state.chatCjPhone+"/"+this.state.chatUserId;
+    const chatRef = "/Chats/+918882290484";
     console.log('<<<<<<<<<<<REFERENCE>>>>>>>>',chatRef);
     const ref = database().ref(chatRef);
     for (let i = 0; i < messages.length; i++) {
@@ -277,7 +278,7 @@ export default class ArticleComponent extends Component {
       name: 'Gokul',
       channel: 'Kochi',
       //avatar: this.props.navigation.state.params.avatar,
-      _id:this.state.chatUserId
+      _id:'10'
     };
   }
   // componentDidMount() {

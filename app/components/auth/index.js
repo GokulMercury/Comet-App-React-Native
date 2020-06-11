@@ -96,7 +96,9 @@ class AuthComponent extends Component {
 
   
   async goNext (){
-  await this.props.signIn({phone : this.state.phone})
+    
+  await this.props.signIn({phone : this.state.phone});
+  console.log('<<<<<<<<<<<GO NEXT>>>>>>>>',this.props.User.auth);
   setTokens(this.props.User.auth)
   this.props.navigation.navigate('App')
   
@@ -221,8 +223,7 @@ const styles = StyleSheet.create({
 })
 
 function mapStateToProps(state){
-  console.log("In Map State Login")
-  console.log(state)
+ 
   return {
       User: state.User
   }

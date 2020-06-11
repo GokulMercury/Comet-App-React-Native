@@ -7,8 +7,8 @@ ref.once("value").then(function(snapshot) {
    snapshot.forEach(function(childSnapshot) {
      var key = childSnapshot.key;
      var childData = childSnapshot.val();
-     console.log(snapshot);
-     var snapshotValue = snapshot.getValue();
-     console.log('<<<<<<<<<<GET VALUE', snapshotValue)
+
+ 
+    
    });
 });

@@ -39,7 +39,7 @@ export function signIn(data){
     console.log(data.phone)
     const request = axios.post(SIGNIN, qs.stringify(params))
         .then(response=>{
-            
+            console.log('<<<<<LOGIN RESPONSE>>>', response.data)
            return response.data;
             
         
@@ -49,7 +49,7 @@ export function signIn(data){
 
     return {
         type:SIGN_IN,
-        payload:request
+        payload:request,
     }
 }
 

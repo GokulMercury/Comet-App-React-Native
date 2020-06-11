@@ -22,7 +22,7 @@ export function getUpdates(params){
                   .then((response) => {
                     const news = [];
 
-                    console.log (response.data);
+                   // console.log (response.data);
                     
                    //const keys = Object.keys(news);
   //here we are using lodah to create an array from all the objects
@@ -32,9 +32,9 @@ export function getUpdates(params){
   const mapMergeData = merge(mapData,mapUserData);
 
 
-                    console.log(mapMergeData)
+                    //console.log(mapMergeData)
                     //console.log (news);
-                    console.log ("USERS END");
+                    // console.log ("USERS END");
 
 
                     for(let key in mapData){

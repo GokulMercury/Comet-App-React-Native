@@ -26,15 +26,15 @@ export const getTokens = (cb) => {
     });
 }
     export const setTokens = (values,cb) => {
+        console.log('<<<<<SET TOKENS',values)
     AsyncStorage.multiSet([
         ['@comet_app@message',values.message],
-        ['@comet_app@phone',qs.stringify(values.phone)],
+        ['@comet_app@phone',values.phone],
         ['@comet_app@userId',values.userId]
     ]).then( response => {
         cb();
     });
 }
-
 
 // export const setTokens = (values,cb) => {
 //     const dateNow = new Date();

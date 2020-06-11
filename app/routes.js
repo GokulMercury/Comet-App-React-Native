@@ -8,6 +8,8 @@ import { createAppContainer, NavigationContainer, createSwitchNavigator } from '
 import SignIn from './components/auth';
 import News from './components/news';
 import Article from './components/news/article';
+import CjChat from './components/chat';
+import UserChat from './components/chat/userChat';
 import Channels from './components/channels';
 import ChannelList from './components/channels/channelList';
 
@@ -34,9 +36,9 @@ const AuthStack = createStackNavigator({
   
 })
 
-const ChannelStack = createStackNavigator({
-  Channels:Channels,
-  ChannelList:ChannelList
+const ChatStack = createStackNavigator({
+  CjChat:CjChat,
+  UserChat:UserChat
 },headerConf)
 
 const NewsStack = createStackNavigator({
@@ -46,7 +48,7 @@ const NewsStack = createStackNavigator({
 
 const AppStack = createBottomTabNavigator({
   News:NewsStack,
-  Channels: ChannelStack
+  Chats: ChatStack
 },{
   tabBarOptions:{
     activeTintColor:'#824d9d',
@@ -68,7 +70,7 @@ const AppStack = createBottomTabNavigator({
       if (routeName === 'News'){
         iconName='ios-alarm';
         
-      } else if(routeName === 'Channels'){
+      } else if(routeName === 'Chats'){
         iconName='ios-add';
       }
       

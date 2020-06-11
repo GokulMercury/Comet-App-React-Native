@@ -1,5 +1,5 @@
 import {
-    GET_CHANNELS
+    GET_CHATS
 } from '../types';
 import qs from 'qs';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import {GETCHANNELSJSON, SUBSCRIBE, UNSUBSCRIBE} from '../../utils/misc';
 import map from 'lodash/map';
 import merge from 'lodash/merge';
 import messaging from '@react-native-firebase/messaging';
+import database from '@react-native-firebase/database';
 
 export function subscribeChannels(user,channel,cName){
   const params = {
@@ -60,40 +61,43 @@ export function unSubscribeChannels(user,channel,cName){
 }
 
 
-export function getChannels(params){
-      //   const params = {
-      //     search_keyword: "",
-      //     user_id:"429",
-      //     start:"0",
-      //     limit:"25"
-      // };
 
-   const request =  axios.post(GETCHANNELSJSON, qs.stringify(params))
-                  .then((response) => {
-                    const channels = [];
-                    const details = [];
-                    const uservalue = [];
-                    // console.log ("IN CHANNELS");
-                    // console.log (response.data.parties);
-                    
-                   const keys = Object.keys(channels);
 
-                    for(let key in response.data.parties){
-                        channels.push({
-                            ...response.data.parties[key],
-                            id: key
-                        })
-                        
-                    }
-                    
-                    return channels;
-                  })
-                  .catch((error) => {
-                      console.log(error);
-                  });
-                  return {
-                    type:GET_CHANNELS,
-                    payload:request
-                }
-          
-      }   
+export function getChats(){
+      console.log('<<<<<<<<<<<<<IN CHATS>>>>>')
+      var rootRef = database().ref();
+      var ref = rootRef.child("/Chats/+919701565293/");
+      ref.once("value").then(function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          var key = childSnapshot.key;
+       
+          var childData = snapshot.val();
+        const chats = [];
+        console.log('<<<<<CHATS>>>>>>',[childData]);
+        for(let key in childData){
+          chats.push({
+              ...childData[key],
+          })
+        }
+        return {
+          type:GET_CHATS,
+          payload:chats
+      }
+        
+        }) .catch((error) => {
+            console.log(error);
+        })
+        
+     })
+
+    }
+
+    export function pushUpdates(params){
+      let news = params;
+      console.log('PUSH_UPDATES', news);
+      //news.push(params.data);
+        return{
+          type:PUSH_UPDATES,
+          payload: news
+        }
+    }

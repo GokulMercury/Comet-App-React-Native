@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage } from '@react-native-community/async-storage';
 import { Linking } from 'react-native';
 import firebase from '@react-native-firebase/app';
 import messaging, { AuthorizationStatus } from '@react-native-firebase/messaging';
@@ -68,7 +68,7 @@ class NewsComponent extends Component {
       } else{
         this.state.userId = value[2][1];
         params.user_id = this.state.userId;
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>',params)
+       
         //this.props.dispatch(getChannels(paramsChannels));
         this.props.dispatch(getUpdates(params));
         this.state.refreshing=false
@@ -206,7 +206,7 @@ displayNotification(title, body) {
       } else{
         
         params.user_id = this.state.userId;
-        console.log(params)
+        console.log('<<<<<<<<<ASYNC VALUE>>>>', value)
         this.props.dispatch(getUpdates(params));
         this.props.dispatch(getChannels(paramsChannels));
       }
