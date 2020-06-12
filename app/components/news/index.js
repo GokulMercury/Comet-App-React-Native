@@ -26,7 +26,8 @@ import { getTokens } from '../../utils/misc';
 import ChannelsComponent from '../channels/index'
 import { color } from 'react-native-reanimated';
 //import { ScrollView } from 'react-native-gesture-handler';
-import OfflineNotice from '../../utils/OfflineNotice'
+import OfflineNotice from '../../utils/OfflineNotice';
+import _ from 'lodash';
 
 class NewsComponent extends Component {
 
@@ -97,10 +98,11 @@ async checkPermission() {
 
 async getMessage () {
   const appNotification = messaging().onMessage(async remoteMessage => {
-    //Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    
+    Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
     
     //this.state.updatesData = this.props.Updates.news;
-    console.log ('BEFORE>>>>>>>>>>>>>>>>>', this.props.Updates.news)
+    //  console.log ('BEFORE>>>>>>>>>>>>>>>>>', message)
     this.state.updatesData.post_id = remoteMessage.data.post_id;
     this.state.updatesData.name = remoteMessage.data.name;
     this.state.updatesData.party_name = remoteMessage.data.party_name;
@@ -115,10 +117,10 @@ async getMessage () {
     this.state.copyData = this.props.Updates.news;
     this.state.copyData.unshift(this.state.updatesData);
                       
-    console.log('UPDATES DATA', this.state.updatesData);
-    console.log('COPY DATA', this.state.copyData);
+    // console.log('UPDATES DATA', this.state.updatesData);
+    // console.log('COPY DATA', this.state.copyData);
     this.props.dispatch(pushUpdates(this.state.copyData));
-    console.log ('BEFORE>>>>>>>>>>>>>>>>>', this.props.Updates.news)
+    // console.log ('BEFORE>>>>>>>>>>>>>>>>>', this.props.Updates.news)
     this.state.copyData = [];
     this.state.updatesData = [];
     
@@ -133,7 +135,7 @@ async getToken() {
   if (!fcmToken) {
     fcmToken = await firebase.messaging().getToken();
     if (fcmToken) {
-      console.log(fcmToken)
+     // console.log(fcmToken)
       await AsyncStorage.setItem('fcmToken', fcmToken);
     }
   }
@@ -206,7 +208,7 @@ displayNotification(title, body) {
       } else{
         
         params.user_id = this.state.userId;
-        console.log('<<<<<<<<<ASYNC VALUE>>>>', value)
+        //console.log('<<<<<<<<<ASYNC VALUE>>>>', value)
         this.props.dispatch(getUpdates(params));
         this.props.dispatch(getChannels(paramsChannels));
       }
@@ -476,7 +478,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state){
-  console.log(state)
+  //console.log(state)
   return {
     User: state.User,
     Updates:state.Updates

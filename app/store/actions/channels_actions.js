@@ -10,7 +10,7 @@ import map from 'lodash/map';
 import merge from 'lodash/merge';
 import messaging from '@react-native-firebase/messaging';
 
-export function subscribeChannels(user,channel,cName){
+export function subscribeChannels(user,channel,cName,channelObjId){
   const params = {
           user_id:user,
           party_id:channel
@@ -20,7 +20,8 @@ export function subscribeChannels(user,channel,cName){
     start:'0',
     limit:'10'
 }
-        let channelName = cName.replace(/ /g, "_");
+        let channelName = channelObjId;
+        console.log(channelName)
         messaging()
         .subscribeToTopic(channelName)
         .then(() => console.log('Subscribed to topic!', channelName));
@@ -34,7 +35,7 @@ export function subscribeChannels(user,channel,cName){
       return request;
 }
 
-export function unSubscribeChannels(user,channel,cName){
+export function unSubscribeChannels(user,channel,cName,channelObjId){
   console.log('UNSUBSCRIBE');
   const params = {
           user_id:user,
@@ -45,9 +46,10 @@ export function unSubscribeChannels(user,channel,cName){
           start:'0',
           limit:'10'
   }
-        let channelName = cName.replace(/ /g, "_");
+        
+    let channelName = channelObjId;
         messaging()
-        .subscribeToTopic(channelName)
+        .unsubscribeFromTopic(channelName)
         .then(() => console.log('Subscribed to topic!', channelName));
 
   const request = axios.post(UNSUBSCRIBE, qs.stringify(params))

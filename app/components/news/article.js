@@ -57,7 +57,7 @@ export default class ArticleComponent extends Component {
     const cjNameTrimSpace = cjNameTrim.replace(/ /g, "_");
     
     const chatRef = "/Chats/"+this.state.chatCjUserId+"/"+this.state.chatUserId+"/msg";
-    console.log('<<<<<<<<<<<REFERENCE>>>>>>>>',chatRef);
+    console.log('<<<<<<<<<<<REFERENCE>>>>>>>>',this.state.chatCjUserId);
     const ref = database().ref(chatRef);
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];

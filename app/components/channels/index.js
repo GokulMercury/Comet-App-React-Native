@@ -45,7 +45,7 @@ class ChannelsComponent extends Component {
         params.user_id = this.state.userId;
        
         this.props.dispatch(getChannels(params));
-      
+        //console.log(this.props.Channels.channels)
       }
     })
     
@@ -55,7 +55,7 @@ class ChannelsComponent extends Component {
     animating: false }), 7000)
 
 
-  getChannelData = (peepin,userId,channelId,channelName) => {
+  getChannelData = (peepin,userId,channelId,channelName,channelObjId) => {
     this.state.animating =true
     this.closeActivityIndicator()
     if (peepin == "false"){
@@ -66,7 +66,7 @@ class ChannelsComponent extends Component {
         limit:"25"
     }
       console.log('>>>>>>SUBSCRIBE CHANNEL>>>>', params)
-      subscribeChannels(userId,channelId,channelName);
+      subscribeChannels(userId,channelId,channelName,channelObjId);
       this.props.dispatch(getChannels(params));
       this.state.subscribeData = this.props.Channels.channels;
     } else {
@@ -77,7 +77,7 @@ class ChannelsComponent extends Component {
         limit:"25"
     }
     console.log('>>>>>>SUBSCRIBE CHANNEL>>>>', params)
-      unSubscribeChannels(userId,channelId,channelName)
+      unSubscribeChannels(userId,channelId,channelName,channelObjId)
       this.props.dispatch(getChannels(params));
       this.state.subscribeData = this.props.Channels.channels;
     }
@@ -108,7 +108,7 @@ render() {
           return(
 
       <TouchableOpacity style={styles.card} onPress={()=>
-        this.getChannelData(item.peepin,this.state.userId,item.party_id,item.party_name)
+        this.getChannelData(item.peepin,this.state.userId,item.party_id,item.party_name,item.party_obj_id)
        // this.getChannelData(this.state.peepin, this.state.userId,item.party_id,item.party_name)
        }
        key={item.party_id}>

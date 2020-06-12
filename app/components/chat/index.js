@@ -55,6 +55,7 @@ class ChannelsComponent extends Component {
         params.user_id = this.state.userId;
        
        // this.props.dispatch(getChats());
+       
        this.getChatBoxData(params.user_id);
        
       }
@@ -64,8 +65,8 @@ class ChannelsComponent extends Component {
   getChatBoxData(user_id){
    // console.log(user_id);
     
-
-    database().ref("/Chats/"+this.state.userId).on('value', (snapshot) => {
+   console.log('<<<<<IN GET CHATBOX DATA', user_id);
+    database().ref("/Chats/"+user_id).on('value', (snapshot) => {
       let test = [];
       snapshot.forEach((childSnapshot) => {
         
@@ -121,6 +122,7 @@ class ChannelsComponent extends Component {
   }
   
   render() {
+    console.log(this.state.chatBox);
     if (this.state.loading) {
       return (
         <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
@@ -129,6 +131,7 @@ class ChannelsComponent extends Component {
       )
     }
     return (
+      
       <View style={styles.container}>
         <FlatList
           data={this.state.chatBox}
