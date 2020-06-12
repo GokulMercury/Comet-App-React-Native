@@ -24,6 +24,8 @@ const appRedux = () => (
     </Provider>
 )
 // Register background handler
+console.disableYellowBox=true;
+
 messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log('Message handled in the background!', remoteMessage);
   });

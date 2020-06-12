@@ -21,8 +21,8 @@ import _ from 'lodash';
 // import firebaseTest from './firebaseTest'
 
 class ChannelsComponent extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { 
       userId :"",
       cjPhone:"",
@@ -30,7 +30,7 @@ class ChannelsComponent extends Component {
       subscribeData : [],
       animating: false,
       loading: false,
-      friends: []
+      chatBox: []
     };
   }
 
@@ -49,7 +49,7 @@ class ChannelsComponent extends Component {
       if(value[0][1]===null){
         console.log("NO TOKENS");
       } else{ 
-        console.log('<<<<<ASYNC VALUE IN CHAT', value[1][1]);
+        console.log('<<<<<ASYNC VALUE IN CHAT', value[2][1]);
         this.state.userId = value[2][1];
         this.state.cjPhone = value[1][1];
         params.user_id = this.state.userId;
@@ -62,35 +62,52 @@ class ChannelsComponent extends Component {
   }
   
   getChatBoxData(user_id){
-    console.log(user_id);
+   // console.log(user_id);
     
-    const chatRef = "/Chats/"+this.state.cjPhone;
-    console.log(chatRef)
-    database().ref(chatRef)
-      .on('value', snapshot => {
-        const friends = _.map(snapshot.val(), (uid) => {
-          return {uid}
-        });
+
+    database().ref("/Chats/"+this.state.userId).on('value', (snapshot) => {
+      let test = [];
+      snapshot.forEach((childSnapshot) => {
         
-        this.setState({friends, loading: false});
-        console.log(this.state.friends)
-      })
+         let childKey = childSnapshot.key;
+        //  test.push(snapshot.val());
+         test.push(childKey);
+        // console.log(childSnapshot.key)
+       });
+       this.setState({chatBox: test});
+       // console.log(this.state.childData);
+   })
+
+
+    // const chatRef = "/Chats/"+this.state.userId;
+    // console.log(chatRef)
+    // database().ref(chatRef).orderByChild("msg")
+    //   .on('value', snapshot => {
+    //     const friends = _.map(snapshot.val(), (uid) => {
+    //       console.log(uid);
+    //       return {uid}
+    //     });
+        
+    //     this.setState({friends, loading: false});
+    //     console.log(this.state.friends)
+    //   })
   }
 
   
   renderItem({item}) {
-    console.log(item);
+   
     return (
+      
       <TouchableOpacity style={styles.card} 
-      onPress={()=> this.props.navigation.navigate('Article',{
-        userId:this.state.userId,
-        cjName:'Gokul',
-        cjPhone:this.state.cjPhone
+      onPress={()=> navigate('Article',{
+        userId:item,
+        cjName:"Gokul",
+        cjUserId:this.state.userId
       })}
        key={item.party_id}>
               <Image style={styles.image} source={{uri:IMAGEURL+`${item.party_image_obj_id}`}}/>
               <View style={styles.cardContent}>
-                <Text style={styles.name}>{item.uid.text}++{item.uid.user._id}</Text>
+                <Text style={styles.name}>{item}</Text>
                 
                 <View style={styles.followButton}>
                 
@@ -114,8 +131,26 @@ class ChannelsComponent extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={this.state.friends}
-          renderItem={this.renderItem}
+          data={this.state.chatBox}
+          renderItem={({item}) =>
+          <TouchableOpacity style={styles.card} 
+          onPress={()=> this.props.navigation.navigate('Article',{
+            userId:item,
+            cjName:"Gokul",
+            cjUserId:this.state.userId
+          })}
+           key={item.party_id}>
+                  <Image style={styles.image} source={{uri:IMAGEURL+`${item.party_image_obj_id}`}}/>
+                  <View style={styles.cardContent}>
+                    <Text style={styles.name}>{item}</Text>
+                    
+                    <View style={styles.followButton}>
+                    
+                    <Icon type='ionicon' name={item.peepin === 'true' ? 'ios-radio' : 'ios-radio'} size={23} color={item.peepin === 'true' ? "#075e54" : "#ed788b"} /> 
+                    
+                    </View>
+                  </View>
+                </TouchableOpacity> }
           keyExtractor={item => item.uid}
         />
       </View>
@@ -201,12 +236,7 @@ const styles = StyleSheet.create({
 });
 
 
-function mapStateToProps(state){
- console.log(state)
-  return {
-    Channels:state.Channels
-  }
-}
 
 
-export default connect(mapStateToProps)(ChannelsComponent);
+
+export default ChannelsComponent;

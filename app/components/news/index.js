@@ -259,7 +259,7 @@ render() {
       onPress={()=> this.props.navigation.navigate('Article',{
         userId:this.state.userId,
         cjName:item.name,
-        cjPhone:item.cjphone
+        cjUserId:item.post_owner_id
       })}
       key={qs.stringify(item.post_id)}
     >            
@@ -268,7 +268,7 @@ render() {
                   
                   <Image style={[styles.image, styles.imageContent]} source={{uri:IMAGEURL+`${item.image}`}}/>
                   <Text style={styles.name}>{item.name}</Text>
-                  <Text style={styles.party}>- {item.party_name}</Text>
+    <Text style={styles.party}>- {item.party_name}{item.cjUserId}</Text>
                   <Text style={styles.time}> ~ {Moment(item.post_date_time).from(Date.now())}</Text>
                   {/* <Text style={styles.time}> - {Moment(item.post_date_time).from(Date.now())}</Text> */}
                 </View>
