@@ -99,17 +99,20 @@ async checkPermission() {
 async getMessage () {
   const appNotification = messaging().onMessage(async remoteMessage => {
     
-    Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
     
+    
+    parseData = JSON.parse(remoteMessage.data.payload_post);
+    //Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+
     //this.state.updatesData = this.props.Updates.news;
-    //  console.log ('BEFORE>>>>>>>>>>>>>>>>>', message)
-    this.state.updatesData.post_id = remoteMessage.data.post_id;
-    this.state.updatesData.name = remoteMessage.data.name;
-    this.state.updatesData.party_name = remoteMessage.data.party_name;
-    this.state.updatesData.image = remoteMessage.data.image;
-    this.state.updatesData.post_attachment_obj_id = remoteMessage.data.post_attachment_obj_id;
-    this.state.updatesData.post_content = remoteMessage.data.post_content;
-    this.state.updatesData.post_date_time = remoteMessage.data.post_date_time;
+    console.log ('BEFORE>>>>>>>>>>>>>>>>>', parseData)
+    this.state.updatesData.post_id = parseData.postid;
+    this.state.updatesData.name = parseData.cj_name;
+    this.state.updatesData.party_name = parseData.postchannel;
+    this.state.updatesData.image = parseData.cj_image;
+    this.state.updatesData.post_attachment_obj_id = parseData.attachmentimage;
+    this.state.updatesData.post_content = parseData.postcontent;
+    this.state.updatesData.post_date_time = parseData.postedtime;
 
     // let joinedUpdates = this.state.copyData.concat(updatesData);
     // this.setState({ copyData: joinedUpdates })

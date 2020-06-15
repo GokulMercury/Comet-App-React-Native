@@ -62,7 +62,7 @@ export function getUpdates(params){
 
 export function pushUpdates(params){
   let news = params;
-  console.log('PUSH_UPDATES', news);
+ // console.log('PUSH_UPDATES', news);
   //news.push(params.data);
     return{
       type:PUSH_UPDATES,
