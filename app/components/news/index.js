@@ -28,7 +28,7 @@ import { color } from 'react-native-reanimated';
 //import { ScrollView } from 'react-native-gesture-handler';
 import OfflineNotice from '../../utils/OfflineNotice';
 import _ from 'lodash';
-
+import {Notifications} from 'react-native-notifications';
 class NewsComponent extends Component {
 
   constructor(props) {
@@ -103,9 +103,10 @@ async getMessage () {
     
     parseData = JSON.parse(remoteMessage.data.payload_post);
     //Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-
+  
+    
     //this.state.updatesData = this.props.Updates.news;
-    console.log ('BEFORE>>>>>>>>>>>>>>>>>', parseData)
+    console.log ('>>>>>>>>>>>>>INSIDE FOREGROUND');
     this.state.updatesData.post_id = parseData.postid;
     this.state.updatesData.name = parseData.cj_name;
     this.state.updatesData.party_name = parseData.postchannel;
@@ -127,6 +128,12 @@ async getMessage () {
     this.state.copyData = [];
     this.state.updatesData = [];
     
+    Notifications.postLocalNotification({
+      title: parseData.postchannel,
+      body: parseData.postcontent,
+      extra: "data"
+  });
+
   });
 
   return appNotification;
@@ -159,12 +166,14 @@ async createNotificationListeners() {
 
   // This listener triggered when notification has been received in foreground
   this.notificationListener = firebase.messaging().onNotification((notification) => {
+    console.log ('>>>>>>>>>>>>>INSIDE LISTENER _ FOREGROUND');
     const { title, body } = notification;
     this.displayNotification(title, body);
   });
 
   // This listener triggered when app is in backgound and we click, tapped and opened notifiaction
   this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+    console.log ('>>>>>>>>>>>>>INSIDE LISTENER _ BACKGROUND');
     const { title, body } = notificationOpen.notification;
     this.displayNotification(title, body);
   });
@@ -172,6 +181,7 @@ async createNotificationListeners() {
   // This listener triggered when app is closed and we click,tapped and opened notification 
   const notificationOpen = await firebase.notifications().getInitialNotification();
   if (notificationOpen) {
+    console.log ('>>>>>>>>>>>>>INSIDE LISTENER _ BACKGROUND-APP-CLOSED');
     const { title, body } = notificationOpen.notification;
     this.displayNotification(title, body);
   }

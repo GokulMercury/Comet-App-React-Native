@@ -11,6 +11,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import promiseMiddleware from 'redux-promise';
 import reducers from './app/store/reducers';
 import messaging from '@react-native-firebase/messaging';
+import {Notifications} from 'react-native-notifications';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -28,6 +29,12 @@ console.disableYellowBox=true;
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log('Message handled in the background!', remoteMessage);
+    parseData = JSON.parse(remoteMessage.data.payload_post);
+    Notifications.postLocalNotification({
+      title: parseData.postchannel,
+      body: parseData.postcontent,
+      extra: "data"
+  });
   });
 
   function HeadlessCheck({ isHeadless }) {
