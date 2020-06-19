@@ -17,6 +17,7 @@ import { getTokens } from '../../utils/misc';
 import { subscribeChannels, unSubscribeChannels } from '../../store/actions/channels_actions';
 import database from '@react-native-firebase/database';
 import firebaseTest from './firebaseTest'
+import ContentLoader, { Facebook } from 'react-content-loader/native';
 
 class ChannelsComponent extends Component {
   constructor() {
@@ -54,6 +55,14 @@ class ChannelsComponent extends Component {
   closeActivityIndicator = () => setTimeout(() => this.setState({
     animating: false }), 7000)
 
+  ListEmpty = () => {
+      return (
+        //View to show when list is empty
+        <View style={styles.MainContainer}>
+          <Facebook />
+        </View>
+      );
+    };
 
   getChannelData = (peepin,userId,channelId,channelName,channelObjId) => {
     this.state.animating =true
@@ -100,6 +109,7 @@ render() {
       horizontal = {true}
       showsHorizontalScrollIndicator={false}
       keyExtractor={(item, index) => String(index)}
+      listEmptyComponent={this.ListEmpty}
       renderItem={({item}) =>{ 
       
       if (item.party_active == 1){

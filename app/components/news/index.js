@@ -8,12 +8,12 @@ import {
   Alert,
   Dimensions,
   TextInput,
-  FlatList
+  FlatList,
+  Linking
 } from 'react-native';
 
-
+import { ThemeProvider, Button } from 'react-native-elements';
 import { AsyncStorage } from '@react-native-community/async-storage';
-import { Linking } from 'react-native';
 import firebase from '@react-native-firebase/app';
 import messaging, { AuthorizationStatus } from '@react-native-firebase/messaging';
 import qs from 'qs';
@@ -29,6 +29,9 @@ import { color } from 'react-native-reanimated';
 import OfflineNotice from '../../utils/OfflineNotice';
 import _ from 'lodash';
 import {Notifications} from 'react-native-notifications';
+import ContentLoader, { Facebook } from 'react-content-loader/native';
+import Icon from 'react-native-ionicons'
+
 class NewsComponent extends Component {
 
   constructor(props) {
@@ -228,11 +231,25 @@ displayNotification(title, body) {
     })
    
   }
-  
+
+  ListEmpty = () => {
+    return (
+      //View to show when list is empty
+      <View style={styles.MainContainer}>
+        <Facebook />
+      </View>
+    );
+  };
 
 //Share to Whatsapp
+
 shareToWhatsApp = (text) => {
   Linking.openURL(`whatsapp://send?text=${text}`);
+ }
+
+ //Chat with CJ's Whatsapp
+chatWithCJWhatsApp = (text,phone) => {
+  Linking.openURL(`whatsapp://send?text=${text}`+ `&phone=${phone}`);
  }
  
 render() {
@@ -259,7 +276,7 @@ render() {
       
 
         {/* <Text>Channels</Text> */}
-
+        
     <FlatList
     
       data={this.props.Updates.news}
@@ -268,19 +285,23 @@ render() {
       refreshing={this.state.refreshing}
       onRefresh={this.onRefresh.bind(this)}
       keyExtractor={(item, index) => String(index)}
+      listEmptyComponent={this.ListEmpty}
       renderItem={({item}) => 
       
-      <TouchableOpacity style={[styles.card, {borderColor:"#EBEBEB"}]} 
-      onPress={()=> this.props.navigation.navigate('Article',{
-        userId:this.state.userId,
-        cjName:item.name,
-        cjUserId:item.post_owner_id
-      })}
+      <View style={[styles.card, {borderColor:"#EBEBEB"}]}
+      //>>>To share content through WhatsApp
+     // onPress={()=>this.shareToWhatsApp(item.post_content)} 
+      //>>>Chat with CJ WhatsApp
+      onPress={()=>this.chatWithCJWhatsApp(item.post_content,item.cjphone)} 
+      //>>>To chat with CJ >>> Chat Page
+      // onPress={()=> this.props.navigation.navigate('Article',{
+      //   userId:this.state.userId,
+      //   cjName:item.name,
+      //   cjUserId:item.post_owner_id
+      // })} 
       key={qs.stringify(item.post_id)}
     >            
-  
                 <View style={styles.cardContent}>
-                  
                   <Image style={[styles.image, styles.imageContent]} source={{uri:IMAGEURL+`${item.image}`}}/>
                   <Text style={styles.name}>{item.name}</Text>
     <Text style={styles.party}>- {item.party_name}{item.cjUserId}</Text>
@@ -301,7 +322,42 @@ render() {
             /> : null}
             
           </View>
-              </TouchableOpacity>
+          <View style={styles.fixToText}>
+          <ThemeProvider theme={theme}> 
+          <Button
+          icon={
+            <Icon
+              name="chatboxes"
+              size={16}
+              color="#9E9E9E"
+            />
+          }
+            title="CHAT WITH ME"
+            onPress={()=>this.chatWithCJWhatsApp(item.post_content,item.cjphone)} 
+            type="clear"
+            
+          />
+          </ThemeProvider>
+
+        <ThemeProvider theme={theme}>
+          <Button
+          
+            title="SHARE"
+            onPress={()=>this.shareToWhatsApp(item.post_content)}
+            type="clear"
+            icon={
+              <Icon
+                name="share-alt"
+                size={20}
+                color="#AB47BC"
+                type="Ionicons"
+              />
+            }
+          />
+        </ThemeProvider>
+        
+        </View>
+    </View>
 
       // <TouchableOpacity
       //   onPress={()=> this.props.navigation.navigate('Article',{
@@ -364,7 +420,14 @@ render() {
 //   },
 // })
 
-
+const theme = {
+  Button: {
+    titleStyle: {
+      color: '#9E9E9E',
+      fontSize:14
+    },
+  },
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -396,6 +459,10 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
+  },
+  fixToText: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   icon:{
     width:30,

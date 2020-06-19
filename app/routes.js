@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from 'react-native-ionicons';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createAppContainer, NavigationContainer, createSwitchNavigator } from 'react-navigation'; 
@@ -68,7 +68,7 @@ const AppStack = createBottomTabNavigator({
       let iconName;
       
       if (routeName === 'News'){
-        iconName='ios-alarm';
+        iconName='radio';
         
       } else if(routeName === 'Chats'){
         iconName='ios-add';
