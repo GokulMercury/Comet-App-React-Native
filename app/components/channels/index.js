@@ -53,7 +53,7 @@ class ChannelsComponent extends Component {
   }
   
   closeActivityIndicator = () => setTimeout(() => this.setState({
-    animating: false }), 7000)
+    animating: false }), 6000)
 
   ListEmpty = () => {
       return (
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
     marginBottom:10,
-    backgroundColor:"#824d9d"
+    backgroundColor:"#e02143"
   },
   listTitle:{
     fontSize:26,
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     fontSize:16,
     flex:1,
     alignSelf:'center',
-    color:"#824d9d",
+    color:"#002768",
     fontWeight:'bold'
   },
   count:{

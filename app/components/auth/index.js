@@ -11,6 +11,7 @@ import {
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 import AuthLogo from '../auth/authLogo';
+import ContentLoader, { Facebook } from 'react-content-loader/native';
 //import AuthForm from '../auth/authForm';
 
 import {connect} from 'react-redux';
@@ -131,6 +132,8 @@ class AuthComponent extends Component {
     if(this.state.loading){
       return(
             <View style={styles.loading}>
+              <AuthLogo/>
+              <ContentLoader/>
               <ActivityIndicator/>
             </View>
             )

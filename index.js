@@ -28,13 +28,16 @@ const appRedux = () => (
 console.disableYellowBox=true;
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-    console.log('Message handled in the background!', remoteMessage);
+  console.log('Message handled in the background!', remoteMessage);
     parseData = JSON.parse(remoteMessage.data.payload_post);
+
+    
     Notifications.postLocalNotification({
       title: parseData.postchannel,
       body: parseData.postcontent,
       extra: "data"
   });
+  
   });
 
   function HeadlessCheck({ isHeadless }) {

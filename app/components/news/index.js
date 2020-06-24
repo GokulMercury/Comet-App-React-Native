@@ -25,12 +25,14 @@ import {IMAGEURL} from '../../utils/misc';
 import { getTokens } from '../../utils/misc';
 import ChannelsComponent from '../channels/index'
 import { color } from 'react-native-reanimated';
+import Hyperlink from 'react-native-hyperlink';
 //import { ScrollView } from 'react-native-gesture-handler';
 import OfflineNotice from '../../utils/OfflineNotice';
 import _ from 'lodash';
 import {Notifications} from 'react-native-notifications';
 import ContentLoader, { Facebook } from 'react-content-loader/native';
 import Icon from 'react-native-ionicons'
+import FitImage from 'react-native-fit-image';
 
 class NewsComponent extends Component {
 
@@ -170,8 +172,8 @@ async createNotificationListeners() {
   // This listener triggered when notification has been received in foreground
   this.notificationListener = firebase.messaging().onNotification((notification) => {
     console.log ('>>>>>>>>>>>>>INSIDE LISTENER _ FOREGROUND');
-    const { title, body } = notification;
-    this.displayNotification(title, body);
+    // const { title, body } = notification;
+    // this.displayNotification(title, body);
   });
 
   // This listener triggered when app is in backgound and we click, tapped and opened notifiaction
@@ -304,22 +306,30 @@ render() {
                 <View style={styles.cardContent}>
                   <Image style={[styles.image, styles.imageContent]} source={{uri:IMAGEURL+`${item.image}`}}/>
                   <Text style={styles.name}>{item.name}</Text>
-    <Text style={styles.party}>- {item.party_name}{item.cjUserId}</Text>
+                  <Text style={styles.party}>- {item.party_name}{item.cjUserId}</Text>
                   <Text style={styles.time}> ~ {Moment(item.post_date_time).from(Date.now())}</Text>
                   {/* <Text style={styles.time}> - {Moment(item.post_date_time).from(Date.now())}</Text> */}
                 </View>
                 <View style={[styles.cardContent, styles.tagsContent]}>
-                <Text style={styles.post}>{item.post_content}</Text>
-
+        {/* Adding hyperlinks */}
+                <Hyperlink linkDefault={ true } linkStyle={ { color: '#2980b9', fontSize: 18 } }>
+                  <Text style={styles.post}>{item.post_content}</Text>
+                </Hyperlink>
                 </View>
                
                 <View>
-         {item.post_attachment_obj_id ? <Image
-              style={styles.postImage}
-              source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
-              //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
-              resizeMode='contain'
-            /> : null}
+         {item.post_attachment_obj_id ? 
+         <FitImage
+         resizeMode="contain"
+         source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
+       />
+        //  <Image
+        //       style={styles.postImage}
+        //       source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
+        //       //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
+        //       resizeMode='contain'
+        //     /> 
+            : null}
             
           </View>
           <View style={styles.fixToText}>
@@ -345,11 +355,12 @@ render() {
             title="SHARE"
             onPress={()=>this.shareToWhatsApp(item.post_content)}
             type="clear"
+            
             icon={
               <Icon
                 name="share-alt"
                 size={20}
-                color="#AB47BC"
+                color="#e02143"
                 type="Ionicons"
               />
             }
@@ -422,6 +433,7 @@ render() {
 
 const theme = {
   Button: {
+    
     titleStyle: {
       color: '#9E9E9E',
       fontSize:14
@@ -529,7 +541,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft:10,
     alignSelf: 'center',
-    color:'#824d9d'
+    color:'#002768'
   },
   party:{
     fontSize:14,
@@ -543,9 +555,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   post:{
-    fontSize:17,
+    fontSize:18,
     // fontWeight: 'bold',
     marginLeft:10,
+    marginRight:12,
+    marginBottom:10,
     alignSelf: 'center'
   },
   btnColor: {

@@ -20,7 +20,7 @@ const headerConf={
   headerLayoutPreset:'center',
   defaultNavigationOptions:{
     headerStyle:{
-      backgroundColor:'#824d9d'
+      backgroundColor:'#e02143'
       },
       headerTintColor:'white',
       headerTitle:'COMET'
@@ -51,7 +51,7 @@ const AppStack = createBottomTabNavigator({
   Chats: ChatStack
 },{
   tabBarOptions:{
-    activeTintColor:'#824d9d',
+    activeTintColor:'#e02143',
     showLabel:false,
     showIcon: true,
     activeBackgroundColor:'white',
@@ -68,7 +68,7 @@ const AppStack = createBottomTabNavigator({
       let iconName;
       
       if (routeName === 'News'){
-        iconName='radio';
+        iconName='ios-radio';
         
       } else if(routeName === 'Chats'){
         iconName='ios-add';
