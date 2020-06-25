@@ -139,13 +139,13 @@ class AuthComponent extends Component {
             )
     } else {
       return (
-        <SafeAreaView style={[styles.container, { backgroundColor: '#333' }]}>
+        <SafeAreaView style={[styles.container, { backgroundColor: 'white' }]}>
           <View style={styles.page}>
             <AuthLogo/>
             <TextInput
               style={styles.textInput}
               placeholder='Phone Number with country code'
-              placeholderTextColor='#eee'
+              placeholderTextColor='#555'
               keyboardType='phone-pad'
               value={this.state.phone}
               onChangeText={phone => {
@@ -179,7 +179,7 @@ class AuthComponent extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#824d9d'
+    backgroundColor: '#e02143'
   },
   page: {
     flex: 1,
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 5,
     paddingLeft: 10,
-    color: '#fff',
+    color: '#555',
     fontSize: 16
   },
   themeButton: {
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#888',
+    backgroundColor: '#e02143',
     borderColor: '#555',
     borderWidth: 2,
     borderRadius: 5

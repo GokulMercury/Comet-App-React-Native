@@ -12,7 +12,7 @@ const LogoTitle = () => (
             source={cometHeaderLogo} 
             resizeMode={'contain'}
             style={{
-                width:70,
+                width:90,
                 height:35
             }}
         />

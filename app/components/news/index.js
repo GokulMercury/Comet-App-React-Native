@@ -34,6 +34,18 @@ import ContentLoader, { Facebook } from 'react-content-loader/native';
 import Icon from 'react-native-ionicons'
 import FitImage from 'react-native-fit-image';
 
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage);
+    parseData = JSON.parse(remoteMessage.data.payload_post);
+    
+      Notifications.postLocalNotification({
+      title: parseData.postchannel,
+      body: parseData.postcontent,
+      // extra: "data"
+  });
+  
+  });
+
 class NewsComponent extends Component {
 
   constructor(props) {
@@ -171,7 +183,7 @@ async createNotificationListeners() {
 
   // This listener triggered when notification has been received in foreground
   this.notificationListener = firebase.messaging().onNotification((notification) => {
-    console.log ('>>>>>>>>>>>>>INSIDE LISTENER _ FOREGROUND');
+    console.log ('>>>>>>>>>>>>>INSIDE LISTENER _ FOREGROUND',notification);
     // const { title, body } = notification;
     // this.displayNotification(title, body);
   });

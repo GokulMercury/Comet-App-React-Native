@@ -14,7 +14,7 @@ import Channels from './components/channels';
 import ChannelList from './components/channels/channelList';
 
 
-//import Logo from './utils/appLogo'
+import Logo from './utils/appLogo'
 
 const headerConf={
   headerLayoutPreset:'center',
@@ -23,8 +23,8 @@ const headerConf={
       backgroundColor:'#e02143'
       },
       headerTintColor:'white',
-      headerTitle:'COMET'
-      //headerTitle:Logo
+      //headerTitle:'COMET'
+      headerTitle:Logo
     }
   }
 

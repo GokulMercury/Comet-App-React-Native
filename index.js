@@ -13,29 +13,45 @@ import reducers from './app/store/reducers';
 import messaging from '@react-native-firebase/messaging';
 import {Notifications} from 'react-native-notifications';
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+// useEffect(() => {
+//   // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
-const createStoreWithMiddleware = createStore(reducers, composeEnhancers(
-    applyMiddleware(promiseMiddleware)
-))
+//   messaging().onNotificationOpenedApp(remoteMessage => {
+//     console.log(
+//       'Notification caused app to open from background state:',
+//       remoteMessage,
+//     );
+//     // navigation.navigate(remoteMessage.data.type);
+//   });
 
-const appRedux = () => (
-    <Provider store={createStoreWithMiddleware}>
-        <App/>
-    </Provider>
-)
-// Register background handler
-console.disableYellowBox=true;
+//Check whether an initial notification is available
+// messaging()
+// .getInitialNotification()
+// .then(remoteMessage => {
+//   if (remoteMessage) {
+//     console.log(
+//       'Notification caused app to open from quit state:',
+//       remoteMessage,
+//     );
+//     // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+//   }
+ 
+// });
+
+// Notifications.getInitialNotification()
+//   .then((notification) => {
+//     console.log("Initial notification was:", (notification ? notification.payload : 'N/A'));
+//     })      
+//   .catch((err) => console.error("getInitialNotifiation() failed", err));
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
+  // console.log('Message handled in the background!', remoteMessage);
     parseData = JSON.parse(remoteMessage.data.payload_post);
-
     
     Notifications.postLocalNotification({
       title: parseData.postchannel,
       body: parseData.postcontent,
-      extra: "data"
+      // extra: "data"
   });
   
   });
@@ -49,5 +65,21 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
     return <App />;
   }
 
-AppRegistry.registerComponent(appName, () => appRedux, () => HeadlessCheck);
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
+const createStoreWithMiddleware = createStore(reducers, composeEnhancers(
+    applyMiddleware(promiseMiddleware)
+))
+
+const appRedux = () => (
+    <Provider store={createStoreWithMiddleware}>
+        <App/>
+    </Provider>
+)
+// Register background handler
+
+
+  
+console.disableYellowBox=true;
+
+AppRegistry.registerComponent(appName, () => appRedux, () => HeadlessCheck);

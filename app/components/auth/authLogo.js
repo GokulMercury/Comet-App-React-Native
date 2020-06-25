@@ -5,7 +5,7 @@ import {
   Image
 } from 'react-native';
 
-import cometLogo from '../../assets/images/cool-logo.png'
+import cometLogo from '../../assets/images/comet-logo.png'
 
 const logoComponent = () => (
     <View style={{alignItems:'center'}}>
