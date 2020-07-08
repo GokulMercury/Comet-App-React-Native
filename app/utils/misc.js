@@ -6,13 +6,13 @@ export const APIKEY ='AIzaSyCH2ZiBuIiXNwIOH0-r6aCNFgM0zBYb6yQ';
 export const SIGNUP ='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCH2ZiBuIiXNwIOH0-r6aCNFgM0zBYb6yQ';
 //export const SIGNIN = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCH2ZiBuIiXNwIOH0-r6aCNFgM0zBYb6yQ';
 export const REFRESH = 'https://securetoken.googleapis.com/v1/token?key=AIzaSyCH2ZiBuIiXNwIOH0-r6aCNFgM0zBYb6yQ';
-export const GETUSERFEEDJSON ='http://dev.cometbroadcast.com/appuser/user_home_feed';
-export const IMAGEURL ='https://www.cometbroadcast.com/data/image?id=';
+export const GETUSERFEEDJSON ='https://dev.cometbroadcast.com/appuser/user_home_feed';
+export const IMAGEURL ='http://www.cometbroadcast.com/data/image?id=';
 // export const GETCHANNELSJSON ='http://dev.cometbroadcast.com/appuser/search_parties';
-export const GETCHANNELSJSON ='http://dev.cometbroadcast.com/appuser/parties';
-export const SIGNIN = 'http://dev.cometbroadcast.com/appuser/new_user';
-export const SUBSCRIBE = 'http://dev.cometbroadcast.com/appuser/user_add_peep';
-export const UNSUBSCRIBE = 'http://dev.cometbroadcast.com/appuser/unpeepin';
+export const GETCHANNELSJSON ='https://dev.cometbroadcast.com/appuser/parties';
+export const SIGNIN = 'https://dev.cometbroadcast.com/appuser/new_user';
+export const SUBSCRIBE = 'https://dev.cometbroadcast.com/appuser/user_add_peep';
+export const UNSUBSCRIBE = 'https://dev.cometbroadcast.com/appuser/unpeepin';
 
 export const getTokens = (cb) => {
 

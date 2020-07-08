@@ -33,6 +33,7 @@ import {Notifications} from 'react-native-notifications';
 import ContentLoader, { Facebook } from 'react-content-loader/native';
 import Icon from 'react-native-ionicons'
 import FitImage from 'react-native-fit-image';
+import Toast from 'react-native-simple-toast';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('Message handled in the background!', remoteMessage);
@@ -62,7 +63,7 @@ class NewsComponent extends Component {
   
 
   componentDidMount(){
-    
+    Toast.showWithGravity('Comet loading. Please wait..', Toast.LONG, Toast.BOTTOM);
     this.checkPermission() ;
     this.createNotificationListeners(); 
     this.getMessage();
@@ -123,33 +124,38 @@ async getMessage () {
   
     
     //this.state.updatesData = this.props.Updates.news;
-    console.log ('>>>>>>>>>>>>>INSIDE FOREGROUND');
-    this.state.updatesData.post_id = parseData.postid;
-    this.state.updatesData.name = parseData.cj_name;
-    this.state.updatesData.party_name = parseData.postchannel;
-    this.state.updatesData.image = parseData.cj_image;
-    this.state.updatesData.post_attachment_obj_id = parseData.attachmentimage;
-    this.state.updatesData.post_content = parseData.postcontent;
-    this.state.updatesData.post_date_time = parseData.postedtime;
 
-    // let joinedUpdates = this.state.copyData.concat(updatesData);
-    // this.setState({ copyData: joinedUpdates })
+    //<<<<<<<<<<<<<<<<<<<<<ENABLE THE FOLLOWING FOR AUTO UPDATE>>>>>>>//
+    // console.log ('>>>>>>>>>>>>>INSIDE FOREGROUND');
+    // this.state.updatesData.post_id = parseData.postid;
+    // this.state.updatesData.name = parseData.cj_name;
+    // this.state.updatesData.party_name = parseData.postchannel;
+    // this.state.updatesData.image = parseData.cj_image;
+    // this.state.updatesData.post_attachment_obj_id = parseData.attachmentimage;
+    // this.state.updatesData.post_content = parseData.postcontent;
+    // this.state.updatesData.post_date_time = parseData.postedtime;
+
+    // // let joinedUpdates = this.state.copyData.concat(updatesData);
+    // // this.setState({ copyData: joinedUpdates })
     
-    this.state.copyData = this.props.Updates.news;
-    this.state.copyData.unshift(this.state.updatesData);
+    // this.state.copyData = this.props.Updates.news;
+    // this.state.copyData.unshift(this.state.updatesData);
                       
-    // console.log('UPDATES DATA', this.state.updatesData);
-    // console.log('COPY DATA', this.state.copyData);
-    this.props.dispatch(pushUpdates(this.state.copyData));
-    // console.log ('BEFORE>>>>>>>>>>>>>>>>>', this.props.Updates.news)
-    this.state.copyData = [];
-    this.state.updatesData = [];
-    
+    // // console.log('UPDATES DATA', this.state.updatesData);
+    // // console.log('COPY DATA', this.state.copyData);
+    // this.props.dispatch(pushUpdates(this.state.copyData));
+    // // console.log ('BEFORE>>>>>>>>>>>>>>>>>', this.props.Updates.news)
+    // this.state.copyData = [];
+    // this.state.updatesData = [];
+    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+
     Notifications.postLocalNotification({
       title: parseData.postchannel,
       body: parseData.postcontent,
       extra: "data"
   });
+
+  Toast.showWithGravity('New message waiting. Swipe down to refresh.', Toast.LONG, Toast.TOP);
 
   });
 
@@ -238,7 +244,7 @@ displayNotification(title, body) {
       } else{
         
         params.user_id = this.state.userId;
-        //console.log('<<<<<<<<<ASYNC VALUE>>>>', value)
+        Toast.showWithGravity('Loading. Please wait..', Toast.LONG, Toast.BOTTOM);
         this.props.dispatch(getUpdates(params));
         this.props.dispatch(getChannels(paramsChannels));
       }
@@ -258,7 +264,7 @@ displayNotification(title, body) {
 //Share to Whatsapp
 
 shareToWhatsApp = (text) => {
-  Linking.openURL(`whatsapp://send?text=${text}`);
+  Linking.openURL(`whatsapp://send?text=*COMET*:: ${text} ::>> *More in COMET App* https://goo.gl/mL4hVW`);
  }
 
  //Chat with CJ's Whatsapp

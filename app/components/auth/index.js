@@ -9,7 +9,7 @@ import {
   ActivityIndicator
 } from 'react-native'
 import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth';
 import AuthLogo from '../auth/authLogo';
 import ContentLoader, { Facebook } from 'react-content-loader/native';
 //import AuthForm from '../auth/authForm';
@@ -34,14 +34,28 @@ class AuthComponent extends Component {
   }
  
   componentDidMount(){
-  getTokens((value)=>{
-    if(value[2][1]===null){
-      console.log("NO TOKENS");
-      this.setState({loading:false})
-    } else{
-      this.props.navigation.navigate('App');
-    }
-  })
+    auth().onAuthStateChanged(async user => {
+      if (!user) {
+        console.log("NO TOKENS");
+        this.setState({loading:false})
+      } 
+      else {
+        this.setState({loading:true})
+        await this.props.signIn({phone : user.phoneNumber});
+        console.log('<<<<<<<<<<<GO NEXT>>>>>>>>',this.props.User.auth);
+        setTokens(this.props.User.auth)
+        this.props.navigation.navigate('App')
+      }
+  });
+
+  // getTokens((value)=>{
+  //   if(value[2][1]===null){
+  //     console.log("NO TOKENS");
+  //     this.setState({loading:false})
+  //   } else{
+  //     this.props.navigation.navigate('App');
+  //   }
+  // })
 }
 
   validatePhoneNumber = () => {
@@ -134,6 +148,7 @@ class AuthComponent extends Component {
             <View style={styles.loading}>
               <AuthLogo/>
               <ContentLoader/>
+              <Text>Goodness on the way. Please wait.</Text>
               <ActivityIndicator/>
             </View>
             )
