@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {SIGN_IN,SIGN_UP, AUTO_SIGN_IN} from '../types';
 import { SIGNUP, SIGNIN, REFRESH } from '../../utils/misc';
 import qs from 'qs';
-import { getTokens, setTokens } from '../../utils/misc';
+import { getTokens, setTokens,storeFirstTimeUser } from '../../utils/misc';
 
 export function signUp(data){
 
@@ -36,10 +36,12 @@ export function signIn(data){
     const params = {
         phone: data.phone
     };
-    console.log(data.phone)
+    
+    
+    //console.log(data.phone)
     const request = axios.post(SIGNIN, qs.stringify(params))
         .then(response=>{
-            console.log('<<<<<LOGIN RESPONSE>>>', response.data)
+            storeFirstTimeUser('true');
            return response.data;
             
         

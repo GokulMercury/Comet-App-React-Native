@@ -13,8 +13,8 @@ import Icon from 'react-native-ionicons'
 import { connect } from 'react-redux';
 import { getChannels } from '../../store/actions/channels_actions';
 import {IMAGEURL} from '../../utils/misc';
-import { getTokens } from '../../utils/misc';
-import { subscribeChannels, unSubscribeChannels } from '../../store/actions/channels_actions';
+import { getTokens, storeFirstTimeUser } from '../../utils/misc';
+import { subscribeChannels, unSubscribeChannels, firebaseSubscribe } from '../../store/actions/channels_actions';
 import database from '@react-native-firebase/database';
 import firebaseTest from './firebaseTest'
 import ContentLoader, { Facebook } from 'react-content-loader/native';
@@ -40,7 +40,7 @@ class ChannelsComponent extends Component {
   }
     getTokens((value)=>{
       if(value[0][1]===null){
-        console.log("NO TOKENS");
+        //console.log("NO TOKENS");
       } else{ 
         this.state.userId = value[2][1];
         params.user_id = this.state.userId;
@@ -52,6 +52,11 @@ class ChannelsComponent extends Component {
     
   }
   
+  componentDidUpdate(){
+    //console.log('component did update');
+    storeFirstTimeUser('false');
+  }
+
   closeActivityIndicator = () => setTimeout(() => this.setState({
     animating: false }), 6000)
 
@@ -74,7 +79,7 @@ class ChannelsComponent extends Component {
         start:"0",
         limit:"25"
     }
-      console.log('>>>>>>SUBSCRIBE CHANNEL>>>>', params)
+      //console.log('>>>>>>SUBSCRIBE CHANNEL>>>>', params)
       subscribeChannels(userId,channelId,channelName,channelObjId);
       this.props.dispatch(getChannels(params));
       this.state.subscribeData = this.props.Channels.channels;
@@ -85,7 +90,7 @@ class ChannelsComponent extends Component {
         start:"0",
         limit:"25"
     }
-    console.log('>>>>>>SUBSCRIBE CHANNEL>>>>', params)
+    //console.log('>>>>>>UNSUBSCRIBE CHANNEL>>>>', params)
       unSubscribeChannels(userId,channelId,channelName,channelObjId)
       this.props.dispatch(getChannels(params));
       this.state.subscribeData = this.props.Channels.channels;
@@ -94,8 +99,9 @@ class ChannelsComponent extends Component {
  
   }
 
+  
 render() {
- 
+
   return (
     <View style={styles.container}>
       
@@ -111,12 +117,15 @@ render() {
       keyExtractor={(item, index) => String(index)}
       listEmptyComponent={this.ListEmpty}
       renderItem={({item}) =>{ 
-      
+      if (item.peein === 'true')
+      {
+        firebaseSubscribe(item.party_obj_id) 
+      }
       if (item.party_active == 1){
        
 
           return(
-
+            
       <TouchableOpacity style={styles.card} onPress={()=>
         this.getChannelData(item.peepin,this.state.userId,item.party_id,item.party_name,item.party_obj_id)
        // this.getChannelData(this.state.peepin, this.state.userId,item.party_id,item.party_name)
@@ -124,11 +133,12 @@ render() {
        key={item.party_id}>
               <Image style={styles.image} source={{uri:IMAGEURL+`${item.party_image_obj_id}`}}/>
               <View style={styles.cardContent}>
+              <Icon type='ionicon' name={item.peepin === 'true' ? 'ios-checkmark-circle' : 'ios-radio'} size={23} color={item.peepin === 'true' ? "#075e54" : "#ed788b"} /> 
                 <Text style={styles.name}>{item.party_name}</Text>
                 
                 <View style={styles.followButton}>
                 
-                <Icon type='ionicon' name={item.peepin === 'true' ? 'ios-radio' : 'ios-radio'} size={23} color={item.peepin === 'true' ? "#075e54" : "#ed788b"} /> 
+               
                 {<ActivityIndicator
                   animating = {this.state.animating}
                   color = '#bc2b78'
@@ -138,42 +148,14 @@ render() {
               </View>
             </TouchableOpacity>
 
-  //           <TouchableOpacity
-              // onPress={()=>
-              //  this.getChannelData(item.peepin,this.state.userId,item.party_id,item.party_name)
-              // // this.getChannelData(this.state.peepin, this.state.userId,item.party_id,item.party_name)
-              // }
-              // key={item.party_id}
-  //           >
-  //           <View style = {styles.listItemContainer}>
-  //   <View style= {styles.iconContainer}>
-  //    <Image source={{uri:IMAGEURL+`${item.party_image_obj_id}`}} style={styles.initStyle} resizeMode='contain' />
-  //   </View>
-  //   <View style = {styles.callerDetailsContainer}>
-  //    <View style={styles.callerDetailsContainerWrap}>
-  //     <View style={styles.nameContainer}>
-  //       <Text style={{ fontFamily:'400', color:'#000', fontSize:16 }}>{item.party_name}</Text>
-  //       <View style={styles.dateContainer}>
-        
-  //         {/* <Ionicons name={item.party_name ? "ios-alarm" : "ios-alarm"} size={15} color={item.party_name ? "#ed788b" : "#075e54"} /> */}
-  //         {/* <Text style={{ fontWeight:'400', color:'#666', fontSize:12 }}>{item.party_name} {item.party_name}</Text> */}
-  //       </View>
-  //      </View>
-  //    <View style={styles.callIconContainer}>
-  //    <Ionicons name={item.peepin === 'true' ? "ios-alarm" : "ios-alarm"} size={23} color={item.peepin === 'true' ? "#075e54" : "#ed788b"} />
-  //      {/* <Ionicons name="ios-alarm" color='#075e54' size={23} style={{ padding:5 }} />  */}
-  //    </View>
-  //   </View>
-  //  </View>
-  // </View>
-  // </TouchableOpacity>    
-           
        ) 
       
           
         }
+
         
       } 
+      
     }
     
   
@@ -182,8 +164,10 @@ render() {
   </View>
   
   );
+
 }
 }
+storeFirstTimeUser('false')
 const styles = StyleSheet.create({
   container:{
     flex:1,
@@ -229,13 +213,13 @@ const styles = StyleSheet.create({
     backgroundColor:"white",
     padding: 10,
     flexDirection:'row',
-    borderRadius:30,
+    borderRadius:10,
   },
 
   name:{
     fontSize:16,
     flex:1,
-    alignSelf:'center',
+    alignSelf:'flex-start',
     color:"#002768",
     fontWeight:'bold'
   },
@@ -247,7 +231,7 @@ const styles = StyleSheet.create({
   },
   followButton: {
     // marginTop:10,
-    height:35,
+    height:10,
     width:100,
     // padding:10,
     flexDirection: 'row',

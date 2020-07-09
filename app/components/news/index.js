@@ -36,7 +36,7 @@ import FitImage from 'react-native-fit-image';
 import Toast from 'react-native-simple-toast';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
+  //console.log('Message handled in the background!', remoteMessage);
     parseData = JSON.parse(remoteMessage.data.payload_post);
     
       Notifications.postLocalNotification({
@@ -63,7 +63,7 @@ class NewsComponent extends Component {
   
 
   componentDidMount(){
-    Toast.showWithGravity('Comet loading. Please wait..', Toast.LONG, Toast.BOTTOM);
+    Toast.showWithGravity('Comet loading. Please wait..', Toast.LONG, Toast.CENTER);
     this.checkPermission() ;
     this.createNotificationListeners(); 
     this.getMessage();
@@ -83,7 +83,7 @@ class NewsComponent extends Component {
     getTokens((value)=>{
       this.state.refreshing=true
       if(value[0][1]===null){
-        console.log("NO TOKENS");
+        //console.log("NO TOKENS");
       } else{
         this.state.userId = value[2][1];
         params.user_id = this.state.userId;
@@ -181,7 +181,7 @@ async requestPermission() {
     this.getToken();
   } catch (error) {
     // User has rejected permissions
-    console.log('permission rejected');
+    //console.log('permission rejected');
   }
 }
 
@@ -189,14 +189,14 @@ async createNotificationListeners() {
 
   // This listener triggered when notification has been received in foreground
   this.notificationListener = firebase.messaging().onNotification((notification) => {
-    console.log ('>>>>>>>>>>>>>INSIDE LISTENER _ FOREGROUND',notification);
+    //console.log ('>>>>>>>>>>>>>INSIDE LISTENER _ FOREGROUND',notification);
     // const { title, body } = notification;
     // this.displayNotification(title, body);
   });
 
   // This listener triggered when app is in backgound and we click, tapped and opened notifiaction
   this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
-    console.log ('>>>>>>>>>>>>>INSIDE LISTENER _ BACKGROUND');
+    //console.log ('>>>>>>>>>>>>>INSIDE LISTENER _ BACKGROUND');
     const { title, body } = notificationOpen.notification;
     this.displayNotification(title, body);
   });
@@ -204,7 +204,7 @@ async createNotificationListeners() {
   // This listener triggered when app is closed and we click,tapped and opened notification 
   const notificationOpen = await firebase.notifications().getInitialNotification();
   if (notificationOpen) {
-    console.log ('>>>>>>>>>>>>>INSIDE LISTENER _ BACKGROUND-APP-CLOSED');
+    //console.log ('>>>>>>>>>>>>>INSIDE LISTENER _ BACKGROUND-APP-CLOSED');
     const { title, body } = notificationOpen.notification;
     this.displayNotification(title, body);
   }
@@ -220,7 +220,7 @@ displayNotification(title, body) {
     ],
     { cancelable: false },
   );
-  console.log(title,body)
+  //console.log(title,body)
 }
   
 
@@ -240,7 +240,7 @@ displayNotification(title, body) {
 };
     getTokens((value)=>{
       if(value[0][1]===null){
-        console.log("NO TOKENS");
+        //console.log("NO TOKENS");
       } else{
         
         params.user_id = this.state.userId;

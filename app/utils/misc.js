@@ -26,7 +26,7 @@ export const getTokens = (cb) => {
     });
 }
     export const setTokens = (values,cb) => {
-        console.log('<<<<<SET TOKENS',values)
+        //console.log('<<<<<SET TOKENS',values)
     AsyncStorage.multiSet([
         ['@comet_app@message',values.message],
         ['@comet_app@phone',values.phone],
@@ -35,6 +35,15 @@ export const getTokens = (cb) => {
         cb();
     });
 }
+
+export const storeFirstTimeUser = async (value) => {
+    try {
+      await AsyncStorage.setItem('@comet_app_firstTimeUser', value)
+     // console.log('FIRST TIME', value);
+    } catch (e) {
+      // saving error
+    }
+  }
 
 // export const setTokens = (values,cb) => {
 //     const dateNow = new Date();

@@ -34,19 +34,26 @@ class AuthComponent extends Component {
   }
  
   componentDidMount(){
-    auth().onAuthStateChanged(async user => {
+    auth().onAuthStateChanged(user => {
       if (!user) {
-        console.log("NO TOKENS");
+        //console.log("NO TOKENS");
         this.setState({loading:false})
       } 
       else {
-        this.setState({loading:true})
-        await this.props.signIn({phone : user.phoneNumber});
-        console.log('<<<<<<<<<<<GO NEXT>>>>>>>>',this.props.User.auth);
-        setTokens(this.props.User.auth)
-        this.props.navigation.navigate('App')
-      }
-  });
+            getTokens(async value=>{
+              if(value[2][1]===null){
+                //console.log("NO TOKENS");
+                //this.setState({loading:true})
+                await this.props.signIn({phone : user.phoneNumber});
+                //console.log('<<<<<<<<<<<GO NEXT>>>>>>>>',this.props.User.auth);
+                setTokens(this.props.User.auth);
+                this.props.navigation.navigate('App');
+              } else{
+                this.props.navigation.navigate('App');
+              }
+            })
+          }
+      });
 
   // getTokens((value)=>{
   //   if(value[2][1]===null){
@@ -75,7 +82,7 @@ class AuthComponent extends Component {
         .catch(error => {
           alert(error.message)
 
-          console.log(error)
+         // console.log(error)
         })
     } else {
       alert('Invalid Phone Number')
@@ -102,7 +109,7 @@ class AuthComponent extends Component {
         })
         .catch(error => {
           alert(error.message)
-          console.log(error)
+          //console.log(error)
         })
     } else {
       alert('Please enter a 6 digit OTP code.')
@@ -113,7 +120,7 @@ class AuthComponent extends Component {
   async goNext (){
     
   await this.props.signIn({phone : this.state.phone});
-  console.log('<<<<<<<<<<<GO NEXT>>>>>>>>',this.props.User.auth);
+  //console.log('<<<<<<<<<<<GO NEXT>>>>>>>>',this.props.User.auth);
   setTokens(this.props.User.auth)
   this.props.navigation.navigate('App')
   
@@ -202,7 +209,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   textInput: {
-    marginTop: 20,
+    marginTop: 5,
     width: '90%',
     height: 40,
     borderColor: '#555',
@@ -218,8 +225,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#e02143',
-    borderColor: '#555',
-    borderWidth: 2,
     borderRadius: 5
   },
   themeButtonTitle: {
@@ -230,7 +235,7 @@ const styles = StyleSheet.create({
   verificationView: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 50
+    marginTop: 20
   },
   loading:{
     flex:1,

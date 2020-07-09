@@ -5,10 +5,12 @@ import qs from 'qs';
 import axios from 'axios';
 //import {FIREBASEDB} from '../../utils/misc';
 import {GETCHANNELSJSON, SUBSCRIBE, UNSUBSCRIBE} from '../../utils/misc';
+import { storeFirstTimeUser } from '../../utils/misc';
 // import _ from 'lodash';
 import map from 'lodash/map';
 import merge from 'lodash/merge';
 import messaging from '@react-native-firebase/messaging';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export function subscribeChannels(user,channel,cName,channelObjId){
   const params = {
@@ -21,22 +23,22 @@ export function subscribeChannels(user,channel,cName,channelObjId){
     limit:'10'
 }
         let channelName = channelObjId;
-        console.log(channelName)
+        //console.log(channelName)
         messaging()
         .subscribeToTopic(channelName)
         .then(() => console.log('Subscribed to topic!', channelName));
 
   const request = axios.post(SUBSCRIBE, qs.stringify(params))
       .then((response) => {
-        console.log ('PARAMS', params);
-        console.log ('SUBSCRIBE RESPONSE', response.data);
+        // console.log ('PARAMS', params);
+        // console.log ('SUBSCRIBE RESPONSE', response.data);
        
       })
       return request;
 }
 
 export function unSubscribeChannels(user,channel,cName,channelObjId){
-  console.log('UNSUBSCRIBE');
+ // console.log('UNSUBSCRIBE');
   const params = {
           user_id:user,
           party_id:channel
@@ -50,15 +52,37 @@ export function unSubscribeChannels(user,channel,cName,channelObjId){
     let channelName = channelObjId;
         messaging()
         .unsubscribeFromTopic(channelName)
-        .then(() => console.log('Subscribed to topic!', channelName));
+        .then(() => console.log('Unbscribed to topic!', channelName));
 
   const request = axios.post(UNSUBSCRIBE, qs.stringify(params))
       .then((response) => {
-        console.log ('PARAMS', params);
-        console.log ('UNSUBSCRIBE RESPONSE', response.data);
+        // console.log ('PARAMS', params);
+        // console.log ('UNSUBSCRIBE RESPONSE', response.data);
       
       })
       return request;
+}
+
+export async function firebaseSubscribe(channelObjId){
+  
+  try {
+    const value = await AsyncStorage.getItem('@comet_app_firstTimeUser');
+    //console.log('NEW USER FIREBASE SUBSCRIPTION VALUE', value);
+    if(value == 'true') {
+        let channelName = channelObjId;
+        console.log(channelName)
+        messaging()
+        .subscribeToTopic(channelName)
+        .then(() => console.log('Subscribed to topic!', channelName));
+      
+        //console.log('NEW USER FIREBASE SUBSCRIPTION');
+    } else {
+      //console.log('NEW USER FIREBASE SUBSCRIPTION NO NEED');
+    }
+  } catch(e) {
+    //console.log('ERROR',e);
+  }
+       
 }
 
 
