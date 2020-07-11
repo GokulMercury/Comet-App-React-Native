@@ -19,7 +19,7 @@ import {signIn} from '../../store/actions/user_actions'
 import {autoSignIn} from '../../store/actions/user_actions';
 import {bindActionCreators} from 'redux';
 import AsyncStorage from '@react-native-community/async-storage';
-import { getTokens, setTokens } from '../../utils/misc';
+import { getTokens, setTokens, storeFirstTimeUser } from '../../utils/misc';
 class AuthComponent extends Component {
 
   constructor() {
@@ -37,6 +37,7 @@ class AuthComponent extends Component {
     auth().onAuthStateChanged(user => {
       if (!user) {
         //console.log("NO TOKENS");
+        storeFirstTimeUser('true');
         this.setState({loading:false})
       } 
       else {
@@ -47,6 +48,7 @@ class AuthComponent extends Component {
                 await this.props.signIn({phone : user.phoneNumber});
                 //console.log('<<<<<<<<<<<GO NEXT>>>>>>>>',this.props.User.auth);
                 setTokens(this.props.User.auth);
+                storeFirstTimeUser('true');
                 this.props.navigation.navigate('App');
               } else{
                 this.props.navigation.navigate('App');

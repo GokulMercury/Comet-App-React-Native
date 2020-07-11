@@ -39,7 +39,7 @@ export const getTokens = (cb) => {
 export const storeFirstTimeUser = async (value) => {
     try {
       await AsyncStorage.setItem('@comet_app_firstTimeUser', value)
-     // console.log('FIRST TIME', value);
+      console.log('FIRST TIME', value);
     } catch (e) {
       // saving error
     }

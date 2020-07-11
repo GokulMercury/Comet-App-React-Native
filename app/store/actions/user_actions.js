@@ -41,7 +41,7 @@ export function signIn(data){
     //console.log(data.phone)
     const request = axios.post(SIGNIN, qs.stringify(params))
         .then(response=>{
-            storeFirstTimeUser('true');
+            
            return response.data;
             
         

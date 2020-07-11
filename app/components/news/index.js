@@ -3,11 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
   Image,
   Alert,
-  Dimensions,
-  TextInput,
   FlatList,
   Linking
 } from 'react-native';
@@ -18,15 +15,13 @@ import firebase from '@react-native-firebase/app';
 import messaging, { AuthorizationStatus } from '@react-native-firebase/messaging';
 import qs from 'qs';
 import { connect } from 'react-redux';
-import { getUpdates, pushUpdates } from '../../store/actions/updates_actions';
+import { getUpdates } from '../../store/actions/updates_actions';
 import { getChannels } from '../../store/actions/channels_actions';
 import Moment from 'moment';
 import {IMAGEURL} from '../../utils/misc';
 import { getTokens } from '../../utils/misc';
 import ChannelsComponent from '../channels/index'
-import { color } from 'react-native-reanimated';
 import Hyperlink from 'react-native-hyperlink';
-//import { ScrollView } from 'react-native-gesture-handler';
 import OfflineNotice from '../../utils/OfflineNotice';
 import _ from 'lodash';
 import {Notifications} from 'react-native-notifications';
@@ -62,7 +57,7 @@ class NewsComponent extends Component {
 
   
 
-  componentDidMount(){
+componentDidMount(){
     Toast.showWithGravity('Comet loading. Please wait..', Toast.LONG, Toast.CENTER);
     this.checkPermission() ;
     this.createNotificationListeners(); 
@@ -224,7 +219,7 @@ displayNotification(title, body) {
 }
   
 
-  onRefresh() {
+ onRefresh() {
     const params = {
       user_id: "",
       start:"0",
@@ -238,14 +233,14 @@ displayNotification(title, body) {
     start:"0",
     limit:"25"
 };
-    getTokens((value)=>{
+    getTokens(async value=>{
       if(value[0][1]===null){
         //console.log("NO TOKENS");
       } else{
         
         params.user_id = this.state.userId;
         Toast.showWithGravity('Loading. Please wait..', Toast.LONG, Toast.BOTTOM);
-        this.props.dispatch(getUpdates(params));
+        await this.props.dispatch(getUpdates(params));
         this.props.dispatch(getChannels(paramsChannels));
       }
     })

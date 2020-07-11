@@ -15,8 +15,6 @@ import { getChannels } from '../../store/actions/channels_actions';
 import {IMAGEURL} from '../../utils/misc';
 import { getTokens, storeFirstTimeUser } from '../../utils/misc';
 import { subscribeChannels, unSubscribeChannels, firebaseSubscribe } from '../../store/actions/channels_actions';
-import database from '@react-native-firebase/database';
-import firebaseTest from './firebaseTest'
 import ContentLoader, { Facebook } from 'react-content-loader/native';
 
 class ChannelsComponent extends Component {
@@ -30,7 +28,7 @@ class ChannelsComponent extends Component {
     };
   }
 
-  componentDidMount(){
+  async componentDidMount(){
 
     const params = {
       // search_keyword: "",
@@ -38,25 +36,25 @@ class ChannelsComponent extends Component {
       start:"0",
       limit:"25"
   }
-    getTokens((value)=>{
+    getTokens(async value=>{
       if(value[0][1]===null){
         //console.log("NO TOKENS");
       } else{ 
         this.state.userId = value[2][1];
         params.user_id = this.state.userId;
        
-        this.props.dispatch(getChannels(params));
+        await this.props.dispatch(getChannels(params));
+        
         //console.log(this.props.Channels.channels)
       }
     })
-    
+
   }
   
-  componentDidUpdate(){
+  componentDidUpdate () {
     //console.log('component did update');
-    storeFirstTimeUser('false');
+        storeFirstTimeUser('false');
   }
-
   closeActivityIndicator = () => setTimeout(() => this.setState({
     animating: false }), 6000)
 
@@ -99,6 +97,7 @@ class ChannelsComponent extends Component {
  
   }
 
+
   
 render() {
 
@@ -117,12 +116,12 @@ render() {
       keyExtractor={(item, index) => String(index)}
       listEmptyComponent={this.ListEmpty}
       renderItem={({item}) =>{ 
-      if (item.peein === 'true')
-      {
-        firebaseSubscribe(item.party_obj_id) 
-      }
+      
       if (item.party_active == 1){
-       
+        if (item.peepin === 'true')
+        {
+          firebaseSubscribe(item.party_obj_id) 
+        }
 
           return(
             
@@ -167,7 +166,7 @@ render() {
 
 }
 }
-storeFirstTimeUser('false')
+
 const styles = StyleSheet.create({
   container:{
     flex:1,
