@@ -71,7 +71,7 @@ const AppStack = createBottomTabNavigator({
         iconName='ios-radio';
         
       } else if(routeName === 'Chats'){
-        iconName='ios-add';
+        iconName='business';
       }
       
       return <Ionicons name={iconName} size={25} color={tintColor}/>;

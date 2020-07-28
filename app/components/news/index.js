@@ -247,7 +247,7 @@ displayNotification(title, body) {
    
   }
 
-  ListEmpty = () => {
+  listHeader = () => {
     return (
       //View to show when list is empty
       <View style={styles.MainContainer}>
@@ -292,129 +292,99 @@ render() {
 
         {/* <Text>Channels</Text> */}
         
-    <FlatList
+        <FlatList
     
-      data={this.props.Updates.news}
-    //  extraData={this.state.copyData}
-      ListHeaderComponent={ChannelsComponent}
-      refreshing={this.state.refreshing}
-      onRefresh={this.onRefresh.bind(this)}
-      keyExtractor={(item, index) => String(index)}
-      listEmptyComponent={this.ListEmpty}
-      renderItem={({item}) => 
-      
-      <View style={[styles.card, {borderColor:"#EBEBEB"}]}
-      //>>>To share content through WhatsApp
-     // onPress={()=>this.shareToWhatsApp(item.post_content)} 
-      //>>>Chat with CJ WhatsApp
-      onPress={()=>this.chatWithCJWhatsApp(item.post_content,item.cjphone)} 
-      //>>>To chat with CJ >>> Chat Page
-      // onPress={()=> this.props.navigation.navigate('Article',{
-      //   userId:this.state.userId,
-      //   cjName:item.name,
-      //   cjUserId:item.post_owner_id
-      // })} 
-      key={qs.stringify(item.post_id)}
-    >            
-                <View style={styles.cardContent}>
-                  <Image style={[styles.image, styles.imageContent]} source={{uri:IMAGEURL+`${item.image}`}}/>
-                  <Text style={styles.name}>{item.name}</Text>
-                  <Text style={styles.party}>- {item.party_name}{item.cjUserId}</Text>
-                  <Text style={styles.time}> ~ {Moment(item.post_date_time).from(Date.now())}</Text>
-                  {/* <Text style={styles.time}> - {Moment(item.post_date_time).from(Date.now())}</Text> */}
-                </View>
-                <View style={[styles.cardContent, styles.tagsContent]}>
-        {/* Adding hyperlinks */}
-                <Hyperlink linkDefault={ true } linkStyle={ { color: '#2980b9', fontSize: 18 } }>
-                  <Text style={styles.post}>{item.post_content}</Text>
-                </Hyperlink>
-                </View>
-               
-                <View>
-         {item.post_attachment_obj_id ? 
-         <FitImage
-         resizeMode="contain"
-         source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
-       />
-        //  <Image
-        //       style={styles.postImage}
-        //       source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
-        //       //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
-        //       resizeMode='contain'
-        //     /> 
-            : null}
-            
-          </View>
-          <View style={styles.fixToText}>
-          <ThemeProvider theme={theme}> 
-          <Button
-          icon={
-            <Icon
-              name="chatboxes"
-              size={16}
-              color="#9E9E9E"
-            />
-          }
-            title="CHAT WITH ME"
-            onPress={()=>this.chatWithCJWhatsApp(item.post_content,item.cjphone)} 
-            type="clear"
-            
-          />
-          </ThemeProvider>
-
-        <ThemeProvider theme={theme}>
-          <Button
-          
-            title="SHARE"
-            onPress={()=>this.shareToWhatsApp(item.post_content)}
-            type="clear"
-            
-            icon={
-              <Icon
-                name="share-alt"
-                size={20}
-                color="#e02143"
-                type="Ionicons"
+    data={this.props.Updates.news}
+  //  extraData={this.state.copyData}
+    ListHeaderComponent={ChannelsComponent}
+    refreshing={this.state.refreshing}
+    onRefresh={this.onRefresh.bind(this)}
+    keyExtractor={(item, index) => String(index)}
+    listEmptyComponent={this.listHeader}
+    renderItem={({item}) => {
+      if (item.cjtype != "locovoco"){
+        return(
+          <View style={[styles.card, {borderColor:"#EBEBEB"}]}
+  
+          onPress={()=>this.chatWithCJWhatsApp(item.post_content,item.cjphone)} 
+         
+          key={qs.stringify(item.post_id)}
+        >            
+                    <View style={styles.cardContent}>
+                      <Image style={[styles.image, styles.imageContent]} source={{uri:IMAGEURL+`${item.image}`}}/>
+                      <Text style={styles.name}>{item.name}</Text>
+                      <Text style={styles.party}>- {item.party_name}{item.cjUserId}</Text>
+                      <Text style={styles.time}> ~ {Moment(item.post_date_time).from(Date.now())}</Text>
+                     
+                    </View>
+                    <View style={[styles.cardContent, styles.tagsContent]}>
+            {/* Adding hyperlinks */}
+                    <Hyperlink linkDefault={ true } linkStyle={ { color: '#2980b9', fontSize: 18 } }>
+                      <Text style={styles.post}>{item.post_content}</Text>
+                    </Hyperlink>
+                    </View>
+                   
+                    <View>
+             {item.post_attachment_obj_id ? 
+             <FitImage
+             resizeMode="contain"
+             source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
+           />
+            //  <Image
+            //       style={styles.postImage}
+            //       source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
+            //       //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
+            //       resizeMode='contain'
+            //     /> 
+                : null}
+                
+              </View>
+              <View style={styles.fixToText}>
+              <ThemeProvider theme={theme}> 
+              <Button
+              icon={
+                <Icon
+                  name="chatboxes"
+                  size={16}
+                  color="#9E9E9E"
+                />
+              }
+                title="CHAT WITH ME"
+                onPress={()=>this.chatWithCJWhatsApp(item.post_content,item.cjphone)} 
+                type="clear"
+                
               />
-            }
-          />
-        </ThemeProvider>
-        
-        </View>
-    </View>
-
-      // <TouchableOpacity
-      //   onPress={()=> this.props.navigation.navigate('Article',{
-      //     ...item
-      //   })}
-      //   key={qs.stringify(item.post_id)}
-      // >
-      //   <View style={styles.cardContainer}>
-      //     <View>
-      //     {item.post_attachment_obj_id ? <Image
-      //         style={{height:150,justifyContent:'space-around'}}
-      //         source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
-      //         //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
-      //         resizeMode='cover'
-      //       /> : null}
+              </ThemeProvider>
+    
+            <ThemeProvider theme={theme}>
+              <Button
+              
+                title="SHARE"
+                onPress={()=>this.shareToWhatsApp(item.post_content)}
+                type="clear"
+                
+                icon={
+                  <Icon
+                    name="share-alt"
+                    size={20}
+                    color="#e02143"
+                    type="Ionicons"
+                  />
+                }
+              />
+            </ThemeProvider>
             
-      //     </View>
-      //     <View style={styles.contentCard}>
-      //         <Text style={styles.titleCard}>{item.post_content}</Text>
-      //         <View style={styles.bottomCard}>
-      //         <Image 
-      //             style={{width: 20, height: 20, borderRadius: 60/ 2}} 
-      //             source={{uri:IMAGEURL+`${item.image}`}}
-      //           />
-      //           <Text style={styles.bottomCardTeam}>{item.name} - </Text>
-      //           <Text style={styles.bottomCardTeam}>{item.party_name} - </Text>
-      //           <Text style={styles.bottomCardText}>Posted at {Moment(item.post_date_time).from(Date.now())}</Text>
-      //         </View>
-      //     </View>
-      //   </View>
-      // </TouchableOpacity>
+            </View>
+        </View>
+        )
+       
+
       }
-    />
+    }
+    
+    
+    }
+  />
  
     {/* </ScrollView> */}
     <OfflineNotice />   
@@ -568,7 +538,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   post:{
-    fontSize:18,
+    fontSize:16,
     // fontWeight: 'bold',
     marginLeft:10,
     marginRight:12,
@@ -585,7 +555,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state){
-  //console.log(state)
+console.log(state)
   return {
     User: state.User,
     Updates:state.Updates
