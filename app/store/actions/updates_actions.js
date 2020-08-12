@@ -17,8 +17,8 @@ export function getUpdates(params){
       //     limit:"25",
       //     explore:"10"
       // };
-
-   const request = axios.post(GETUSERFEEDJSON, qs.stringify(params))
+      return function(dispatch){
+   return axios.post(GETUSERFEEDJSON, qs.stringify(params))
                   .then((response) => {
                     const news = [];
 
@@ -46,18 +46,15 @@ export function getUpdates(params){
                     }
 
                     
-                    return news;
+                    dispatch({
+                      type:GET_UPDATES,
+                      payload:news,
+                  });
 
                  
                   })
-                  .catch((error) => {
-                      console.log(error);
-                  });
-                  return {
-                    type:GET_UPDATES,
-                    payload:request
-                }
-          
+                  
+              }
       }   
 
 export function pushUpdates(params){

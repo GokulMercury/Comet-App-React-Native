@@ -31,29 +31,43 @@ export function signUp(data){
     }
 }
 
-
-export function signIn(data){
-    const params = {
-        phone: data.phone
+export function signIn(data) {
+    return function(dispatch) {
+        const params = {
+                    phone: data.phone
+                };
+        return axios.post(SIGNIN, qs.stringify(params)).then(request=> {
+            // dispatch
+            console.log('REQUEST',request)
+            dispatch({
+                type:SIGN_IN,
+                payload:request.data,
+            });
+        });
     };
-    
-    
-    //console.log(data.phone)
-    const request = axios.post(SIGNIN, qs.stringify(params))
-        .then(response=>{
-            
-           return response.data;
-            
-        
-    }).catch( e => {
-        return false
-    });
-
-    return {
-        type:SIGN_IN,
-        payload:request,
-    }
 }
+
+// export function signIn(data){
+//     const params = {
+//         phone: data.phone
+//     };
+    
+    
+//     //console.log(data.phone)
+//     const request = axios.post(SIGNIN, qs.stringify(params), { timeout: 2})
+
+//     .then(response => response.json())
+//     .then(result =>{
+//         console.log ('RESULT DATA', result.data)
+//         return result.data})
+//     .catch(error => {return false})
+
+//     return {
+        
+//         type:SIGN_IN,
+//         payload:request,
+//     }
+// }
 
 export const autoSignIn = (refToken) =>{
     const request = axios(

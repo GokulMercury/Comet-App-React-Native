@@ -9,10 +9,32 @@ import {name as appName} from './app.json';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import promiseMiddleware from 'redux-promise';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
+import Auth from './app/components/auth';
+import { persistStore, persistReducer } from 'redux-persist';
 import reducers from './app/store/reducers';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+//import {AsyncStorage} from '@react-native-community/async-storage';
+import storageLocal from 'redux-persist/es/storage/index'
+import storage from 'redux-persist/lib/storage';
 import messaging from '@react-native-firebase/messaging';
 import {Notifications} from 'react-native-notifications';
 
+const persistConfig = {
+  key: 'root',
+  storage: storage,
+  // stateReconciler: autoMergeLevel2
+  // key: 'Updates',
+  // storage: storageLocal,
+  // blacklist: ['Auth'] // which reducer want to store
+};
+
+const pReducer = persistReducer(persistConfig, reducers);
+
+const middleware = applyMiddleware(thunk, logger);
+const store = createStore(pReducer, middleware);
+const persistor = persistStore(store);
 // useEffect(() => {
 //   // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
@@ -72,8 +94,10 @@ const createStoreWithMiddleware = createStore(reducers, composeEnhancers(
 ))
 
 const appRedux = () => (
-    <Provider store={createStoreWithMiddleware}>
+    <Provider store={store}>
+     <PersistGate loading={null} persistor={persistor}>
         <App/>
+      </PersistGate>
     </Provider>
 )
 // Register background handler

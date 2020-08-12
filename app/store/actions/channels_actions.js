@@ -87,6 +87,7 @@ export async function firebaseSubscribe(channelObjId){
 
 
 export function getChannels(params){
+  return function(dispatch){
       //   const params = {
       //     search_keyword: "",
       //     user_id:"429",
@@ -94,7 +95,7 @@ export function getChannels(params){
       //     limit:"25"
       // };
 
-   const request =  axios.post(GETCHANNELSJSON, qs.stringify(params))
+   return axios.post(GETCHANNELSJSON, qs.stringify(params))
                   .then((response) => {
                     const channels = [];
                     const details = [];
@@ -112,14 +113,13 @@ export function getChannels(params){
                         
                     }
                     
-                    return channels;
-                  })
-                  .catch((error) => {
-                      console.log(error);
+                    dispatch({
+                      type:GET_CHANNELS,
+                      payload:channels,
                   });
-                  return {
-                    type:GET_CHANNELS,
-                    payload:request
-                }
+                  })
+                  
+                  
+              }
           
       }   

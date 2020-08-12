@@ -133,7 +133,7 @@ android {
         applicationId "comet.dreamboosters.com.comet"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 103
+        versionCode 105
         versionName "10.1"
         multiDexEnabled true
     }

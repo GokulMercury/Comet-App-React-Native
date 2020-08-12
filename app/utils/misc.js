@@ -26,7 +26,7 @@ export const getTokens = (cb) => {
     });
 }
     export const setTokens = (values,cb) => {
-        //console.log('<<<<<SET TOKENS',values)
+        console.log('<<<<<SET TOKENS',values)
     AsyncStorage.multiSet([
         ['@comet_app@message',values.message],
         ['@comet_app@phone',values.phone],

@@ -6,7 +6,8 @@ import {
   Image,
   Alert,
   FlatList,
-  Linking
+  Linking,
+  TouchableOpacity
 } from 'react-native';
 
 import { ThemeProvider, Button } from 'react-native-elements';
@@ -52,16 +53,19 @@ class NewsComponent extends Component {
       updatesData: [],
       refreshing: false,
       subscribeRefreshing: false,
+      newArray : []
     };
   }
 
   
 
 componentDidMount(){
-    Toast.showWithGravity('Comet loading. Please wait..', Toast.LONG, Toast.CENTER);
+  console.log('IN NEWS') 
+  Toast.showWithGravity('Comet loading. Please wait..', Toast.LONG, Toast.CENTER);
     this.checkPermission() ;
     this.createNotificationListeners(); 
     this.getMessage();
+    
     
     const params = {
       user_id: "",
@@ -78,13 +82,24 @@ componentDidMount(){
     getTokens((value)=>{
       this.state.refreshing=true
       if(value[0][1]===null){
-        //console.log("NO TOKENS");
+        
+        console.log("NO TOKENS");
       } else{
         this.state.userId = value[2][1];
+        console.log('TOKEN VALUE',value);
         params.user_id = this.state.userId;
        
+        const value = AsyncStorage.getItem('@comet_app_firstTimeUser');
+        //console.log('NEW USER FIREBASE SUBSCRIPTION VALUE', value);
+        if(value == 'true') {
+          console.log('LOADING NEW NEWS DATA')
+          this.props.dispatch(getUpdates(params));
+          
+            //console.log('NEW USER FIREBASE SUBSCRIPTION');
+        }
+        else {console.log('LOADING PERSISTED DATA')}
         //this.props.dispatch(getChannels(paramsChannels));
-        this.props.dispatch(getUpdates(params));
+        
         this.state.refreshing=false
       }
     })
@@ -235,9 +250,9 @@ displayNotification(title, body) {
 };
     getTokens(async value=>{
       if(value[0][1]===null){
-        //console.log("NO TOKENS");
+        console.log("VALUE", value);
       } else{
-        
+        console.log("VALUE", value);
         params.user_id = this.state.userId;
         Toast.showWithGravity('Loading. Please wait..', Toast.LONG, Toast.BOTTOM);
         await this.props.dispatch(getUpdates(params));
@@ -246,6 +261,13 @@ displayNotification(title, body) {
     })
    
   }
+
+
+//  filteredItems(state) {
+//    console.log('STATE>>>>>>>>>>>>>>>>',state.party_name)
+//     // const { items, searchText } = state.searchSimple;
+//     // return items.filter((item) => item.party_name(searchText));
+// }
 
   listHeader = () => {
     return (
@@ -256,6 +278,8 @@ displayNotification(title, body) {
     );
   };
 
+
+  
 //Share to Whatsapp
 
 shareToWhatsApp = (text) => {
@@ -266,10 +290,54 @@ shareToWhatsApp = (text) => {
 chatWithCJWhatsApp = (text,phone) => {
   Linking.openURL(`whatsapp://send?text=${text}`+ `&phone=${phone}`);
  }
+
+ list(){
+  
+    const filterData = this.props.Updates.news;
+    // let filterData = this.props.Updates.news;
+    if (filterData != 'undefined')
+    {
+      const newArray = [];
+      filterData.forEach(obj => {
+        if (!newArray.some(o => o.party_name === obj.party_name)) {
+          newArray.push({ ...obj })
+        }
+   
+      });
+   
+    //   console.log(this.props.Updates.news);
+    return newArray.map(element => {
+      return (
+        <View style={{ margin: 10 }}>
+          <Text>{element.party_name}</Text>
+          <Text>{element.post_content}</Text>
+        </View>
+      );
+    });
+  
  
+    }
+    
+};
+
 render() {
   
+  const filterData = this.props.Updates.news;
+  // let filterData = this.props.Updates.news;
+  if (filterData != 'undefined')
+  {
+    
+    filterData.forEach(obj => {
+      if (!this.state.newArray.some(o => o.party_name === obj.party_name)) {
+        this.state.newArray.push({ ...obj })
+      }
+      
+    });
+  } 
+//  return <View>{this.list()}</View>;
 
+  // this.fliterData(this.props.Updates.news);
+// this.filteredItems(this.props.Updates.news)
 
   return (
 
@@ -294,7 +362,7 @@ render() {
         
         <FlatList
     
-    data={this.props.Updates.news}
+    data={this.state.newArray}
   //  extraData={this.state.copyData}
     ListHeaderComponent={ChannelsComponent}
     refreshing={this.state.refreshing}
@@ -304,78 +372,93 @@ render() {
     renderItem={({item}) => {
       if (item.cjtype != "locovoco"){
         return(
-          <View style={[styles.card, {borderColor:"#EBEBEB"}]}
-  
-          onPress={()=>this.chatWithCJWhatsApp(item.post_content,item.cjphone)} 
-         
-          key={qs.stringify(item.post_id)}
-        >            
-                    <View style={styles.cardContent}>
-                      <Image style={[styles.image, styles.imageContent]} source={{uri:IMAGEURL+`${item.image}`}}/>
-                      <Text style={styles.name}>{item.name}</Text>
-                      <Text style={styles.party}>- {item.party_name}{item.cjUserId}</Text>
-                      <Text style={styles.time}> ~ {Moment(item.post_date_time).from(Date.now())}</Text>
-                     
-                    </View>
-                    <View style={[styles.cardContent, styles.tagsContent]}>
-            {/* Adding hyperlinks */}
-                    <Hyperlink linkDefault={ true } linkStyle={ { color: '#2980b9', fontSize: 18 } }>
-                      <Text style={styles.post}>{item.post_content}</Text>
-                    </Hyperlink>
-                    </View>
-                   
-                    <View>
-             {item.post_attachment_obj_id ? 
-             <FitImage
-             resizeMode="contain"
-             source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
-           />
-            //  <Image
-            //       style={styles.postImage}
-            //       source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
-            //       //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
-            //       resizeMode='contain'
-            //     /> 
-                : null}
-                
-              </View>
-              <View style={styles.fixToText}>
-              <ThemeProvider theme={theme}> 
-              <Button
-              icon={
-                <Icon
-                  name="chatboxes"
-                  size={16}
-                  color="#9E9E9E"
-                />
-              }
-                title="CHAT WITH ME"
-                onPress={()=>this.chatWithCJWhatsApp(item.post_content,item.cjphone)} 
-                type="clear"
-                
-              />
-              </ThemeProvider>
-    
-            <ThemeProvider theme={theme}>
-              <Button
-              
-                title="SHARE"
-                onPress={()=>this.shareToWhatsApp(item.post_content)}
-                type="clear"
-                
-                icon={
-                  <Icon
-                    name="share-alt"
-                    size={20}
-                    color="#e02143"
-                    type="Ionicons"
-                  />
-                }
-              />
-            </ThemeProvider>
-            
+          <TouchableOpacity>
+        <View style={styles.row}>
+          <Image source={{uri:IMAGEURL+`${item.image}`}} style={styles.pic} />
+          <View>
+            <View style={styles.cardContent}>
+              <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
+              <Text style={styles.party}> - {item.party_name}</Text>
+              <Text style={styles.time}> - {Moment(item.post_date_time).from(Date.now())}</Text>
             </View>
+            <View style={styles.msgContainer}>
+              <Text numberOfLines={1} style={styles.post}>{item.post_content}</Text>
+            </View>
+          </View>
         </View>
+      </TouchableOpacity>
+        //   <View style={[styles.card, {borderColor:"#EBEBEB"}]}
+  
+        //   onPress={()=>this.chatWithCJWhatsApp(item.post_content,item.cjphone)} 
+         
+        //   key={qs.stringify(item.post_id)}
+        // >            
+        //             <View style={styles.cardContent}>
+        //               <Image style={[styles.image, styles.imageContent]} source={{uri:IMAGEURL+`${item.image}`}}/>
+        //               <Text style={styles.name}>{item.name}</Text>
+        //               <Text style={styles.party}>- {item.party_name}{item.cjUserId}</Text>
+        //               <Text style={styles.time}> ~ {Moment(item.post_date_time).from(Date.now())}</Text>
+                     
+        //             </View>
+        //             <View style={[styles.cardContent, styles.tagsContent]}>
+        //     {/* Adding hyperlinks */}
+        //             <Hyperlink linkDefault={ true } linkStyle={ { color: '#2980b9', fontSize: 18 } }>
+        //               <Text style={styles.post}>{item.post_content}</Text>
+        //             </Hyperlink>
+        //             </View>
+                   
+        //             <View>
+        //      {item.post_attachment_obj_id ? 
+        //      <FitImage
+        //      resizeMode="contain"
+        //      source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
+        //    />
+        //     //  <Image
+        //     //       style={styles.postImage}
+        //     //       source={{uri:IMAGEURL+`${item.post_attachment_obj_id}`}}
+        //     //       //source={{uri:`https://miro.medium.com/max/1400/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg`}}
+        //     //       resizeMode='contain'
+        //     //     /> 
+        //         : null}
+                
+        //       </View>
+        //       <View style={styles.fixToText}>
+        //       <ThemeProvider theme={theme}> 
+        //       <Button
+        //       icon={
+        //         <Icon
+        //           name="chatboxes"
+        //           size={16}
+        //           color="#9E9E9E"
+        //         />
+        //       }
+        //         title="CHAT WITH ME"
+        //         onPress={()=>this.chatWithCJWhatsApp(item.post_content,item.cjphone)} 
+        //         type="clear"
+                
+        //       />
+        //       </ThemeProvider>
+    
+        //     <ThemeProvider theme={theme}>
+        //       <Button
+              
+        //         title="SHARE"
+        //         onPress={()=>this.shareToWhatsApp(item.post_content)}
+        //         type="clear"
+                
+        //         icon={
+        //           <Icon
+        //             name="share-alt"
+        //             size={20}
+        //             color="#e02143"
+        //             type="Ionicons"
+        //           />
+        //         }
+        //       />
+        //     </ThemeProvider>
+            
+        //     </View>
+        // </View>
         )
        
 
@@ -522,7 +605,7 @@ const styles = StyleSheet.create({
   name:{
     fontSize:14,
     fontWeight: 'bold',
-    marginLeft:10,
+    marginLeft:0,
     alignSelf: 'center',
     color:'#002768'
   },
@@ -543,7 +626,8 @@ const styles = StyleSheet.create({
     marginLeft:10,
     marginRight:12,
     marginBottom:10,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    width:270
   },
   btnColor: {
     padding:10,
@@ -551,6 +635,48 @@ const styles = StyleSheet.create({
     marginHorizontal:3,
     backgroundColor: "#eee",
     marginTop:5,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#DCDCDC',
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    padding: 10,
+  },
+  pic: {
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+  },
+  nameContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 280,
+  },
+  nameTxt: {
+    marginLeft: 15,
+    fontWeight: '600',
+    fontWeight: 'bold',
+    color: '#002768',
+    fontSize: 15,
+    width:170,
+  },
+  mblTxt: {
+    fontWeight: '200',
+    color: '#777',
+    fontSize: 13,
+  },
+  msgContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  msgTxt: {
+    fontWeight: '400',
+    color: '#000',
+    fontSize: 16,
+    marginLeft: 15,
+    marginRight: 15,
   },
 });
 

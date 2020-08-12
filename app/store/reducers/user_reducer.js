@@ -2,7 +2,7 @@ import { SIGN_UP, SIGN_IN, AUTO_SIGN_IN } from '../types';
 export default function (state={},action){
     switch(action.type){
         case SIGN_IN:
-            console.log(action.payload.message)
+            console.log('ACTION PAYLOAD',action.payload)
             //return {...state,auth:action.payload}
             return {
                 ...state,
