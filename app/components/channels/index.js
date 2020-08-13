@@ -32,7 +32,7 @@ class ChannelsComponent extends Component {
 
     const params = {
       // search_keyword: "",
-      user_id: "",
+      user_id: this.props.User.auth.userId,
       start:"0",
       limit:"25"
   }
@@ -67,24 +67,24 @@ class ChannelsComponent extends Component {
       );
     };
 
-  getChannelData = (peepin,userId,channelId,channelName,channelObjId) => {
+  getChannelData = async (peepin,userId,channelId,channelName,channelObjId) => {
     this.state.animating =true
     this.closeActivityIndicator()
     if (peepin == "false"){
       const params = {
         // search_keyword: "",
-        user_id:userId,
+        user_id:this.props.User.auth.userId,
         start:"0",
         limit:"25"
     }
       //console.log('>>>>>>SUBSCRIBE CHANNEL>>>>', params)
       subscribeChannels(userId,channelId,channelName,channelObjId);
-      this.props.dispatch(getChannels(params));
+      await this.props.dispatch(getChannels(params));
       this.state.subscribeData = this.props.Channels.channels;
     } else {
       const params = {
         // search_keyword: "",
-        user_id:userId,
+        user_id:this.props.User.auth.userId,
         start:"0",
         limit:"25"
     }
@@ -250,6 +250,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state){
  // console.log(state)
   return {
+    User: state.User,
     Channels:state.Channels
   }
 }

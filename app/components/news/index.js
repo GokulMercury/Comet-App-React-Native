@@ -53,14 +53,22 @@ class NewsComponent extends Component {
       updatesData: [],
       refreshing: false,
       subscribeRefreshing: false,
-      newArray : []
+      renderArray: undefined
     };
   }
 
   
+  componentWillReceiveProps(props) {
+    this.setState({
+        renderArray: this.props.Updates.news
+    });
+}
 
-componentDidMount(){
-  console.log('IN NEWS') 
+async componentWillMount(){
+  
+  let renderArray = this.props.Updates.news;
+  this.setState({ renderArray });
+  console.log('LOG', this.state.renderArray);
   Toast.showWithGravity('Comet loading. Please wait..', Toast.LONG, Toast.CENTER);
     this.checkPermission() ;
     this.createNotificationListeners(); 
@@ -68,36 +76,36 @@ componentDidMount(){
     
     
     const params = {
-      user_id: "",
+      user_id: this.props.User.auth.userId,
       start:"0",
       limit:"25",
       explore:"10"
   };
   const paramsChannels = {
-    search_keyword: "",
-    user_id:this.state.userId,
+    search_keyword: this.props.User.auth.userId,
+    user_id: '',
     start:"0",
     limit:"25"
 }
     getTokens((value)=>{
-      this.state.refreshing=true
-      if(value[0][1]===null){
-        
-        console.log("NO TOKENS");
-      } else{
-        this.state.userId = value[2][1];
-        console.log('TOKEN VALUE',value);
-        params.user_id = this.state.userId;
+      console.log("IN GET TOKENS", this.props.User.auth.userId);
+      this.state.refreshing=true;
+      if(JSON.stringify(this.props.User.auth.message) !='user already found'){
+        console.log('TOKEN VALUE',JSON.stringify(this.props.User.auth.phone));
+        // this.state.userId = JSON.stringify(this.props.User.auth.userId);
+        console.log("PARAMS", params);
+        this.props.dispatch(getUpdates(params));
+        // params.user_id = this.state.userId;
        
-        const value = AsyncStorage.getItem('@comet_app_firstTimeUser');
-        //console.log('NEW USER FIREBASE SUBSCRIPTION VALUE', value);
-        if(value == 'true') {
-          console.log('LOADING NEW NEWS DATA')
-          this.props.dispatch(getUpdates(params));
+        // const value = AsyncStorage.getItem('@comet_app_firstTimeUser');
+        
+        // if(value == 'true') {
+        //   console.log('LOADING NEW NEWS DATA')
+         
           
-            //console.log('NEW USER FIREBASE SUBSCRIPTION');
-        }
-        else {console.log('LOADING PERSISTED DATA')}
+        //     //console.log('NEW USER FIREBASE SUBSCRIPTION');
+        // }
+        // else {console.log('LOADING PERSISTED DATA')}
         //this.props.dispatch(getChannels(paramsChannels));
         
         this.state.refreshing=false
@@ -236,7 +244,7 @@ displayNotification(title, body) {
 
  onRefresh() {
     const params = {
-      user_id: "",
+      user_id: this.props.User.auth.userId,
       start:"0",
       limit:"25",
       explore:"10"
@@ -244,20 +252,26 @@ displayNotification(title, body) {
 
   const paramsChannels = {
     search_keyword: "",
-    user_id:this.state.userId,
+    user_id:this.props.User.auth.userId,
     start:"0",
     limit:"25"
 };
     getTokens(async value=>{
-      if(value[0][1]===null){
-        console.log("VALUE", value);
-      } else{
-        console.log("VALUE", value);
-        params.user_id = this.state.userId;
-        Toast.showWithGravity('Loading. Please wait..', Toast.LONG, Toast.BOTTOM);
-        await this.props.dispatch(getUpdates(params));
-        this.props.dispatch(getChannels(paramsChannels));
+      console.log('INSIDE REFRESH')
+      switch(this.props.User.auth.message){
+        case 'user already found': 
+          console.log("FOUND");
+          console.log('REFRESH TOKEN VALUE',JSON.stringify(this.props.User.auth.userId));
+          // let userId = this.props.User.auth.userId;
+          // this.setState({userId})
+         
+          console.log("REFRESH PARAMS", params);
+          Toast.showWithGravity('Loading. Please wait..', Toast.LONG, Toast.BOTTOM);
+          await this.props.dispatch(getUpdates(params));
+          this.props.dispatch(getChannels(paramsChannels));
+        //default: return null
       }
+      
     })
    
   }
@@ -291,49 +305,49 @@ chatWithCJWhatsApp = (text,phone) => {
   Linking.openURL(`whatsapp://send?text=${text}`+ `&phone=${phone}`);
  }
 
- list(){
+//  list(){
   
-    const filterData = this.props.Updates.news;
-    // let filterData = this.props.Updates.news;
-    if (filterData != 'undefined')
-    {
-      const newArray = [];
-      filterData.forEach(obj => {
-        if (!newArray.some(o => o.party_name === obj.party_name)) {
-          newArray.push({ ...obj })
-        }
+//     const filterData = this.props.Updates.news;
+//     // let filterData = this.props.Updates.news;
+//     if (filterData != 'undefined')
+//     {
+//       const newArray = [];
+//       filterData.forEach(obj => {
+//         if (!newArray.some(o => o.party_name === obj.party_name)) {
+//           newArray.push({ ...obj })
+//         }
    
-      });
+//       });
    
-    //   console.log(this.props.Updates.news);
-    return newArray.map(element => {
-      return (
-        <View style={{ margin: 10 }}>
-          <Text>{element.party_name}</Text>
-          <Text>{element.post_content}</Text>
-        </View>
-      );
-    });
+//     //   console.log(this.props.Updates.news);
+//     return newArray.map(element => {
+//       return (
+//         <View style={{ margin: 10 }}>
+//           <Text>{element.party_name}</Text>
+//           <Text>{element.post_content}</Text>
+//         </View>
+//       );
+//     });
   
  
-    }
+//     }
     
-};
+// };
 
 render() {
   
   const filterData = this.props.Updates.news;
   // let filterData = this.props.Updates.news;
-  if (filterData != 'undefined')
-  {
-    
+ 
+    const newArray = [];
     filterData.forEach(obj => {
-      if (!this.state.newArray.some(o => o.party_name === obj.party_name)) {
-        this.state.newArray.push({ ...obj })
+      if (!newArray.some(o => o.party_name === obj.party_name)) {
+        newArray.push({ ...obj })
+        console.log('NEW ARRAY',newArray)
       }
       
     });
-  } 
+
 //  return <View>{this.list()}</View>;
 
   // this.fliterData(this.props.Updates.news);
@@ -362,7 +376,7 @@ render() {
         
         <FlatList
     
-    data={this.state.newArray}
+    data={newArray}
   //  extraData={this.state.copyData}
     ListHeaderComponent={ChannelsComponent}
     refreshing={this.state.refreshing}
@@ -370,7 +384,7 @@ render() {
     keyExtractor={(item, index) => String(index)}
     listEmptyComponent={this.listHeader}
     renderItem={({item}) => {
-      if (item.cjtype != "locovoco"){
+      if (item.cjtype != "locovoco" && item.post_content != null){
         return(
           <TouchableOpacity>
         <View style={styles.row}>
