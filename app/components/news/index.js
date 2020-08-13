@@ -58,11 +58,55 @@ class NewsComponent extends Component {
   }
 
   
-  componentWillReceiveProps(props) {
-    this.setState({
-        renderArray: this.props.Updates.news
-    });
-}
+  async componentDidMount(){
+  
+    let renderArray = this.props.Updates.news;
+    this.setState({ renderArray });
+    console.log('LOG', this.state.renderArray);
+    Toast.showWithGravity('Comet loading. Please wait..', Toast.LONG, Toast.CENTER);
+      this.checkPermission() ;
+      this.createNotificationListeners(); 
+      this.getMessage();
+      
+      
+      const params = {
+        user_id: this.props.User.auth.userId,
+        start:"0",
+        limit:"25",
+        explore:"10"
+    };
+    const paramsChannels = {
+      search_keyword: this.props.User.auth.userId,
+      user_id: '',
+      start:"0",
+      limit:"25"
+  }
+     await  getTokens((value)=>{
+        console.log("IN GET TOKENS", this.props.User.auth.userId);
+        this.state.refreshing=true;
+        if(JSON.stringify(this.props.User.auth.message) !='user already found'){
+          console.log('TOKEN VALUE',JSON.stringify(this.props.User.auth.phone));
+          // this.state.userId = JSON.stringify(this.props.User.auth.userId);
+          console.log("PARAMS", params);
+          this.props.dispatch(getUpdates(params));
+          // params.user_id = this.state.userId;
+         
+          // const value = AsyncStorage.getItem('@comet_app_firstTimeUser');
+          
+          // if(value == 'true') {
+          //   console.log('LOADING NEW NEWS DATA')
+           
+            
+          //     //console.log('NEW USER FIREBASE SUBSCRIPTION');
+          // }
+          // else {console.log('LOADING PERSISTED DATA')}
+          //this.props.dispatch(getChannels(paramsChannels));
+          
+          this.state.refreshing=false
+        }
+      })
+      
+    }
 
 async componentWillMount(){
   
@@ -87,7 +131,7 @@ async componentWillMount(){
     start:"0",
     limit:"25"
 }
-    getTokens((value)=>{
+   await  getTokens((value)=>{
       console.log("IN GET TOKENS", this.props.User.auth.userId);
       this.state.refreshing=true;
       if(JSON.stringify(this.props.User.auth.message) !='user already found'){
@@ -340,6 +384,7 @@ render() {
   // let filterData = this.props.Updates.news;
  
     const newArray = [];
+    if (filterData){
     filterData.forEach(obj => {
       if (!newArray.some(o => o.party_name === obj.party_name)) {
         newArray.push({ ...obj })
@@ -347,6 +392,7 @@ render() {
       }
       
     });
+  }
 
 //  return <View>{this.list()}</View>;
 
@@ -386,7 +432,12 @@ render() {
     renderItem={({item}) => {
       if (item.cjtype != "locovoco" && item.post_content != null){
         return(
-          <TouchableOpacity>
+          <TouchableOpacity
+        onPress={()=> this.props.navigation.navigate('Article',{
+          partyName:item.party_name
+        })}
+        
+      >
         <View style={styles.row}>
           <Image source={{uri:IMAGEURL+`${item.image}`}} style={styles.pic} />
           <View>
@@ -534,6 +585,7 @@ const styles = StyleSheet.create({
     height:300,
     justifyContent:'space-around'
   },
+  
   inputContainer: {
     borderBottomColor: '#F5FCFF',
     backgroundColor: '#FFFFFF',

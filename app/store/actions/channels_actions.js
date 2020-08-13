@@ -12,7 +12,7 @@ import merge from 'lodash/merge';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 
-export function subscribeChannels(user,channel,cName,channelObjId){
+export async function subscribeChannels(user,channel,cName,channelObjId){
   const params = {
           user_id:user,
           party_id:channel
@@ -28,7 +28,7 @@ export function subscribeChannels(user,channel,cName,channelObjId){
         .subscribeToTopic(channelName)
         .then(() => console.log('Subscribed to topic!', channelName));
 
-  const request = axios.post(SUBSCRIBE, qs.stringify(params))
+  const request = await axios.post(SUBSCRIBE, qs.stringify(params))
       .then((response) => {
         // console.log ('PARAMS', params);
         // console.log ('SUBSCRIBE RESPONSE', response.data);
@@ -37,7 +37,7 @@ export function subscribeChannels(user,channel,cName,channelObjId){
       return request;
 }
 
-export function unSubscribeChannels(user,channel,cName,channelObjId){
+export async function unSubscribeChannels(user,channel,cName,channelObjId){
  // console.log('UNSUBSCRIBE');
   const params = {
           user_id:user,
@@ -54,7 +54,7 @@ export function unSubscribeChannels(user,channel,cName,channelObjId){
         .unsubscribeFromTopic(channelName)
         .then(() => console.log('Unbscribed to topic!', channelName));
 
-  const request = axios.post(UNSUBSCRIBE, qs.stringify(params))
+  const request = await axios.post(UNSUBSCRIBE, qs.stringify(params))
       .then((response) => {
         // console.log ('PARAMS', params);
         // console.log ('UNSUBSCRIBE RESPONSE', response.data);

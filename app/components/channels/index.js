@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   listTitle:{
     fontSize:26,
     fontWeight: 'bold',
-    color:'#EBEBEB',
+    color:'#feb40a',
     marginTop:10,
     alignSelf: 'center'
   },
