@@ -16,6 +16,7 @@ import {IMAGEURL} from '../../utils/misc';
 import { getTokens, storeFirstTimeUser } from '../../utils/misc';
 import { subscribeChannels, unSubscribeChannels, firebaseSubscribe } from '../../store/actions/channels_actions';
 import ContentLoader, { Facebook } from 'react-content-loader/native';
+import Toast from 'react-native-simple-toast';
 
 class ChannelsComponent extends Component {
   constructor() {
@@ -38,19 +39,69 @@ class ChannelsComponent extends Component {
   }
     getTokens(async value=>{
       if(value[0][1]===null){
-        //console.log("NO TOKENS");
+        
       } else{ 
         this.state.userId = value[2][1];
-        params.user_id = this.state.userId;
-       
-        await this.props.dispatch(getChannels(params));
-        
+        // params.user_id = this.state.userId;
+      //  console.log("CHANNEL PARAMS");
+        this.props.dispatch(getChannels(params));
+        this.setState({subscribeData: this.props.Channels.channels})
         //console.log(this.props.Channels.channels)
       }
     })
 
   }
   
+  // async componentDidMount(){
+  
+
+  //   // Toast.showWithGravity('Comet loading. Please wait..', Toast.SHORT, Toast.TOP);
+  //   //   this.checkPermission() ;
+  //   //   this.createNotificationListeners(); 
+  //   //   this.getMessage();
+      
+      
+  //   //   const params = {
+  //   //     user_id: this.props.User.auth.userId,
+  //   //     start:"0",
+  //   //     limit:"25",
+  //   //     explore:"10"
+  //   // };
+  //   const params = {
+  //     // search_keyword: "",
+  //     user_id: this.props.User.auth.userId,
+  //     start:"0",
+  //     limit:"25"
+  // }
+  //    await  getTokens(async (value)=>{
+  //       // console.log("IN GET TOKENS", this.props.User.auth.userId);
+  //       // this.state.refreshing=true;
+  //       if(JSON.stringify(this.props.User.auth.message) !='user already found'){
+  //         console.log('TOKEN VALUE',JSON.stringify(this.props.User.auth.phone));
+  //         // this.state.userId = JSON.stringify(this.props.User.auth.userId);
+  //         console.log("PARAMS", params);
+  //         params.user_id = this.state.userId;
+       
+  //         await this.props.dispatch(getChannels(params));
+  //         // params.user_id = this.state.userId;
+         
+  //         // const value = AsyncStorage.getItem('@comet_app_firstTimeUser');
+          
+  //         // if(value == 'true') {
+  //         //   console.log('LOADING NEW NEWS DATA')
+           
+            
+  //         //     //console.log('NEW USER FIREBASE SUBSCRIPTION');
+  //         // }
+  //         // else {console.log('LOADING PERSISTED DATA')}
+  //         //this.props.dispatch(getChannels(paramsChannels));
+          
+  //         this.state.refreshing=false
+  //       }
+  //     })
+    //   console.log('cHANNEL LOAD')
+    // }
+
   componentDidUpdate () {
     //console.log('component did update');
         storeFirstTimeUser('false');
@@ -68,8 +119,9 @@ class ChannelsComponent extends Component {
     };
 
   getChannelData = async (peepin,userId,channelId,channelName,channelObjId) => {
-    this.state.animating =true
-    this.closeActivityIndicator()
+    this.state.animating =true;
+    Toast.showWithGravity('Please wait', Toast.SHORT, Toast.TOP);
+    // this.closeActivityIndicator()
     if (peepin == "false"){
       const params = {
         // search_keyword: "",
@@ -78,9 +130,11 @@ class ChannelsComponent extends Component {
         limit:"25"
     }
       //console.log('>>>>>>SUBSCRIBE CHANNEL>>>>', params)
-      subscribeChannels(userId,channelId,channelName,channelObjId);
+      await subscribeChannels(userId,channelId,channelName,channelObjId);
       await this.props.dispatch(getChannels(params));
-      this.state.subscribeData = this.props.Channels.channels;
+      this.setState({subscribeData: this.props.Channels.channels})
+      // this.setState({animating: false});
+      Toast.showWithGravity('Subscribed :)', Toast.SHORT, Toast.TOP);
     } else {
       const params = {
         // search_keyword: "",
@@ -89,9 +143,12 @@ class ChannelsComponent extends Component {
         limit:"25"
     }
     //console.log('>>>>>>UNSUBSCRIBE CHANNEL>>>>', params)
-      unSubscribeChannels(userId,channelId,channelName,channelObjId)
-      this.props.dispatch(getChannels(params));
-      this.state.subscribeData = this.props.Channels.channels;
+      await unSubscribeChannels(userId,channelId,channelName,channelObjId)
+      await this.props.dispatch(getChannels(params));
+      this.setState({subscribeData: this.props.Channels.channels})
+      // this.state.subscribeData = this.props.Channels.channels;
+      Toast.showWithGravity('Unsubscribed :(', Toast.SHORT, Toast.TOP);
+      // this.setState({animating: false});
     }
    
  
@@ -100,7 +157,7 @@ class ChannelsComponent extends Component {
 
   
 render() {
-
+ 
   return (
     <View style={styles.container}>
       
@@ -109,7 +166,7 @@ render() {
     
     </View>
     <FlatList
-      data={this.props.Channels.channels}
+      data={this.state.subscribeData.sort((a, b) => a.party_name.localeCompare(b.party_name))}
       // extraData={this.state}
       horizontal = {true}
       showsHorizontalScrollIndicator={false}
@@ -138,11 +195,11 @@ render() {
                 <View style={styles.followButton}>
                 
                
-                {<ActivityIndicator
+                {/* {<ActivityIndicator
                   animating = {this.state.animating}
                   color = '#bc2b78'
                   size = "large"
-                  />}
+                  />} */}
                 </View>
               </View>
             </TouchableOpacity>

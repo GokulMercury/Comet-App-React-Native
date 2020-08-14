@@ -82,12 +82,12 @@ class ArticleComponent extends Component {
       limit:"25"
   }
      await  getTokens((value)=>{
-        console.log("IN GET TOKENS", this.props.User.auth.userId);
+        // console.log("IN GET TOKENS", this.props.User.auth.userId);
         this.state.refreshing=true;
         if(JSON.stringify(this.props.User.auth.message) !='user already found'){
-          console.log('TOKEN VALUE',JSON.stringify(this.props.User.auth.phone));
+          // console.log('TOKEN VALUE',JSON.stringify(this.props.User.auth.phone));
           // this.state.userId = JSON.stringify(this.props.User.auth.userId);
-          console.log("PARAMS", params);
+          // console.log("PARAMS", params);
           this.props.dispatch(getUpdates(params));
           // params.user_id = this.state.userId;
          
@@ -125,12 +125,12 @@ async componentWillMount(){
     limit:"25"
 }
    await  getTokens((value)=>{
-      console.log("IN GET TOKENS", this.props.User.auth.userId);
+      // console.log("IN GET TOKENS", this.props.User.auth.userId);
       this.state.refreshing=true;
       if(JSON.stringify(this.props.User.auth.message) !='user already found'){
-        console.log('TOKEN VALUE',JSON.stringify(this.props.User.auth.phone));
+        // console.log('TOKEN VALUE',JSON.stringify(this.props.User.auth.phone));
         // this.state.userId = JSON.stringify(this.props.User.auth.userId);
-        console.log("PARAMS", params);
+        // console.log("PARAMS", params);
         this.props.dispatch(getUpdates(params));
         // params.user_id = this.state.userId;
        
@@ -294,15 +294,15 @@ displayNotification(title, body) {
     limit:"25"
 };
     getTokens(async value=>{
-      console.log('INSIDE REFRESH')
+      // console.log('INSIDE REFRESH')
       switch(this.props.User.auth.message){
         case 'user already found': 
-          console.log("FOUND");
-          console.log('REFRESH TOKEN VALUE',JSON.stringify(this.props.User.auth.userId));
+          // console.log("FOUND");
+          // console.log('REFRESH TOKEN VALUE',JSON.stringify(this.props.User.auth.userId));
           // let userId = this.props.User.auth.userId;
           // this.setState({userId})
          
-          console.log("REFRESH PARAMS", params);
+          // console.log("REFRESH PARAMS", params);
           Toast.showWithGravity('Loading. Please wait..', Toast.LONG, Toast.BOTTOM);
           await this.props.dispatch(getUpdates(params));
           this.props.dispatch(getChannels(paramsChannels));
@@ -374,7 +374,7 @@ listHeader = () => {
 
 
 render() {
-  console.log("PARTY NAME FROM NAV", this.props.navigation.state.params.partyName)
+  // console.log("PARTY NAME FROM NAV", this.props.navigation.state.params.partyName)
 
 //  return <View>{this.list()}</View>;
 

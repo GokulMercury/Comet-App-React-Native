@@ -17,7 +17,7 @@ export function getUpdates(params){
     //     limit:"25",
     //     explore:"10"
     // };
-    console.log('PARAMS IN GET UPDATES', params)
+    // console.log('PARAMS IN GET UPDATES', params)
     return function(dispatch){
  return axios.post(GETUSERFEEDJSON, qs.stringify(params))
                 .then((response) => {

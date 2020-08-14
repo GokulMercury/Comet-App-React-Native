@@ -70,7 +70,7 @@ export async function firebaseSubscribe(channelObjId){
     //console.log('NEW USER FIREBASE SUBSCRIPTION VALUE', value);
     if(value == 'true') {
         let channelName = channelObjId;
-        console.log(channelName)
+        
         messaging()
         .subscribeToTopic(channelName)
         .then(() => console.log('Subscribed to topic!', channelName));

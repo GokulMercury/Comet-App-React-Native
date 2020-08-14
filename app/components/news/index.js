@@ -60,10 +60,8 @@ class NewsComponent extends Component {
   
   async componentDidMount(){
   
-    let renderArray = this.props.Updates.news;
-    this.setState({ renderArray });
-    console.log('LOG', this.state.renderArray);
-    Toast.showWithGravity('Comet loading. Please wait..', Toast.LONG, Toast.CENTER);
+
+    Toast.showWithGravity('Comet loading. Please wait..', Toast.SHORT, Toast.TOP);
       this.checkPermission() ;
       this.createNotificationListeners(); 
       this.getMessage();
@@ -82,12 +80,12 @@ class NewsComponent extends Component {
       limit:"25"
   }
      await  getTokens((value)=>{
-        console.log("IN GET TOKENS", this.props.User.auth.userId);
+        // console.log("IN GET TOKENS", this.props.User.auth.userId);
         this.state.refreshing=true;
         if(JSON.stringify(this.props.User.auth.message) !='user already found'){
-          console.log('TOKEN VALUE',JSON.stringify(this.props.User.auth.phone));
+          // console.log('TOKEN VALUE',JSON.stringify(this.props.User.auth.phone));
           // this.state.userId = JSON.stringify(this.props.User.auth.userId);
-          console.log("PARAMS", params);
+          // console.log("PARAMS", params);
           this.props.dispatch(getUpdates(params));
           // params.user_id = this.state.userId;
          
@@ -108,55 +106,55 @@ class NewsComponent extends Component {
       
     }
 
-async componentWillMount(){
+// async componentWillMount(){
   
-  let renderArray = this.props.Updates.news;
-  this.setState({ renderArray });
-  console.log('LOG', this.state.renderArray);
-  Toast.showWithGravity('Comet loading. Please wait..', Toast.LONG, Toast.CENTER);
-    this.checkPermission() ;
-    this.createNotificationListeners(); 
-    this.getMessage();
+//   let renderArray = this.props.Updates.news;
+//   this.setState({ renderArray });
+//   console.log('LOG', this.state.renderArray);
+//   Toast.showWithGravity('Comet loading. Please wait..', Toast.LONG, Toast.CENTER);
+//     this.checkPermission() ;
+//     this.createNotificationListeners(); 
+//     this.getMessage();
     
     
-    const params = {
-      user_id: this.props.User.auth.userId,
-      start:"0",
-      limit:"25",
-      explore:"10"
-  };
-  const paramsChannels = {
-    search_keyword: this.props.User.auth.userId,
-    user_id: '',
-    start:"0",
-    limit:"25"
-}
-   await  getTokens((value)=>{
-      console.log("IN GET TOKENS", this.props.User.auth.userId);
-      this.state.refreshing=true;
-      if(JSON.stringify(this.props.User.auth.message) !='user already found'){
-        console.log('TOKEN VALUE',JSON.stringify(this.props.User.auth.phone));
-        // this.state.userId = JSON.stringify(this.props.User.auth.userId);
-        console.log("PARAMS", params);
-        this.props.dispatch(getUpdates(params));
-        // params.user_id = this.state.userId;
+//     const params = {
+//       user_id: this.props.User.auth.userId,
+//       start:"0",
+//       limit:"25",
+//       explore:"10"
+//   };
+//   const paramsChannels = {
+//     search_keyword: this.props.User.auth.userId,
+//     user_id: '',
+//     start:"0",
+//     limit:"25"
+// }
+//    await  getTokens((value)=>{
+//       console.log("IN GET TOKENS", this.props.User.auth.userId);
+//       this.state.refreshing=true;
+//       if(JSON.stringify(this.props.User.auth.message) !='user already found'){
+//         console.log('TOKEN VALUE',JSON.stringify(this.props.User.auth.phone));
+//         // this.state.userId = JSON.stringify(this.props.User.auth.userId);
+//         console.log("PARAMS", params);
+//         this.props.dispatch(getUpdates(params));
+//         // params.user_id = this.state.userId;
        
-        // const value = AsyncStorage.getItem('@comet_app_firstTimeUser');
+//         // const value = AsyncStorage.getItem('@comet_app_firstTimeUser');
         
-        // if(value == 'true') {
-        //   console.log('LOADING NEW NEWS DATA')
+//         // if(value == 'true') {
+//         //   console.log('LOADING NEW NEWS DATA')
          
           
-        //     //console.log('NEW USER FIREBASE SUBSCRIPTION');
-        // }
-        // else {console.log('LOADING PERSISTED DATA')}
-        //this.props.dispatch(getChannels(paramsChannels));
+//         //     //console.log('NEW USER FIREBASE SUBSCRIPTION');
+//         // }
+//         // else {console.log('LOADING PERSISTED DATA')}
+//         //this.props.dispatch(getChannels(paramsChannels));
         
-        this.state.refreshing=false
-      }
-    })
+//         this.state.refreshing=false
+//       }
+//     })
     
-  }
+//   }
 
 
 //  Remove listeners allocated in createNotificationListeners()
@@ -217,7 +215,7 @@ async getMessage () {
       extra: "data"
   });
 
-  Toast.showWithGravity('New message waiting. Swipe down to refresh.', Toast.LONG, Toast.TOP);
+  Toast.showWithGravity('New message waiting. Swipe down to refresh.', Toast.SHORT, Toast.TOP);
 
   });
 
@@ -301,16 +299,16 @@ displayNotification(title, body) {
     limit:"25"
 };
     getTokens(async value=>{
-      console.log('INSIDE REFRESH')
+      // console.log('INSIDE REFRESH')
       switch(this.props.User.auth.message){
         case 'user already found': 
-          console.log("FOUND");
-          console.log('REFRESH TOKEN VALUE',JSON.stringify(this.props.User.auth.userId));
+          // console.log("FOUND");
+          // console.log('REFRESH TOKEN VALUE',JSON.stringify(this.props.User.auth.userId));
           // let userId = this.props.User.auth.userId;
           // this.setState({userId})
          
-          console.log("REFRESH PARAMS", params);
-          Toast.showWithGravity('Loading. Please wait..', Toast.LONG, Toast.BOTTOM);
+          // console.log("REFRESH PARAMS", params);
+          Toast.showWithGravity('Loading. Please wait..', Toast.SHORT, Toast.TOP);
           await this.props.dispatch(getUpdates(params));
           this.props.dispatch(getChannels(paramsChannels));
         //default: return null
@@ -388,7 +386,7 @@ render() {
     filterData.forEach(obj => {
       if (!newArray.some(o => o.party_name === obj.party_name)) {
         newArray.push({ ...obj })
-        console.log('NEW ARRAY',newArray)
+        // console.log('NEW ARRAY',newArray)
       }
       
     });
@@ -676,12 +674,14 @@ const styles = StyleSheet.create({
     color:'#002768'
   },
   party:{
-    fontSize:14,
+    fontSize:11,
     marginLeft:3,
+    fontWeight: 'bold',
     alignSelf: 'center'
   },
   time:{
     fontSize:10,
+    
     //fontWeight: 'bold',
     marginLeft:3,
     alignSelf: 'center'
@@ -690,6 +690,7 @@ const styles = StyleSheet.create({
     fontSize:16,
     // fontWeight: 'bold',
     marginLeft:10,
+    marginTop:10,
     marginRight:12,
     marginBottom:10,
     alignSelf: 'center',
@@ -747,7 +748,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state){
-console.log(state)
+// console.log(state)
   return {
     User: state.User,
     Updates:state.Updates
