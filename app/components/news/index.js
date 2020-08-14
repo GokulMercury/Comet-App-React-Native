@@ -61,7 +61,7 @@ class NewsComponent extends Component {
   async componentDidMount(){
   
 
-    Toast.showWithGravity('Comet loading. Please wait..', Toast.SHORT, Toast.TOP);
+    Toast.showWithGravity('Comet loading. Please wait :)', Toast.LONG, Toast.CENTER);
       this.checkPermission() ;
       this.createNotificationListeners(); 
       this.getMessage();

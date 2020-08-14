@@ -29,7 +29,7 @@ class ChannelsComponent extends Component {
     };
   }
 
-  async componentDidMount(){
+  componentDidMount(){
 
     const params = {
       // search_keyword: "",
@@ -38,16 +38,14 @@ class ChannelsComponent extends Component {
       limit:"25"
   }
     getTokens(async value=>{
-      if(value[0][1]===null){
-        
-      } else{ 
+      if(JSON.stringify(this.props.User.auth.message) !='user already found'){
         this.state.userId = value[2][1];
         // params.user_id = this.state.userId;
       //  console.log("CHANNEL PARAMS");
         this.props.dispatch(getChannels(params));
         this.setState({subscribeData: this.props.Channels.channels})
         //console.log(this.props.Channels.channels)
-      }
+      } 
     })
 
   }
@@ -157,7 +155,8 @@ class ChannelsComponent extends Component {
 
   
 render() {
- 
+ if (this.props.Channels.channels){
+
   return (
     <View style={styles.container}>
       
@@ -166,7 +165,7 @@ render() {
     
     </View>
     <FlatList
-      data={this.state.subscribeData.sort((a, b) => a.party_name.localeCompare(b.party_name))}
+      data={this.props.Channels.channels.sort((a, b) => a.party_name.localeCompare(b.party_name))}
       // extraData={this.state}
       horizontal = {true}
       showsHorizontalScrollIndicator={false}
@@ -221,6 +220,7 @@ render() {
   
   );
 
+} else {return null;}
 }
 }
 

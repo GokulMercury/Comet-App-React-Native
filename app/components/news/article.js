@@ -108,48 +108,48 @@ class ArticleComponent extends Component {
       
     }
 
-async componentWillMount(){
+// async componentWillMount(){
   
   
     
-    const params = {
-      user_id: this.props.User.auth.userId,
-      start:"0",
-      limit:"25",
-      explore:"10"
-  };
-  const paramsChannels = {
-    search_keyword: this.props.User.auth.userId,
-    user_id: '',
-    start:"0",
-    limit:"25"
-}
-   await  getTokens((value)=>{
-      // console.log("IN GET TOKENS", this.props.User.auth.userId);
-      this.state.refreshing=true;
-      if(JSON.stringify(this.props.User.auth.message) !='user already found'){
-        // console.log('TOKEN VALUE',JSON.stringify(this.props.User.auth.phone));
-        // this.state.userId = JSON.stringify(this.props.User.auth.userId);
-        // console.log("PARAMS", params);
-        this.props.dispatch(getUpdates(params));
-        // params.user_id = this.state.userId;
+//     const params = {
+//       user_id: this.props.User.auth.userId,
+//       start:"0",
+//       limit:"25",
+//       explore:"10"
+//   };
+//   const paramsChannels = {
+//     search_keyword: this.props.User.auth.userId,
+//     user_id: '',
+//     start:"0",
+//     limit:"25"
+// }
+//    await  getTokens((value)=>{
+//       // console.log("IN GET TOKENS", this.props.User.auth.userId);
+//       this.state.refreshing=true;
+//       if(JSON.stringify(this.props.User.auth.message) !='user already found'){
+//         // console.log('TOKEN VALUE',JSON.stringify(this.props.User.auth.phone));
+//         // this.state.userId = JSON.stringify(this.props.User.auth.userId);
+//         // console.log("PARAMS", params);
+//         this.props.dispatch(getUpdates(params));
+//         // params.user_id = this.state.userId;
        
-        // const value = AsyncStorage.getItem('@comet_app_firstTimeUser');
+//         // const value = AsyncStorage.getItem('@comet_app_firstTimeUser');
         
-        // if(value == 'true') {
-        //   console.log('LOADING NEW NEWS DATA')
+//         // if(value == 'true') {
+//         //   console.log('LOADING NEW NEWS DATA')
          
           
-        //     //console.log('NEW USER FIREBASE SUBSCRIPTION');
-        // }
-        // else {console.log('LOADING PERSISTED DATA')}
-        //this.props.dispatch(getChannels(paramsChannels));
+//         //     //console.log('NEW USER FIREBASE SUBSCRIPTION');
+//         // }
+//         // else {console.log('LOADING PERSISTED DATA')}
+//         //this.props.dispatch(getChannels(paramsChannels));
         
-        this.state.refreshing=false
-      }
-    })
+//         this.state.refreshing=false
+//       }
+//     })
     
-  }
+//   }
 
 
 //  Remove listeners allocated in createNotificationListeners()
