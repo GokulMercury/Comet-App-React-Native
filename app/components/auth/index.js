@@ -10,7 +10,56 @@ import {connect} from 'react-redux';
 import {autoSignIn} from '../../store/actions/user_actions';
 import {bindActionCreators} from 'redux';
 
+<<<<<<< Updated upstream
 import { getTokens, setTokens } from '../../utils/misc';
+=======
+  constructor() {
+    super();
+    this.state = { 
+      phone: '',
+      confirmResult: null,
+      verificationCode: '',
+      userId: '',
+      loading:true
+    };
+  }
+ 
+  componentDidMount(){
+    auth().onAuthStateChanged(user => {
+      if (!user) {
+        //console.log("NO TOKENS");
+        storeFirstTimeUser('true');
+        this.setState({loading:false})
+      } 
+      else {
+            getTokens(async value=>{
+              if(value[2][1]===null){
+                //console.log("NO TOKENS");
+                //this.setState({loading:true})
+                await this.props.signIn({phone : user.phoneNumber});
+                //console.log('<<<<<<<<<<<GO NEXT>>>>>>>>',this.props.User.auth);
+                setTokens(this.props.User.auth);
+                storeFirstTimeUser('true');
+                this.props.navigation.navigate('App');
+              } else{
+                console.log('loading value',value)
+                console.log('USER ALREADY FOUND THANKS VALUE',this.props.User.auth.message);
+                if(this.props.User.auth.message !='user already found'){
+                  await this.props.signIn({phone : user.phoneNumber});
+                  console.log('<<<<<<<<<<<GO NEXT1>>>>>>>>',this.props.User.auth);
+                  setTokens(this.props.User.auth);
+                  storeFirstTimeUser('true');
+                  this.props.navigation.navigate('App');
+                } else {
+                  console.log('<<<<<<<<<<<GO NEXT2>>>>>>>>',this.props.User.auth);
+                  this.props.navigation.navigate('App');
+                }
+         
+              }
+            })
+          }
+      });
+>>>>>>> Stashed changes
 
 class AuthComponent extends Component{
   

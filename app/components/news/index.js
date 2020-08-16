@@ -22,6 +22,29 @@ class NewsComponent extends Component {
     super(props);
     this.state = {
       refreshing: false,
+<<<<<<< Updated upstream
+=======
+      subscribeRefreshing: false,
+      renderArray: undefined
+    };
+  }
+
+  
+  async componentDidMount(){
+  
+
+    Toast.showWithGravity('Comet loading. Please wait :)', Toast.LONG, Toast.CENTER);
+      this.checkPermission() ;
+      this.createNotificationListeners(); 
+      this.getMessage();
+      
+      
+      const params = {
+        user_id: this.props.User.auth.userId,
+        start:"0",
+        limit:"25",
+        explore:"10"
+>>>>>>> Stashed changes
     };
   }
 
