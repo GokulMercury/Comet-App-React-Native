@@ -6,7 +6,8 @@ import {
   View,
   Text,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
+  KeyboardAvoidingView
 } from 'react-native'
 import firebase from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
@@ -163,6 +164,10 @@ class AuthComponent extends Component {
             )
     } else {
       return (
+        <KeyboardAvoidingView
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
         <SafeAreaView style={[styles.container, { backgroundColor: 'white' }]}>
           <View style={styles.page}>
             <AuthLogo/>
@@ -194,6 +199,7 @@ class AuthComponent extends Component {
             {this.state.confirmResult ? this.renderConfirmationCodeView() : null}
           </View>
         </SafeAreaView>
+        </KeyboardAvoidingView>
       )
     }
    
