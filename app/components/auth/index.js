@@ -52,7 +52,7 @@ class AuthComponent extends Component {
                 storeFirstTimeUser('true');
                 this.props.navigation.navigate('App');
               } else{
-                if (this.props.User.auth)
+                if (!this.props.User.auth)
                 {
                   await this.props.signIn({phone : user.phoneNumber});
                   console.log('<<<<<<<<<<<GO NEXT NEW VERSION>>>>>>>>',this.props.User.auth);
