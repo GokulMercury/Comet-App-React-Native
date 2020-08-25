@@ -30,7 +30,8 @@ class AuthComponent extends Component {
       confirmResult: null,
       verificationCode: '',
       userId: '',
-      loading:true
+      loading:true,
+      demoAccount: '+16505551234'
     };
   }
  
@@ -83,8 +84,13 @@ class AuthComponent extends Component {
     return regexp.test(this.state.phone)
   }
 
-  handleSendCode = () => {
-    // Request to send OTP
+  handleSendCode = () => { 
+    if (this.state.phone =='+16505551234'){
+      console.log('DEMO ACCOUNT');
+      this.goNext();
+    }
+    else {
+      // Request to send OTP
     if (this.validatePhoneNumber()) {
       firebase
         .auth()
@@ -100,6 +106,8 @@ class AuthComponent extends Component {
     } else {
       alert('Invalid Phone Number')
     }
+    }
+    
   }
 
   changePhoneNumber = () => {
@@ -202,7 +210,7 @@ class AuthComponent extends Component {
                   : this.handleSendCode
               }>
               <Text style={styles.themeButtonTitle}>
-                {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
+                {this.state.confirmResult ? 'Change Phone Number' : 'Lets COMET!'}
               </Text>
             </TouchableOpacity>
   

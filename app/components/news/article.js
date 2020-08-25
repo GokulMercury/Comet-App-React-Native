@@ -326,11 +326,14 @@ displayNotification(title, body) {
 //Share to Whatsapp
 
 shareToWhatsApp = (text) => {
+  Toast.showWithGravity('Share in WhatsApp', Toast.SHORT, Toast.BOTTOM);
   Linking.openURL(`whatsapp://send?text=*COMET*:: ${text} ::>> *More in COMET App* https://goo.gl/mL4hVW`);
  }
 
  //Chat with CJ's Whatsapp
 chatWithCJWhatsApp = (text,phone) => {
+  Toast.showWithGravity('Let us chat in WhatsApp', Toast.SHORT, Toast.BOTTOM);
+  
   Linking.openURL(`whatsapp://send?text=${text}`+ `&phone=${phone}`);
  }
 
@@ -462,11 +465,11 @@ render() {
           icon={
             <Icon
               name="chatboxes"
-              size={16}
-              color="#9E9E9E"
+              size={14}
+              color="#feb40a"
             />
           }
-            title="CHAT WITH ME"
+            title="WhatsApp me"
             onPress={()=>this.chatWithCJWhatsApp(item.post_content,item.cjphone)} 
             type="clear"
             
@@ -475,15 +478,15 @@ render() {
         <ThemeProvider theme={theme}>
           <Button
           
-            title="SHARE"
+            title="Share in WhatsApp"
             onPress={()=>this.shareToWhatsApp(item.post_content)}
             type="clear"
             
             icon={
               <Icon
                 name="share-alt"
-                size={20}
-                color="#e02143"
+                size={14}
+                color="#feb40a"
                 type="Ionicons"
               />
             }
