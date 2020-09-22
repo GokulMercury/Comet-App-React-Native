@@ -53,7 +53,7 @@ class NewsComponent extends Component {
       updatesData: [],
       refreshing: false,
       subscribeRefreshing: false,
-      renderArray: undefined
+      renderArray: undefined,
     };
   }
 
@@ -61,7 +61,7 @@ class NewsComponent extends Component {
   async componentDidMount(){
   
 
-    Toast.showWithGravity('Comet loading. Please wait :)', Toast.LONG, Toast.CENTER);
+    Toast.showWithGravity('Comet loading. Please wait :)', Toast.LONG, Toast.TOP);
       this.checkPermission() ;
       this.createNotificationListeners(); 
       this.getMessage();
@@ -180,7 +180,7 @@ async getMessage () {
     
     
     parseData = JSON.parse(remoteMessage.data.payload_post);
-    //Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
   
     
     //this.state.updatesData = this.props.Updates.news;
@@ -212,10 +212,10 @@ async getMessage () {
     Notifications.postLocalNotification({
       title: parseData.postchannel,
       body: parseData.postcontent,
-      extra: "data"
+      // extra: "data"
   });
 
-  Toast.showWithGravity('New message waiting. Swipe down to refresh.', Toast.SHORT, Toast.TOP);
+  Toast.showWithGravity('New message waiting. Swipe down to refresh.', Toast.LONG, Toast.TOP);
 
   });
 
@@ -308,7 +308,7 @@ displayNotification(title, body) {
           // this.setState({userId})
          
           // console.log("REFRESH PARAMS", params);
-          Toast.showWithGravity('Loading. Please wait..', Toast.SHORT, Toast.TOP);
+          Toast.showWithGravity('Loading. Please wait..', Toast.LONG, Toast.CENTER);
           await this.props.dispatch(getUpdates(params));
           this.props.dispatch(getChannels(paramsChannels));
         //default: return null
@@ -375,6 +375,16 @@ chatWithCJWhatsApp = (text,phone) => {
 //     }
     
 // };
+listFooter = () => {
+  return (
+    //View to show when list is empty
+    <View style={styles.channelHeader}>
+      <Text style={styles.listTitle}>Swipe down to refresh</Text>
+      <Icon style={styles.listTitleIcon} name ="arrow-down" color="#fff" size={20} />
+
+    </View>
+  );
+};
 
 render() {
   
@@ -423,6 +433,7 @@ render() {
     data={newArray}
   //  extraData={this.state.copyData}
     ListHeaderComponent={ChannelsComponent}
+    ListFooterComponent={this.listFooter}
     refreshing={this.state.refreshing}
     onRefresh={this.onRefresh.bind(this)}
     keyExtractor={(item, index) => String(index)}
@@ -446,6 +457,7 @@ render() {
             </View>
             <View style={styles.msgContainer}>
               <Text numberOfLines={1} style={styles.post}>{item.post_content}</Text>
+              <Icon name ="arrow-forward" color="#feb40a" size={20} />
             </View>
           </View>
         </View>
@@ -694,7 +706,7 @@ const styles = StyleSheet.create({
     marginRight:12,
     marginBottom:10,
     alignSelf: 'center',
-    width:270
+    width:250
   },
   btnColor: {
     padding:10,
@@ -710,6 +722,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     padding: 10,
+  },
+  listTitle:{
+    fontSize:20,
+    fontWeight: 'bold',
+    color:'#fff',
+    marginTop:10,
+    alignSelf: 'center'
+  },
+  listTitleIcon:{
+    fontSize:30,
+    fontWeight: 'bold',
+    color:'#fff',
+    marginTop:10,
+    alignSelf: 'center'
   },
   pic: {
     borderRadius: 30,

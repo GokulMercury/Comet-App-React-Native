@@ -48,7 +48,7 @@ const NewsStack = createStackNavigator({
 
 const AppStack = createBottomTabNavigator({
   News:NewsStack,
-  Chats: ChatStack
+  // Chats: ChatStack
 },{
   tabBarOptions:{
     activeTintColor:'#e02143',

@@ -169,53 +169,53 @@ async checkPermission() {
   }
 }
 
-async getMessage () {
-  const appNotification = messaging().onMessage(async remoteMessage => {
+// async getMessage () {
+//   const appNotification = messaging().onMessage(async remoteMessage => {
     
     
     
-    parseData = JSON.parse(remoteMessage.data.payload_post);
-    //Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+//     parseData = JSON.parse(remoteMessage.data.payload_post);
+//     //Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
   
     
-    //this.state.updatesData = this.props.Updates.news;
+//     //this.state.updatesData = this.props.Updates.news;
 
-    //<<<<<<<<<<<<<<<<<<<<<ENABLE THE FOLLOWING FOR AUTO UPDATE>>>>>>>//
-    // console.log ('>>>>>>>>>>>>>INSIDE FOREGROUND');
-    // this.state.updatesData.post_id = parseData.postid;
-    // this.state.updatesData.name = parseData.cj_name;
-    // this.state.updatesData.party_name = parseData.postchannel;
-    // this.state.updatesData.image = parseData.cj_image;
-    // this.state.updatesData.post_attachment_obj_id = parseData.attachmentimage;
-    // this.state.updatesData.post_content = parseData.postcontent;
-    // this.state.updatesData.post_date_time = parseData.postedtime;
+//     //<<<<<<<<<<<<<<<<<<<<<ENABLE THE FOLLOWING FOR AUTO UPDATE>>>>>>>//
+//     // console.log ('>>>>>>>>>>>>>INSIDE FOREGROUND');
+//     // this.state.updatesData.post_id = parseData.postid;
+//     // this.state.updatesData.name = parseData.cj_name;
+//     // this.state.updatesData.party_name = parseData.postchannel;
+//     // this.state.updatesData.image = parseData.cj_image;
+//     // this.state.updatesData.post_attachment_obj_id = parseData.attachmentimage;
+//     // this.state.updatesData.post_content = parseData.postcontent;
+//     // this.state.updatesData.post_date_time = parseData.postedtime;
 
-    // // let joinedUpdates = this.state.copyData.concat(updatesData);
-    // // this.setState({ copyData: joinedUpdates })
+//     // // let joinedUpdates = this.state.copyData.concat(updatesData);
+//     // // this.setState({ copyData: joinedUpdates })
     
-    // this.state.copyData = this.props.Updates.news;
-    // this.state.copyData.unshift(this.state.updatesData);
+//     // this.state.copyData = this.props.Updates.news;
+//     // this.state.copyData.unshift(this.state.updatesData);
                       
-    // // console.log('UPDATES DATA', this.state.updatesData);
-    // // console.log('COPY DATA', this.state.copyData);
-    // this.props.dispatch(pushUpdates(this.state.copyData));
-    // // console.log ('BEFORE>>>>>>>>>>>>>>>>>', this.props.Updates.news)
-    // this.state.copyData = [];
-    // this.state.updatesData = [];
-    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+//     // // console.log('UPDATES DATA', this.state.updatesData);
+//     // // console.log('COPY DATA', this.state.copyData);
+//     // this.props.dispatch(pushUpdates(this.state.copyData));
+//     // // console.log ('BEFORE>>>>>>>>>>>>>>>>>', this.props.Updates.news)
+//     // this.state.copyData = [];
+//     // this.state.updatesData = [];
+//     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
 
-    Notifications.postLocalNotification({
-      title: parseData.postchannel,
-      body: parseData.postcontent,
-      extra: "data"
-  });
+//     Notifications.postLocalNotification({
+//       title: parseData.postchannel,
+//       body: parseData.postcontent,
+//       extra: "data"
+//   });
 
-  Toast.showWithGravity('New message waiting. Swipe down to refresh.', Toast.LONG, Toast.TOP);
+//   Toast.showWithGravity('New message waiting. Swipe down to refresh.', Toast.LONG, Toast.TOP);
 
-  });
+//   });
 
-  return appNotification;
-}
+//   return appNotification;
+// }
  
 
 async getToken() {

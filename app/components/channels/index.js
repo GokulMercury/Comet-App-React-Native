@@ -161,7 +161,7 @@ render() {
     <View style={styles.container}>
       
     <View>
-      <Text style={styles.listTitle}>Tune to channels</Text>
+      <Text style={styles.listTitle}>Select channels</Text>
     
     </View>
     <FlatList
